@@ -1,4 +1,4 @@
-package us.fatehi.schemacrawler;
+package us.fatehi.schemacrawler.webapp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

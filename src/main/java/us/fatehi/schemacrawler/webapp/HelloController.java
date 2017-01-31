@@ -1,4 +1,4 @@
-package us.fatehi.schemacrawler;
+package us.fatehi.schemacrawler.webapp;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package us.fatehi.schemacrawler;
+package us.fatehi.schemacrawler.webapp;
 
 
 import static org.hamcrest.Matchers.equalTo;

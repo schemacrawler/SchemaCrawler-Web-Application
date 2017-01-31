@@ -1,4 +1,4 @@
-package us.fatehi.schemacrawler;
+package us.fatehi.schemacrawler.webapp;
 
 
 import org.springframework.boot.SpringApplication;
