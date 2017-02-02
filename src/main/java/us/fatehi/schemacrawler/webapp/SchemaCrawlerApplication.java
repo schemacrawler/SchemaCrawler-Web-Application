@@ -8,9 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SchemaCrawlerApplication
 {
 
-  public static void main(String[] args)
+  public static void main(final String[] args)
   {
     SpringApplication.run(SchemaCrawlerApplication.class, args);
   }
-  
+
 }
