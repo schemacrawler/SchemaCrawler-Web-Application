@@ -15,11 +15,12 @@ import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerSQLiteDiagramRequest;
 @Controller
 public class SchemaCrawlerSQLiteDiagramController
 {
-  
+
   @GetMapping("/schemacrawler")
   public String schemacrawlerSQLiteDiagramForm(final Model model)
   {
-    model.addAttribute("diagramRequest", new SchemaCrawlerSQLiteDiagramRequest());
+    model.addAttribute("diagramRequest",
+                       new SchemaCrawlerSQLiteDiagramRequest());
     return "SchemaCrawlerSQLiteDiagramForm";
   }
 
