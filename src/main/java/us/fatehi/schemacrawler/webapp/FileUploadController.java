@@ -39,7 +39,7 @@ public class FileUploadController
   }
 
   @GetMapping("/")
-  public String listUploadedFiles(final Model model)
+  public String showFileUploadForm(final Model model)
   {
     return "uploadForm";
   }

@@ -14,16 +14,20 @@
 	<div class="container">
 		<div class="starter-template">
 			<h1>SchemaCrawler SQLite Diagram Request Form</h1>
-			<form action="#" th:action="@{/schemacrawler}" th:object="${diagramRequest}"
-				method="post">
+			<form action="#" th:action="@{/schemacrawler}"
+				th:object="${diagramRequest}" method="post"
+				enctype="multipart/form-data">
 				<p>
-					name: <input type="text" th:field="*{name}" />
+					Your name: <input type="text" th:field="*{name}" />
 				</p>
 				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" />
 				<p>
-					email: <input type="text" th:field="*{email}" />
+					Your email: <input type="text" th:field="*{email}" />
 				</p>
 				<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
+				<p>
+					SQLite database (to upload):<input type="file" name="file" />
+				</p>
 				<p>
 					<input type="submit" value="Submit" /> <input type="reset"
 						value="Reset" />
