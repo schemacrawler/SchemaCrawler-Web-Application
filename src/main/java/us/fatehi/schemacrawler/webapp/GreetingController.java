@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import us.fatehi.schemacrawler.webapp.model.Greeting;
 
 @Controller
-public class SchemaCrawlerController
+public class GreetingController
 {
 
   @GetMapping("/greeting")

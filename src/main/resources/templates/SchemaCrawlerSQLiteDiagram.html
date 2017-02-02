@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>SchemaCrawler SQLite Diagrams</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link
+	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
+	rel="stylesheet" media="screen" />
+<script src="http://cdn.jsdelivr.net/webjars/jquery/3.1.1/jquery.min.js"
+	th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="starter-template">
+			<h1>SchemaCrawler SQLite Diagram</h1>
+            <p th:text="'name: ' + ${diagramRequest.name}" />
+            <p th:text="'email: ' + ${diagramRequest.email}" />
+		</div>
+	</div>
+</body>
+</html>
