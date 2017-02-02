@@ -19,9 +19,11 @@
 				<p>
 					id: <input type="text" th:field="*{id}" />
 				</p>
+				<p th:if="${#fields.hasErrors('id')}" th:errors="*{id}" />
 				<p>
 					content: <input type="text" th:field="*{content}" />
 				</p>
+				<p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" />
 				<p>
 					<input type="submit" value="Submit" /> <input type="reset"
 						value="Reset" />
