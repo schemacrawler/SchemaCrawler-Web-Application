@@ -1,6 +1,9 @@
 package us.fatehi.schemacrawler.webapp;
 
 
+import java.nio.file.Path;
+import java.sql.Connection;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerSQLiteDiagramRequest;
+import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.storage.StorageService;
 
 @Controller
@@ -21,11 +25,14 @@ public class SchemaCrawlerSQLiteDiagramController
 {
 
   private final StorageService storageService;
+  private final SchemaCrawlerService schemacrawlerService;
 
   @Autowired
-  public SchemaCrawlerSQLiteDiagramController(final StorageService storageService)
+  public SchemaCrawlerSQLiteDiagramController(final StorageService storageService,
+                                              final SchemaCrawlerService schemacrawlerService)
   {
     this.storageService = storageService;
+    this.schemacrawlerService = schemacrawlerService;
   }
 
   @GetMapping("/schemacrawler")
@@ -40,6 +47,7 @@ public class SchemaCrawlerSQLiteDiagramController
   public String schemacrawlerSQLiteDiagramFormSubmit(@ModelAttribute("diagramRequest") @Valid final SchemaCrawlerSQLiteDiagramRequest diagramRequest,
                                                      @RequestParam("file") final MultipartFile file,
                                                      final BindingResult bindingResult)
+    throws Exception
   {
 
     if (bindingResult.hasErrors())
@@ -47,8 +55,13 @@ public class SchemaCrawlerSQLiteDiagramController
       return "SchemaCrawlerSQLiteDiagramForm";
     }
 
-    storageService.store(file);
-    
+    final Path serverLocalPath = storageService.store(file);
+    final Connection connection = schemacrawlerService
+      .createDatabaseConnection(serverLocalPath);
+    final Path schemaCrawlerDiagram = schemacrawlerService
+      .createSchemaCrawlerDiagram(connection);
+    System.out.println(schemaCrawlerDiagram);
+
     return "SchemaCrawlerSQLiteDiagram";
   }
 

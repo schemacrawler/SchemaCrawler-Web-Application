@@ -39,7 +39,7 @@ public class FileSystemStorageService
   }
 
   @Override
-  public void store(final MultipartFile file)
+  public Path store(final MultipartFile file)
   {
     try
     {
@@ -48,8 +48,10 @@ public class FileSystemStorageService
         throw new StorageException("Failed to store empty file "
                                    + file.getOriginalFilename());
       }
-      Files.copy(file.getInputStream(),
-                 rootLocation.resolve(file.getOriginalFilename()));
+      final Path serverLocalPath = rootLocation
+        .resolve(file.getOriginalFilename());
+      Files.copy(file.getInputStream(), serverLocalPath);
+      return serverLocalPath;
     }
     catch (final IOException e)
     {
