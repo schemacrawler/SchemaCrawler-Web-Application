@@ -1,7 +1,9 @@
 package us.fatehi.schemacrawler.webapp.storage;
 
 
+import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +12,13 @@ public interface StorageService
 
   void init();
 
-  Path store(MultipartFile file);
+  Optional<Path> resolve(String filenameKey)
+    throws Exception;
+
+  String store(MultipartFile file)
+    throws Exception;
+
+  InputStream stream(String filenameKey)
+    throws Exception;
 
 }

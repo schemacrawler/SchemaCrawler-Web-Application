@@ -1,11 +1,22 @@
 package us.fatehi.schemacrawler.webapp.storage;
 
 
+import static java.nio.file.Files.copy;
+import static java.nio.file.Files.createDirectories;
+import static java.nio.file.Files.exists;
+import static java.nio.file.Files.isReadable;
+import static java.nio.file.Files.isRegularFile;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,9 +38,9 @@ public class FileSystemStorageService
   {
     try
     {
-      if (!Files.exists(rootLocation))
+      if (!exists(rootLocation))
       {
-        Files.createDirectories(rootLocation);
+        createDirectories(rootLocation);
       }
     }
     catch (final IOException e)
@@ -39,7 +50,24 @@ public class FileSystemStorageService
   }
 
   @Override
-  public Path store(final MultipartFile file)
+  public Optional<Path> resolve(final String filenameKey)
+    throws Exception
+  {
+    if (StringUtils.isBlank(filenameKey))
+    {
+      return Optional.ofNullable(null);
+    }
+    final Path serverLocalPath = rootLocation.resolve(filenameKey);
+    if (!exists(serverLocalPath) || !isRegularFile(serverLocalPath)
+        || !isReadable(serverLocalPath))
+    {
+      return Optional.ofNullable(null);
+    }
+    return Optional.of(serverLocalPath);
+  }
+
+  @Override
+  public String store(final MultipartFile file)
   {
     try
     {
@@ -48,10 +76,11 @@ public class FileSystemStorageService
         throw new StorageException("Failed to store empty file "
                                    + file.getOriginalFilename());
       }
-      final Path serverLocalPath = rootLocation
-        .resolve(file.getOriginalFilename());
-      Files.copy(file.getInputStream(), serverLocalPath);
-      return serverLocalPath;
+      final String filenameKey = RandomStringUtils.randomAlphanumeric(12)
+        .toLowerCase();
+      final Path serverLocalPath = rootLocation.resolve(filenameKey);
+      copy(file.getInputStream(), serverLocalPath);
+      return filenameKey;
     }
     catch (final IOException e)
     {
@@ -59,4 +88,20 @@ public class FileSystemStorageService
                                  + file.getOriginalFilename(), e);
     }
   }
+
+  @Override
+  public InputStream stream(final String filenameKey)
+    throws Exception
+  {
+    final Optional<Path> serverLocalPath = resolve(filenameKey);
+    if (serverLocalPath.isPresent())
+    {
+      return new FileInputStream(serverLocalPath.get().toFile());
+    }
+    else
+    {
+      return new ByteArrayInputStream(new byte[0]);
+    }
+  }
+
 }
