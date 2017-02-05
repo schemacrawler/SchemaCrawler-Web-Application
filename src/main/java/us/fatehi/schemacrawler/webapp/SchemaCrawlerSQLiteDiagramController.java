@@ -55,11 +55,13 @@ public class SchemaCrawlerSQLiteDiagramController
       return "SchemaCrawlerSQLiteDiagramForm";
     }
 
-    final String filenameKey = storageService.store(file);
+    final String filenameKey = storageService.store(file, "db");
     final Connection connection = schemacrawlerService
-      .createDatabaseConnection(storageService.resolve(filenameKey).get());
+      .createDatabaseConnection(storageService.resolve(filenameKey, "db")
+        .get());
     final Path schemaCrawlerDiagram = schemacrawlerService
       .createSchemaCrawlerDiagram(connection);
+    storageService.store(schemaCrawlerDiagram, filenameKey);
     System.out.println(schemaCrawlerDiagram);
 
     return "SchemaCrawlerSQLiteDiagram";

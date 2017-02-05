@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -50,14 +51,17 @@ public class FileSystemStorageService
   }
 
   @Override
-  public Optional<Path> resolve(final String filenameKey)
+  public Optional<Path> resolve(final String filenameKey,
+                                final String extension)
     throws Exception
   {
     if (StringUtils.isBlank(filenameKey))
     {
       return Optional.ofNullable(null);
     }
-    final Path serverLocalPath = rootLocation.resolve(filenameKey);
+    final String filenameExt = fixFilenameExtension(extension);
+    final Path serverLocalPath = rootLocation
+      .resolve(filenameKey + filenameExt);
     if (!exists(serverLocalPath) || !isRegularFile(serverLocalPath)
         || !isReadable(serverLocalPath))
     {
@@ -67,33 +71,58 @@ public class FileSystemStorageService
   }
 
   @Override
-  public String store(final MultipartFile file)
+  public String store(final MultipartFile file, final String extension)
   {
+    if (file == null || file.isEmpty())
+    {
+      throw new StorageException("Failed to store empty file "
+                                 + file.getOriginalFilename());
+    }
+    final String fileNameKey = RandomStringUtils.randomAlphanumeric(8)
+      .toLowerCase();
     try
     {
-      if (file.isEmpty())
-      {
-        throw new StorageException("Failed to store empty file "
-                                   + file.getOriginalFilename());
-      }
-      final String filenameKey = RandomStringUtils.randomAlphanumeric(12)
-        .toLowerCase();
-      final Path serverLocalPath = rootLocation.resolve(filenameKey);
-      copy(file.getInputStream(), serverLocalPath);
-      return filenameKey;
+      store(file.getInputStream(), fileNameKey, extension);
     }
     catch (final IOException e)
     {
       throw new StorageException("Failed to store file "
                                  + file.getOriginalFilename(), e);
     }
+    return fileNameKey;
   }
 
   @Override
-  public InputStream stream(final String filenameKey)
+  public String store(final Path file, final String fileNameKey)
+  {
+    if (file == null || !exists(file) || !isRegularFile(file)
+        || !isReadable(file))
+    {
+      throw new StorageException("Failed to store file " + file);
+    }
+    if (StringUtils.isBlank(fileNameKey))
+    {
+      throw new StorageException("Failed to store file " + file);
+    }
+
+    try
+    {
+      store(new FileInputStream(file.toFile()),
+            fileNameKey,
+            FilenameUtils.getExtension(file.toString()));
+    }
+    catch (final IOException e)
+    {
+      throw new StorageException("Failed to store file " + file, e);
+    }
+    return fileNameKey;
+  }
+
+  @Override
+  public InputStream stream(final String filenameKey, final String extension)
     throws Exception
   {
-    final Optional<Path> serverLocalPath = resolve(filenameKey);
+    final Optional<Path> serverLocalPath = resolve(filenameKey, extension);
     if (serverLocalPath.isPresent())
     {
       return new FileInputStream(serverLocalPath.get().toFile());
@@ -102,6 +131,24 @@ public class FileSystemStorageService
     {
       return new ByteArrayInputStream(new byte[0]);
     }
+  }
+
+  private String fixFilenameExtension(final String extension)
+  {
+    final String filenameExt = StringUtils
+      .trimToNull(extension) == null? ".dat": "." + StringUtils.trim(extension);
+    return filenameExt;
+  }
+
+  private void store(final InputStream stream,
+                     final String filenameKey,
+                     final String extension)
+    throws IOException
+  {
+    final String filenameExt = fixFilenameExtension(extension);
+    final Path serverLocalPath = rootLocation
+      .resolve(filenameKey + filenameExt);
+    copy(stream, serverLocalPath);
   }
 
 }

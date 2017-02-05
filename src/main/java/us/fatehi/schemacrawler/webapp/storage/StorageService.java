@@ -12,13 +12,16 @@ public interface StorageService
 
   void init();
 
-  Optional<Path> resolve(String filenameKey)
+  Optional<Path> resolve(String filenameKey, String extension)
     throws Exception;
 
-  String store(MultipartFile file)
+  String store(MultipartFile file, String extension)
     throws Exception;
 
-  InputStream stream(String filenameKey)
+  String store(Path file, String filenameKey)
+    throws Exception;
+
+  InputStream stream(String filenameKey, String extension)
     throws Exception;
 
 }
