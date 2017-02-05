@@ -6,11 +6,18 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class SchemaCrawlerSQLiteDiagramRequest
   implements Serializable
 {
 
   private static final long serialVersionUID = 2065519510282344200L;
+  private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   private String name;
   private String email;
@@ -23,53 +30,7 @@ public class SchemaCrawlerSQLiteDiagramRequest
   @Override
   public boolean equals(final Object obj)
   {
-    if (this == obj)
-    {
-      return true;
-    }
-    if (obj == null)
-    {
-      return false;
-    }
-    if (!(obj instanceof SchemaCrawlerSQLiteDiagramRequest))
-    {
-      return false;
-    }
-    final SchemaCrawlerSQLiteDiagramRequest other = (SchemaCrawlerSQLiteDiagramRequest) obj;
-    if (email == null)
-    {
-      if (other.email != null)
-      {
-        return false;
-      }
-    }
-    else if (!email.equals(other.email))
-    {
-      return false;
-    }
-    if (key == null)
-    {
-      if (other.key != null)
-      {
-        return false;
-      }
-    }
-    else if (!key.equals(other.key))
-    {
-      return false;
-    }
-    if (name == null)
-    {
-      if (other.name != null)
-      {
-        return false;
-      }
-    }
-    else if (!name.equals(other.name))
-    {
-      return false;
-    }
-    return true;
+    return EqualsBuilder.reflectionEquals(this, obj);
   }
 
   @NotNull
@@ -100,12 +61,7 @@ public class SchemaCrawlerSQLiteDiagramRequest
   @Override
   public int hashCode()
   {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + (email == null? 0: email.hashCode());
-    result = prime * result + (key == null? 0: key.hashCode());
-    result = prime * result + (name == null? 0: name.hashCode());
-    return result;
+    return HashCodeBuilder.reflectionHashCode(this, false);
   }
 
   public void setEmail(final String email)
@@ -126,8 +82,7 @@ public class SchemaCrawlerSQLiteDiagramRequest
   @Override
   public String toString()
   {
-    return "SchemaCrawlerSQLiteDiagramRequest [name=" + name + ", email="
-           + email + ", key=" + key + "]";
+    return gson.toJson(this);
   }
 
 }

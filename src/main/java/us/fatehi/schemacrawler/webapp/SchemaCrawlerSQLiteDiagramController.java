@@ -2,12 +2,15 @@ package us.fatehi.schemacrawler.webapp;
 
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -80,6 +83,15 @@ public class SchemaCrawlerSQLiteDiagramController
       return "SchemaCrawlerSQLiteDiagramForm";
     }
 
+    generateSchemaCrawlerSQLiteDiagram(diagramRequest, file);
+
+    return "SchemaCrawlerSQLiteDiagram";
+  }
+
+  private void generateSchemaCrawlerSQLiteDiagram(final SchemaCrawlerSQLiteDiagramRequest diagramRequest,
+                                                  final MultipartFile file)
+    throws Exception
+  {
     final String filenameKey = storageService.store(file, "db");
     final Connection connection = schemacrawlerService
       .createDatabaseConnection(storageService.resolve(filenameKey, "db")
@@ -89,7 +101,12 @@ public class SchemaCrawlerSQLiteDiagramController
     storageService.store(schemaCrawlerDiagram, filenameKey);
     diagramRequest.setKey(filenameKey);
 
-    return "SchemaCrawlerSQLiteDiagram";
+    final Path tempFile = Files.createTempFile("schemacrawler-web-application",
+                                               ".json");
+    FileUtils.writeStringToFile(tempFile.toFile(),
+                                diagramRequest.toString(),
+                                StandardCharsets.UTF_8);
+    storageService.store(tempFile, filenameKey);
   }
 
 }
