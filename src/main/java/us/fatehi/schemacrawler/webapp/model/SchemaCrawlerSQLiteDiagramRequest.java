@@ -14,7 +14,12 @@ public class SchemaCrawlerSQLiteDiagramRequest
 
   private String name;
   private String email;
+  private String key;
 
+  /*
+   * (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals(final Object obj)
   {
@@ -26,7 +31,7 @@ public class SchemaCrawlerSQLiteDiagramRequest
     {
       return false;
     }
-    if (getClass() != obj.getClass())
+    if (!(obj instanceof SchemaCrawlerSQLiteDiagramRequest))
     {
       return false;
     }
@@ -39,6 +44,17 @@ public class SchemaCrawlerSQLiteDiagramRequest
       }
     }
     else if (!email.equals(other.email))
+    {
+      return false;
+    }
+    if (key == null)
+    {
+      if (other.key != null)
+      {
+        return false;
+      }
+    }
+    else if (!key.equals(other.key))
     {
       return false;
     }
@@ -65,6 +81,11 @@ public class SchemaCrawlerSQLiteDiagramRequest
     return email;
   }
 
+  public String getKey()
+  {
+    return key;
+  }
+
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
   public String getName()
@@ -72,12 +93,17 @@ public class SchemaCrawlerSQLiteDiagramRequest
     return name;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode()
   {
     final int prime = 31;
     int result = 1;
     result = prime * result + (email == null? 0: email.hashCode());
+    result = prime * result + (key == null? 0: key.hashCode());
     result = prime * result + (name == null? 0: name.hashCode());
     return result;
   }
@@ -85,6 +111,11 @@ public class SchemaCrawlerSQLiteDiagramRequest
   public void setEmail(final String email)
   {
     this.email = email;
+  }
+
+  public void setKey(final String key)
+  {
+    this.key = key;
   }
 
   public void setName(final String name)
@@ -96,7 +127,7 @@ public class SchemaCrawlerSQLiteDiagramRequest
   public String toString()
   {
     return "SchemaCrawlerSQLiteDiagramRequest [name=" + name + ", email="
-           + email + "]";
+           + email + ", key=" + key + "]";
   }
 
 }
