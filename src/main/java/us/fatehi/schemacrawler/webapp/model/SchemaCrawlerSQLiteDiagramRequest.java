@@ -2,8 +2,14 @@ package us.fatehi.schemacrawler.webapp.model;
 
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -12,16 +18,22 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+@Entity
 public class SchemaCrawlerSQLiteDiagramRequest
   implements Serializable
 {
 
   private static final long serialVersionUID = 2065519510282344200L;
+
   private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
   private String name;
   private String email;
   private String key;
+  private final LocalDateTime timestamp = LocalDateTime.now();
 
   /*
    * (non-Javadoc)
@@ -34,12 +46,15 @@ public class SchemaCrawlerSQLiteDiagramRequest
   }
 
   @NotNull
-  // @Pattern(regexp =
-  // "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z",
-  // message = "Please enter a valid email address")
+  @Pattern(regexp = "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z", message = "Please enter a valid email address")
   public String getEmail()
   {
     return email;
+  }
+
+  public Long getId()
+  {
+    return id;
   }
 
   public String getKey()
@@ -52,6 +67,11 @@ public class SchemaCrawlerSQLiteDiagramRequest
   public String getName()
   {
     return name;
+  }
+
+  public LocalDateTime getTimestamp()
+  {
+    return timestamp;
   }
 
   /*
