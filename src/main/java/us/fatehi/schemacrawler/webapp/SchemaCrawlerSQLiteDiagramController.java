@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerSQLiteDiagramRequest;
+import us.fatehi.schemacrawler.webapp.repository.SchemaCrawlerSQLiteDiagramRequestRepository;
 import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.storage.StorageService;
 
@@ -37,13 +38,16 @@ public class SchemaCrawlerSQLiteDiagramController
 
   private final StorageService storageService;
   private final SchemaCrawlerService schemacrawlerService;
+  private final SchemaCrawlerSQLiteDiagramRequestRepository requestRepository;
 
   @Autowired
   public SchemaCrawlerSQLiteDiagramController(final StorageService storageService,
-                                              final SchemaCrawlerService schemacrawlerService)
+                                              final SchemaCrawlerService schemacrawlerService,
+                                              final SchemaCrawlerSQLiteDiagramRequestRepository requestRepository)
   {
     this.storageService = storageService;
     this.schemacrawlerService = schemacrawlerService;
+    this.requestRepository = requestRepository;
   }
 
   @GetMapping(value = "/images/{key}")
@@ -93,12 +97,14 @@ public class SchemaCrawlerSQLiteDiagramController
     throws Exception
   {
     final String filenameKey = storageService.store(file, "db");
-    final Connection connection = schemacrawlerService
+    try (final Connection connection = schemacrawlerService
       .createDatabaseConnection(storageService.resolve(filenameKey, "db")
-        .get());
-    final Path schemaCrawlerDiagram = schemacrawlerService
-      .createSchemaCrawlerDiagram(connection);
-    storageService.store(schemaCrawlerDiagram, filenameKey);
+        .get());)
+    {
+      final Path schemaCrawlerDiagram = schemacrawlerService
+        .createSchemaCrawlerDiagram(connection);
+      storageService.store(schemaCrawlerDiagram, filenameKey);
+    }
     diagramRequest.setKey(filenameKey);
 
     final Path tempFile = Files.createTempFile("schemacrawler-web-application",
@@ -107,6 +113,8 @@ public class SchemaCrawlerSQLiteDiagramController
                                 diagramRequest.toString(),
                                 StandardCharsets.UTF_8);
     storageService.store(tempFile, filenameKey);
+    
+    requestRepository.save(diagramRequest);
   }
 
 }

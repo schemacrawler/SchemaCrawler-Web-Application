@@ -30,10 +30,16 @@ public class SchemaCrawlerSQLiteDiagramRequest
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+
   private String name;
   private String email;
   private String key;
-  private final LocalDateTime timestamp = LocalDateTime.now();
+  private final LocalDateTime timestamp;
+
+  public SchemaCrawlerSQLiteDiagramRequest()
+  {
+    timestamp = LocalDateTime.now();
+  }
 
   /*
    * (non-Javadoc)
