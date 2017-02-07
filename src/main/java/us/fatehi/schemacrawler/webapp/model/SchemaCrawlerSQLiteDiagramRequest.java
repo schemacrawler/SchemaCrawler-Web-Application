@@ -4,6 +4,7 @@ package us.fatehi.schemacrawler.webapp.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,9 +31,9 @@ public class SchemaCrawlerSQLiteDiagramRequest
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
-
   private String name;
   private String email;
+  @Column(unique = true)
   private String key;
   private final LocalDateTime timestamp;
 
@@ -41,10 +42,6 @@ public class SchemaCrawlerSQLiteDiagramRequest
     timestamp = LocalDateTime.now();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj)
   {
@@ -80,10 +77,6 @@ public class SchemaCrawlerSQLiteDiagramRequest
     return timestamp;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode()
   {

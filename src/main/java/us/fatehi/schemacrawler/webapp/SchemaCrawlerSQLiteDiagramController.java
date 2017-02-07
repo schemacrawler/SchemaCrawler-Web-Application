@@ -107,14 +107,15 @@ public class SchemaCrawlerSQLiteDiagramController
     }
     diagramRequest.setKey(filenameKey);
 
+    requestRepository.save(diagramRequest);
+
+    // Save the JSON request to disk, after the database id has been generated
     final Path tempFile = Files.createTempFile("schemacrawler-web-application",
                                                ".json");
     FileUtils.writeStringToFile(tempFile.toFile(),
                                 diagramRequest.toString(),
-                                StandardCharsets.UTF_8);
+                                StandardCharsets.UTF_8);    
     storageService.store(tempFile, filenameKey);
-    
-    requestRepository.save(diagramRequest);
   }
 
 }
