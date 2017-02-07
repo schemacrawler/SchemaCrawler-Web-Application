@@ -89,6 +89,18 @@ public class SchemaCrawlerSQLiteDiagramController
 
     generateSchemaCrawlerSQLiteDiagram(diagramRequest, file);
 
+    return "SchemaCrawlerSQLiteDiagramResult";
+  }
+
+  @GetMapping(value = "/diagrams/{key}")
+  public String schemacrawlerSQLiteDiagramPage(final Model model,
+                                               @PathVariable final String key)
+  {
+
+    final SchemaCrawlerSQLiteDiagramRequest diagramRequest = requestRepository
+      .findByKey(key);
+    model.addAttribute("diagramRequest", diagramRequest);
+
     return "SchemaCrawlerSQLiteDiagram";
   }
 
@@ -109,12 +121,13 @@ public class SchemaCrawlerSQLiteDiagramController
 
     requestRepository.save(diagramRequest);
 
-    // Save the JSON request to disk, after the database id has been generated
+    // Save the JSON request to disk, after the database id has been
+    // generated
     final Path tempFile = Files.createTempFile("schemacrawler-web-application",
                                                ".json");
     FileUtils.writeStringToFile(tempFile.toFile(),
                                 diagramRequest.toString(),
-                                StandardCharsets.UTF_8);    
+                                StandardCharsets.UTF_8);
     storageService.store(tempFile, filenameKey);
   }
 
