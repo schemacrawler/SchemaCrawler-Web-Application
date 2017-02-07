@@ -17,21 +17,24 @@
 			<form action="#" th:action="@{/schemacrawler}"
 				th:object="${diagramRequest}" method="post"
 				enctype="multipart/form-data">
-				<p>
-					Your name: <input type="text" th:field="*{name}" />
-				</p>
-				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" />
-				<p>
-					Your email: <input type="text" th:field="*{email}" />
-				</p>
-				<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
-				<p>
-					SQLite database (to upload):<input type="file" name="file" />
-				</p>
-				<p>
-					<input type="submit" value="Submit" /> <input type="reset"
-						value="Reset" />
-				</p>
+
+				<div class="form-group">
+					<label for="name">Name:</label> <input type="text"
+						class="form-control" id="name" th:field="*{name}" />
+					<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" />
+				</div>
+				<div class="form-group">
+					<label for="email">Email:</label> <input type="email"
+						class="form-control" id="email" th:field="*{email}" />
+					<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
+				</div>
+
+				<div class="form-group">
+					<label for="file">SQLite database (to upload):</label> <input
+						type="file" class="form-control" id="file" name="file" />
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+				<button type="reset" class="btn btn-default">Reset</button>
 			</form>
 		</div>
 	</div>
