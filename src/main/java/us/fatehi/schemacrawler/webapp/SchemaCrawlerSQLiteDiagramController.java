@@ -109,7 +109,11 @@ public class SchemaCrawlerSQLiteDiagramController
     throws Exception
   {
     final String filenameKey = diagramRequest.getKey();
+    
+    // Store the uploaded SQLite database file
     storageService.store(filenameKey, file, "db");
+    
+    // Generate a database diagram, and store the generated image
     try (final Connection connection = schemacrawlerService
       .createDatabaseConnection(storageService.resolve(filenameKey, "db")
         .get());)
@@ -119,6 +123,7 @@ public class SchemaCrawlerSQLiteDiagramController
       storageService.store(filenameKey, schemaCrawlerDiagram);
     }
 
+    // Persist the request itself in the database
     requestRepository.save(diagramRequest);
 
     // Save the JSON request to disk, after the database id has been
