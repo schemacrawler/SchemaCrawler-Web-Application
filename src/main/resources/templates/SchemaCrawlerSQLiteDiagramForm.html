@@ -3,34 +3,32 @@
 <head th:replace="fragments/header :: header"></head>
 <body>
 	<div class="container">
-		<div class="starter-template">
-			<h1>Draw a SchemaCrawler SQLite Diagram</h1>
-			<form action="#" th:action="@{/schemacrawler}"
-				th:object="${diagramRequest}" method="post"
-				enctype="multipart/form-data">
+		<h1>Draw a SchemaCrawler SQLite Diagram</h1>
+		<form action="#" th:action="@{/schemacrawler}"
+			th:object="${diagramRequest}" method="post"
+			enctype="multipart/form-data">
 
-				<div class="form-group">
-					<label for="name">Name:</label> <input type="text"
-						class="form-control" id="name" th:field="*{name}" />
-					<div class="alert alert-warning"
-						th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-				</div>
-				<div class="form-group">
-					<label for="email">Email:</label> <input type="email"
-						class="form-control" id="email" th:field="*{email}" />
-					<div class="alert alert-warning"
-						th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-				</div>
+			<div class="form-group">
+				<label for="name">Name:</label> <input type="text"
+					class="form-control" id="name" th:field="*{name}" />
+				<div class="alert alert-warning"
+					th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+			</div>
+			<div class="form-group">
+				<label for="email">Email:</label> <input type="email"
+					class="form-control" id="email" th:field="*{email}" />
+				<div class="alert alert-warning"
+					th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+			</div>
 
-				<div class="form-group">
-					<label for="file">SQLite database (to upload):</label> <input
-						type="file" class="form-control" id="file" name="file" />
-				</div>
-				<button type="submit" class="btn btn-default">Submit</button>
-				<button type="reset" class="btn btn-default">Reset</button>
-			</form>
-		</div>
-		<div th:replace="fragments/footer :: footer"></div>
+			<div class="form-group">
+				<label for="file">SQLite database (to upload):</label> <input
+					type="file" class="form-control" id="file" name="file" />
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+			<button type="reset" class="btn btn-default">Reset</button>
+		</form>
 	</div>
+	<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>
