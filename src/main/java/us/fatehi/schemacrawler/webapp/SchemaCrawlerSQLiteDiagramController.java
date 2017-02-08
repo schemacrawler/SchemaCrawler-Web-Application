@@ -28,16 +28,16 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp;
 
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.io.FileUtils.writeStringToFile;
+
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -142,14 +142,10 @@ public class SchemaCrawlerSQLiteDiagramController
     storageService.store(filenameKey, file, "db");
 
     // Generate a database diagram, and store the generated image
-    try (final Connection connection = schemacrawlerService
-      .createDatabaseConnection(storageService.resolve(filenameKey, "db")
-        .get());)
-    {
-      final Path schemaCrawlerDiagram = schemacrawlerService
-        .createSchemaCrawlerDiagram(connection);
-      storageService.store(filenameKey, schemaCrawlerDiagram);
-    }
+    final Path dbFile = storageService.resolve(filenameKey, "db").get();
+    final Path schemaCrawlerDiagram = schemacrawlerService
+      .createSchemaCrawlerDiagram(dbFile, "png");
+    storageService.store(filenameKey, schemaCrawlerDiagram, "png");
 
     // Persist the request itself in the database
     requestRepository.save(diagramRequest);
@@ -158,10 +154,8 @@ public class SchemaCrawlerSQLiteDiagramController
     // generated
     final Path tempFile = Files.createTempFile("schemacrawler-web-application",
                                                ".json");
-    FileUtils.writeStringToFile(tempFile.toFile(),
-                                diagramRequest.toString(),
-                                StandardCharsets.UTF_8);
-    storageService.store(filenameKey, tempFile);
+    writeStringToFile(tempFile.toFile(), diagramRequest.toString(), UTF_8);
+    storageService.store(filenameKey, tempFile, "json");
   }
 
 }

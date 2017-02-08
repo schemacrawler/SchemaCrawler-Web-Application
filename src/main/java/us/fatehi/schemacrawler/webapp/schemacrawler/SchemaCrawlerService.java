@@ -29,15 +29,14 @@ package us.fatehi.schemacrawler.webapp.schemacrawler;
 
 
 import java.nio.file.Path;
-import java.sql.Connection;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public interface SchemaCrawlerService
 {
 
-  Connection createDatabaseConnection(Path file)
-    throws Exception;
-
-  Path createSchemaCrawlerDiagram(Connection connection)
+  Path createSchemaCrawlerDiagram(Path dbFile, String extension)
     throws Exception;
 
 }

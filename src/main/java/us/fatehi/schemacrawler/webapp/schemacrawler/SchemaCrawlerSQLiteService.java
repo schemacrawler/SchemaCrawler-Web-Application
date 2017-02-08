@@ -28,8 +28,6 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.schemacrawler;
 
 
-import static schemacrawler.tools.integration.graph.GraphOutputFormat.png;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -52,7 +50,17 @@ public class SchemaCrawlerSQLiteService
 {
 
   @Override
-  public Connection createDatabaseConnection(final Path file)
+  public Path createSchemaCrawlerDiagram(final Path dbFile,
+                                         final String extension)
+    throws Exception
+  {
+    try (final Connection connection = createDatabaseConnection(dbFile);)
+    {
+      return createSchemaCrawlerDiagram(connection, extension);
+    }
+  }
+
+  private Connection createDatabaseConnection(final Path file)
     throws Exception
   {
     final Config config = new Config();
@@ -63,16 +71,18 @@ public class SchemaCrawlerSQLiteService
     return connectionOptions.getConnection();
   }
 
-  @Override
-  public Path createSchemaCrawlerDiagram(final Connection connection)
+  private Path createSchemaCrawlerDiagram(final Connection connection,
+                                          final String extension)
     throws Exception
   {
     final SchemaCrawlerOptions options = new SchemaCrawlerOptions();
     options.setSchemaInfoLevel(SchemaInfoLevelBuilder.standard());
     options.setRoutineInclusionRule(new ExcludeAll());
 
-    final Path outputFile = Files.createTempFile("schemacrawler", ".png");
-    final OutputOptions outputOptions = new OutputOptions(png, outputFile);
+    final Path outputFile = Files.createTempFile("schemacrawler",
+                                                 "." + extension);
+    final OutputOptions outputOptions = new OutputOptions(extension,
+                                                          outputFile);
 
     final Executable executable = new GraphExecutable("schema");
     executable.setSchemaCrawlerOptions(options);

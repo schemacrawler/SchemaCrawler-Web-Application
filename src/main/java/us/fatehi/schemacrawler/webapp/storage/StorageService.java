@@ -32,12 +32,15 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Service
 public interface StorageService
 {
 
-  void init();
+  void init()
+    throws Exception;
 
   Optional<Path> resolve(String filenameKey, String extension)
     throws Exception;
@@ -45,7 +48,7 @@ public interface StorageService
   void store(String filenameKey, MultipartFile file, String extension)
     throws Exception;
 
-  void store(String filenameKey, Path file)
+  void store(String filenameKey, Path file, String extension)
     throws Exception;
 
   InputStream stream(String filenameKey, String extension)
