@@ -1,22 +1,15 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<title>SchemaCrawler SQLite Diagrams</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link
-	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
-	th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
-	rel="stylesheet" media="screen" />
-<script src="http://cdn.jsdelivr.net/webjars/jquery/3.1.1/jquery.min.js"
-	th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
-</head>
+<head th:replace="fragments/header :: header"></head>
 <body>
 	<div class="container">
 		<div class="starter-template">
 			<h1>SchemaCrawler SQLite Diagram</h1>
 			<div class="row">
 				<div class="col-sm-4">
-					<p><strong>Name:</strong></p>
+					<p>
+						<strong>Name:</strong>
+					</p>
 				</div>
 				<div class="col-sm-8">
 					<p th:text="${diagramRequest.name}" />
@@ -24,7 +17,9 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-4">
-					<p><strong>Email:</strong></p>
+					<p>
+						<strong>Email:</strong>
+					</p>
 				</div>
 				<div class="col-sm-8">
 					<p th:text="${diagramRequest.email}" />
@@ -36,6 +31,7 @@
 				</div>
 			</div>
 		</div>
+		<div th:replace="fragments/footer :: footer"></div>
 	</div>
 </body>
 </html>

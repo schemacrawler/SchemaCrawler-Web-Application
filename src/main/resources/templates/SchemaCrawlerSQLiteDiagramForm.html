@@ -1,15 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<title>SchemaCrawler SQLite Diagrams</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link
-	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
-	th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
-	rel="stylesheet" media="screen" />
-<script src="http://cdn.jsdelivr.net/webjars/jquery/3.1.1/jquery.min.js"
-	th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
-</head>
+<head th:replace="fragments/header :: header"></head>
 <body>
 	<div class="container">
 		<div class="starter-template">
@@ -22,13 +13,13 @@
 					<label for="name">Name:</label> <input type="text"
 						class="form-control" id="name" th:field="*{name}" />
 					<div class="alert alert-warning"
-						th:if="${#fields.hasErrors('name')}" th:errors="*{name}" />
+						th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 				</div>
 				<div class="form-group">
 					<label for="email">Email:</label> <input type="email"
 						class="form-control" id="email" th:field="*{email}" />
 					<div class="alert alert-warning"
-						th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
+						th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 				</div>
 
 				<div class="form-group">
@@ -39,6 +30,7 @@
 				<button type="reset" class="btn btn-default">Reset</button>
 			</form>
 		</div>
+		<div th:replace="fragments/footer :: footer"></div>
 	</div>
 </body>
 </html>
