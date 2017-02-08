@@ -45,7 +45,7 @@ public class FileUploadTests
       .andExpect(status().isFound())
       .andExpect(header().string("Location", "/"));
 
-    then(this.storageService).should().store(multipartFile, "abcd");
+    then(this.storageService).should().store("abcd", multipartFile, "abcd");
   }
 
 }

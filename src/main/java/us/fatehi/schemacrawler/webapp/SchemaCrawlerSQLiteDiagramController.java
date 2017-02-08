@@ -108,16 +108,16 @@ public class SchemaCrawlerSQLiteDiagramController
                                                   final MultipartFile file)
     throws Exception
   {
-    final String filenameKey = storageService.store(file, "db");
+    final String filenameKey = diagramRequest.getKey();
+    storageService.store(filenameKey, file, "db");
     try (final Connection connection = schemacrawlerService
       .createDatabaseConnection(storageService.resolve(filenameKey, "db")
         .get());)
     {
       final Path schemaCrawlerDiagram = schemacrawlerService
         .createSchemaCrawlerDiagram(connection);
-      storageService.store(schemaCrawlerDiagram, filenameKey);
+      storageService.store(filenameKey, schemaCrawlerDiagram);
     }
-    diagramRequest.setKey(filenameKey);
 
     requestRepository.save(diagramRequest);
 
@@ -128,7 +128,7 @@ public class SchemaCrawlerSQLiteDiagramController
     FileUtils.writeStringToFile(tempFile.toFile(),
                                 diagramRequest.toString(),
                                 StandardCharsets.UTF_8);
-    storageService.store(tempFile, filenameKey);
+    storageService.store(filenameKey, tempFile);
   }
 
 }

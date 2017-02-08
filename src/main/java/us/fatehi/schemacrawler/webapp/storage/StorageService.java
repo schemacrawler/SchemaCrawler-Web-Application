@@ -15,10 +15,10 @@ public interface StorageService
   Optional<Path> resolve(String filenameKey, String extension)
     throws Exception;
 
-  String store(MultipartFile file, String extension)
+  void store(String filenameKey, MultipartFile file, String extension)
     throws Exception;
 
-  String store(Path file, String filenameKey)
+  void store(String filenameKey, Path file)
     throws Exception;
 
   InputStream stream(String filenameKey, String extension)

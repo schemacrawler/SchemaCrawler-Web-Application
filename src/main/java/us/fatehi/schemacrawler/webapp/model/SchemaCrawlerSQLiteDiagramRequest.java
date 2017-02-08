@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -34,12 +35,13 @@ public class SchemaCrawlerSQLiteDiagramRequest
   private String name;
   private String email;
   @Column(unique = true)
-  private String key;
+  private final String key;
   private final LocalDateTime timestamp;
 
   public SchemaCrawlerSQLiteDiagramRequest()
   {
     timestamp = LocalDateTime.now();
+    key = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
   }
 
   @Override
@@ -86,11 +88,6 @@ public class SchemaCrawlerSQLiteDiagramRequest
   public void setEmail(final String email)
   {
     this.email = email;
-  }
-
-  public void setKey(final String key)
-  {
-    this.key = key;
   }
 
   public void setName(final String name)
