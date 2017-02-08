@@ -59,10 +59,18 @@ public class SchemaCrawlerSQLiteDiagramRequest
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+
+  @NotNull
+  @Size(min = 2, message = "Please enter your full name")
   private String name;
+
+  @NotNull
+  @Pattern(regexp = "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z", message = "Please enter a valid email address")
   private String email;
+
   @Column(unique = true)
   private final String key;
+
   private final LocalDateTime timestamp;
 
   public SchemaCrawlerSQLiteDiagramRequest()
@@ -77,8 +85,6 @@ public class SchemaCrawlerSQLiteDiagramRequest
     return EqualsBuilder.reflectionEquals(this, obj);
   }
 
-  @NotNull
-  @Pattern(regexp = "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z", message = "Please enter a valid email address")
   public String getEmail()
   {
     return email;
@@ -94,8 +100,6 @@ public class SchemaCrawlerSQLiteDiagramRequest
     return key;
   }
 
-  @NotNull
-  @Size(min = 2, message = "Please enter your full name")
   public String getName()
   {
     return name;

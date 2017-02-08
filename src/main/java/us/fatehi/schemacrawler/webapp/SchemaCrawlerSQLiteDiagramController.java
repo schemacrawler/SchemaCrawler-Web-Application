@@ -102,10 +102,11 @@ public class SchemaCrawlerSQLiteDiagramController
     return "SchemaCrawlerSQLiteDiagramForm";
   }
 
+  // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = "/schemacrawler")
   public String schemacrawlerSQLiteDiagramFormSubmit(@ModelAttribute("diagramRequest") @Valid final SchemaCrawlerSQLiteDiagramRequest diagramRequest,
-                                                     @RequestParam("file") final MultipartFile file,
-                                                     final BindingResult bindingResult)
+                                                     final BindingResult bindingResult,
+                                                     @RequestParam("file") final MultipartFile file)
     throws Exception
   {
 
@@ -136,10 +137,10 @@ public class SchemaCrawlerSQLiteDiagramController
     throws Exception
   {
     final String filenameKey = diagramRequest.getKey();
-    
+
     // Store the uploaded SQLite database file
     storageService.store(filenameKey, file, "db");
-    
+
     // Generate a database diagram, and store the generated image
     try (final Connection connection = schemacrawlerService
       .createDatabaseConnection(storageService.resolve(filenameKey, "db")
