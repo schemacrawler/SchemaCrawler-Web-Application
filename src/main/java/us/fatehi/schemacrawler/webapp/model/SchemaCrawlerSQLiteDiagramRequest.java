@@ -31,23 +31,18 @@ package us.fatehi.schemacrawler.webapp.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-@Entity
 public class SchemaCrawlerSQLiteDiagramRequest
   implements Serializable
 {
@@ -56,9 +51,14 @@ public class SchemaCrawlerSQLiteDiagramRequest
 
   private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+  public static SchemaCrawlerSQLiteDiagramRequest fromJson(final String jsonRequest)
+  {
+    if (StringUtils.isBlank(jsonRequest))
+    {
+      return null;
+    }
+    return gson.fromJson(jsonRequest, SchemaCrawlerSQLiteDiagramRequest.class);
+  }
 
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
@@ -72,7 +72,6 @@ public class SchemaCrawlerSQLiteDiagramRequest
   @Size(min = 1, message = "Please select a file to upload")
   private String file;
 
-  @Column(unique = true)
   private final String key;
 
   private final LocalDateTime timestamp;
@@ -100,11 +99,6 @@ public class SchemaCrawlerSQLiteDiagramRequest
   public String getFile()
   {
     return file;
-  }
-
-  public Long getId()
-  {
-    return id;
   }
 
   public String getKey()

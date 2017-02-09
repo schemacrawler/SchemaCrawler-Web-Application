@@ -55,7 +55,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerSQLiteDiagramRequest;
-import us.fatehi.schemacrawler.webapp.repository.SchemaCrawlerSQLiteDiagramRequestRepository;
 import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.storage.StorageService;
 
@@ -65,16 +64,13 @@ public class SchemaCrawlerSQLiteDiagramController
 
   private final StorageService storageService;
   private final SchemaCrawlerService schemacrawlerService;
-  private final SchemaCrawlerSQLiteDiagramRequestRepository requestRepository;
 
   @Autowired
   public SchemaCrawlerSQLiteDiagramController(final StorageService storageService,
-                                              final SchemaCrawlerService schemacrawlerService,
-                                              final SchemaCrawlerSQLiteDiagramRequestRepository requestRepository)
+                                              final SchemaCrawlerService schemacrawlerService)
   {
     this.storageService = storageService;
     this.schemacrawlerService = schemacrawlerService;
-    this.requestRepository = requestRepository;
   }
 
   @GetMapping(value = "/")
@@ -129,10 +125,11 @@ public class SchemaCrawlerSQLiteDiagramController
   @GetMapping(value = "/schemacrawler/diagrams/{key}")
   public String schemacrawlerSQLiteDiagramPage(final Model model,
                                                @PathVariable final String key)
+    throws Exception
   {
-
-    final SchemaCrawlerSQLiteDiagramRequest diagramRequest = requestRepository
-      .findByKey(key);
+    final Path jsonFile = storageService.resolve(key, "json").get();
+    final SchemaCrawlerSQLiteDiagramRequest diagramRequest = SchemaCrawlerSQLiteDiagramRequest
+      .fromJson(new String(Files.readAllBytes(jsonFile)));
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerSQLiteDiagram";
@@ -142,26 +139,23 @@ public class SchemaCrawlerSQLiteDiagramController
                                                   final MultipartFile file)
     throws Exception
   {
-    final String filenameKey = diagramRequest.getKey();
+    final String key = diagramRequest.getKey();
 
     // Store the uploaded SQLite database file
-    storageService.store(filenameKey, file, "db");
+    storageService.store(key, file, "db");
 
     // Generate a database diagram, and store the generated image
-    final Path dbFile = storageService.resolve(filenameKey, "db").get();
+    final Path dbFile = storageService.resolve(key, "db").get();
     final Path schemaCrawlerDiagram = schemacrawlerService
       .createSchemaCrawlerDiagram(dbFile, "png");
-    storageService.store(filenameKey, schemaCrawlerDiagram, "png");
-
-    // Persist the request itself in the database
-    requestRepository.save(diagramRequest);
+    storageService.store(key, schemaCrawlerDiagram, "png");
 
     // Save the JSON request to disk, after the database id has been
     // generated
     final Path tempFile = Files.createTempFile("schemacrawler-web-application",
                                                ".json");
     writeStringToFile(tempFile.toFile(), diagramRequest.toString(), UTF_8);
-    storageService.store(filenameKey, tempFile, "json");
+    storageService.store(key, tempFile, "json");
   }
 
 }
