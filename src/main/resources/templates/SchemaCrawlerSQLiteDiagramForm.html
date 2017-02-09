@@ -3,33 +3,60 @@
 <head th:replace="fragments/header :: header"></head>
 <body>
 	<div class="container">
-		<h1>Draw a SchemaCrawler SQLite Diagram</h1>
+		<div class="page-header row">
+			<div class="span-12">
+				<img src="/schemacrawler_logo.png" />
+				<h1>SchemaCrawler</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span-12">
+				<h2>SchemaCrawler SQLite Diagram</h2>
+			</div>
+		</div>
 		<form action="#" th:action="@{/schemacrawler}"
 			th:object="${diagramRequest}" method="post"
 			enctype="multipart/form-data">
 
-			<div class="form-group">
-				<label for="name">Name:</label> <input type="text"
-					class="form-control" id="name" th:field="*{name}" />
-				<div class="alert alert-warning text-muted small"
-					th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+			<div class="form-group row">
+				<div class="col-lg-4">
+					<label for="name">Name:</label>
+				</div>
+				<div class="col-lg-8">
+					<input type="text" class="form-control" id="name"
+						th:field="*{name}" />
+					<div class="alert alert-warning text-muted small"
+						th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="email">Email:</label> <input type="email"
-					class="form-control" id="email" th:field="*{email}" />
-				<div class="alert alert-warning text-muted small"
-					th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+			<div class="form-group row">
+				<div class="col-lg-4">
+					<label for="email">Email:</label>
+				</div>
+				<div class="col-lg-8">
+					<input type="email" class="form-control" id="email"
+						th:field="*{email}" />
+					<div class="alert alert-warning text-muted small"
+						th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+				</div>
 			</div>
 
-			<div class="form-group">
-				<label for="file">SQLite database (to upload):</label> <input
-					type="file" class="form-control" id="file" name="file" />
-				<div class="alert alert-warning text-muted small"
-					th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
+			<div class="form-group row">
+				<div class="col-lg-4">
+					<label for="file">SQLite database (to upload):</label>
+				</div>
+				<div class="col-lg-8">
+					<input type="file" class="form-control" id="file" name="file" />
+					<div class="alert alert-warning text-muted small"
+						th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
+				</div>
 			</div>
-			<hr />
-			<button type="submit" class="btn btn-default">Submit</button>
-			<button type="reset" class="btn btn-default">Reset</button>
+			<div class="row">
+				<div class="span-12 pull-right">
+					<button type="submit" class="btn btn-default">Submit</button>
+					<button type="reset" class="btn btn-default">Reset</button>
+				</div>
+			</div>
 		</form>
 	</div>
 	<footer th:replace="fragments/footer :: footer"></footer>

@@ -1,0 +1,27 @@
+body, p, li, td, th, caption, select, input, strong {
+	font-family: "Century Gothic", CenturyGothic, Geneva, sans-serif;
+	color: rgb(16, 16, 16);
+}
+
+h1, h2, h3 {
+	font-family: "Palatino Linotype", Georgia, "Times New Roman", serif;
+	margin-top: 1.0rem;
+	margin-bottom: 1.5rem;	
+    font-weight: bold;
+}
+
+footer {
+    margin-top: 1.0rem;
+    margin-bottom: 1.5rem; 
+}
+
+.page-header img {
+  float: left;
+  height: 62px;
+}
+
+.page-header h1 {
+  position: relative;
+  top: 18px;
+  left: 10px;
+}
