@@ -31,6 +31,7 @@ package us.fatehi.schemacrawler.webapp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
@@ -46,7 +47,8 @@ public class SchemaCrawlerApplication
   @Override
   public void addFormatters(final FormatterRegistry registry)
   {
-    registry.addConverter(new MultipartFileConverter());
+    registry.addConverter((MultipartFile file) -> file == null? null: file
+      .getOriginalFilename());
   }
 
 }
