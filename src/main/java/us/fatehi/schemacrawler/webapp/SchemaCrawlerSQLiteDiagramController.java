@@ -38,6 +38,8 @@ import java.nio.file.Path;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -47,11 +49,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerSQLiteDiagramRequest;
@@ -62,6 +66,9 @@ import us.fatehi.schemacrawler.webapp.storage.StorageService;
 public class SchemaCrawlerSQLiteDiagramController
 {
 
+  private static Logger logger = LoggerFactory
+    .getLogger(SchemaCrawlerSQLiteDiagramController.class);
+
   private final StorageService storageService;
   private final SchemaCrawlerService schemacrawlerService;
 
@@ -71,6 +78,18 @@ public class SchemaCrawlerSQLiteDiagramController
   {
     this.storageService = storageService;
     this.schemacrawlerService = schemacrawlerService;
+  }
+
+  @ExceptionHandler(Throwable.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public String exception(final Throwable throwable, final Model model)
+  {
+    logger.error(throwable.getMessage(), throwable);
+    
+    final String errorMessage = throwable != null? throwable.getMessage()
+                                                 : "Unknown error";
+    model.addAttribute("errorMessage", errorMessage);
+    return "error";
   }
 
   @GetMapping(value = "/")

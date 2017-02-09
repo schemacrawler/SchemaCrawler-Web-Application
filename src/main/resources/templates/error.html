@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"></head>
 <body>
@@ -11,15 +11,10 @@
 		</div>
 		<div class="row">
 			<div class="span-12">
-				<h2>SchemaCrawler SQLite Diagram</h2>
-			</div>
-		</div>
-		<div class="row">
-			<div class="span-12">
-				<div class="alert alert-success">
-					<a th:href="'/schemacrawler/diagrams/' + ${diagramRequest.key}">View
-						SchemaCrawler SQLite Diagram</a>
+				<div class="alert alert-danger">
+					<strong>Error: </strong> <span th:utext="${errorMessage}" />
 				</div>
+				<a href="/" th:href="@{/}">Back to Home Page</a>
 			</div>
 		</div>
 	</div>
