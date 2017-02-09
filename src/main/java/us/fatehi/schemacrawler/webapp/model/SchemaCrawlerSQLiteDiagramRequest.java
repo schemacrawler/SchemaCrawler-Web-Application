@@ -51,6 +51,13 @@ public class SchemaCrawlerSQLiteDiagramRequest
 
   private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+  /**
+   * Factory method to deserialize a JSON request.
+   *
+   * @param jsonRequest
+   *        JSON serialized request.
+   * @return Deserialzied Java request.
+   */
   public static SchemaCrawlerSQLiteDiagramRequest fromJson(final String jsonRequest)
   {
     if (StringUtils.isBlank(jsonRequest))
@@ -76,46 +83,78 @@ public class SchemaCrawlerSQLiteDiagramRequest
 
   private final LocalDateTime timestamp;
 
+  /**
+   * Public constructor. Generates a random key, and sets the creation
+   * timestamp.
+   */
   public SchemaCrawlerSQLiteDiagramRequest()
   {
     timestamp = LocalDateTime.now();
     key = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean equals(final Object obj)
   {
     return EqualsBuilder.reflectionEquals(this, obj);
   }
 
+  /**
+   * Returns the email address of the requester.
+   *
+   * @return Email address of the requester.
+   */
   public String getEmail()
   {
     return email;
   }
 
   /**
-   * @return the file
+   * Returns the uploaded file name.
+   *
+   * @return Uploaded file name.
    */
   public String getFile()
   {
     return file;
   }
 
+  /**
+   * Returns a randomized unique key for the request.
+   *
+   * @return Unique key for the request.
+   */
   public String getKey()
   {
     return key;
   }
 
+  /**
+   * Returns the name of the requester.
+   *
+   * @return Name of the requester.
+   */
   public String getName()
   {
     return name;
   }
 
+  /**
+   * Returns the request creation timestamp.
+   *
+   * @return Request creation timestamp.
+   */
   public LocalDateTime getTimestamp()
   {
     return timestamp;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int hashCode()
   {
@@ -128,19 +167,30 @@ public class SchemaCrawlerSQLiteDiagramRequest
   }
 
   /**
+   * Sets the uploaded file name.
+   *
    * @param file
-   *        the file to set
+   *        Uploaded file name.
    */
   public void setFile(final String file)
   {
     this.file = file;
   }
 
+  /**
+   * Sets the name of the requester.
+   *
+   * @param name
+   *        Name of the requester.
+   */
   public void setName(final String name)
   {
     this.name = name;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString()
   {

@@ -32,10 +32,30 @@ import java.nio.file.Path;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for SchemaCrawler functions.
+ *
+ * @author Sualeh Fatehi
+ */
 @Service
 public interface SchemaCrawlerService
 {
 
+  /**
+   * Reads in a database file, and generates a database diagram, in the
+   * file format specified by the extension. All files are on the local
+   * default file-system.
+   *
+   * @param dbFile
+   *        Path to a database file.
+   * @param extension
+   *        Filename extension for a diagram image. Should be a file
+   *        type supported by GraphViz.
+   * @return Path to a diagram file.
+   * @throws Exception
+   *         Any exceptions thrown in the process of generating a
+   *         diagram.
+   */
   Path createSchemaCrawlerDiagram(Path dbFile, String extension)
     throws Exception;
 

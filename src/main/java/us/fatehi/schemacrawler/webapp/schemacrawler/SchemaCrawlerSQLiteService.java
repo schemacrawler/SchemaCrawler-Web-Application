@@ -34,11 +34,19 @@ import org.springframework.stereotype.Service;
 
 import schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility;
 
+/**
+ * Service for SchemaCrawler functions, using SQLite.
+ *
+ * @author Sualeh Fatehi
+ */
 @Service
 public class SchemaCrawlerSQLiteService
   implements SchemaCrawlerService
 {
 
+  /**
+   * Works with SQLite database files. {@inheritDoc}
+   */
   @Override
   public Path createSchemaCrawlerDiagram(final Path dbFile,
                                          final String extension)

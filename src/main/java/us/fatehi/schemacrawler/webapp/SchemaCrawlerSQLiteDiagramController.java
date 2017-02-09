@@ -29,12 +29,13 @@ package us.fatehi.schemacrawler.webapp;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.commons.io.FileUtils.writeStringToFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -75,6 +76,7 @@ public class SchemaCrawlerSQLiteDiagramController
   @Autowired
   public SchemaCrawlerSQLiteDiagramController(final StorageService storageService,
                                               final SchemaCrawlerService schemacrawlerService)
+    throws Exception
   {
     this.storageService = storageService;
     this.schemacrawlerService = schemacrawlerService;
@@ -85,10 +87,11 @@ public class SchemaCrawlerSQLiteDiagramController
   public String exception(final Throwable throwable, final Model model)
   {
     logger.error(throwable.getMessage(), throwable);
-    
+
     final String errorMessage = throwable != null? throwable.getMessage()
                                                  : "Unknown error";
     model.addAttribute("errorMessage", errorMessage);
+
     return "error";
   }
 
@@ -101,16 +104,13 @@ public class SchemaCrawlerSQLiteDiagramController
   @GetMapping(value = "/schemacrawler/diagrams/images/{key}")
   public HttpEntity schemacrawlerSQLiteDiagram(final HttpServletResponse response,
                                                @PathVariable final String key)
+    throws Exception
   {
-    try (final InputStream inputStream = storageService.stream(key, "png");)
+    response.setContentType(MediaType.IMAGE_PNG_VALUE);
+    try (final InputStream inputStream = storageService.stream(key, "png");
+        final ServletOutputStream outputStream = response.getOutputStream();)
     {
-
-      StreamUtils.copy(inputStream, response.getOutputStream());
-      response.setContentType(MediaType.IMAGE_PNG_VALUE);
-    }
-    catch (final Exception e)
-    {
-      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+      StreamUtils.copy(inputStream, outputStream);
     }
     return new ResponseEntity(HttpStatus.OK);
   }
@@ -130,7 +130,6 @@ public class SchemaCrawlerSQLiteDiagramController
                                                      @RequestParam("file") final MultipartFile file)
     throws Exception
   {
-
     if (bindingResult.hasErrors())
     {
       return "SchemaCrawlerSQLiteDiagramForm";
@@ -146,7 +145,8 @@ public class SchemaCrawlerSQLiteDiagramController
                                                @PathVariable final String key)
     throws Exception
   {
-    final Path jsonFile = storageService.resolve(key, "json").get();
+    final Path jsonFile = storageService.resolve(key, "json")
+      .orElseThrow(() -> new Exception("Cannot find diagram for " + key));
     final SchemaCrawlerSQLiteDiagramRequest diagramRequest = SchemaCrawlerSQLiteDiagramRequest
       .fromJson(new String(Files.readAllBytes(jsonFile)));
     model.addAttribute("diagramRequest", diagramRequest);
@@ -158,23 +158,23 @@ public class SchemaCrawlerSQLiteDiagramController
                                                   final MultipartFile file)
     throws Exception
   {
+    final String DATABASE_EXT = "db";
+    final String DIAGRAM_EXT = "png";
+
     final String key = diagramRequest.getKey();
 
     // Store the uploaded SQLite database file
-    storageService.store(key, file, "db");
+    storageService.store(file, key, DATABASE_EXT);
 
     // Generate a database diagram, and store the generated image
-    final Path dbFile = storageService.resolve(key, "db").get();
+    final Path dbFile = storageService.resolve(key, DATABASE_EXT).get();
     final Path schemaCrawlerDiagram = schemacrawlerService
-      .createSchemaCrawlerDiagram(dbFile, "png");
-    storageService.store(key, schemaCrawlerDiagram, "png");
+      .createSchemaCrawlerDiagram(dbFile, DIAGRAM_EXT);
+    storageService.store(schemaCrawlerDiagram, key, DIAGRAM_EXT);
 
-    // Save the JSON request to disk, after the database id has been
-    // generated
-    final Path tempFile = Files.createTempFile("schemacrawler-web-application",
-                                               ".json");
-    writeStringToFile(tempFile.toFile(), diagramRequest.toString(), UTF_8);
-    storageService.store(key, tempFile, "json");
+    // Save the JSON request to disk
+    storageService.store(new ByteArrayInputStream(diagramRequest.toString()
+      .getBytes(UTF_8)), key, "json");
   }
 
 }

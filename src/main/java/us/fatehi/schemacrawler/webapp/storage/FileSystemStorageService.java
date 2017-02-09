@@ -33,6 +33,7 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.exists;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
+import static java.util.Objects.requireNonNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -54,21 +55,18 @@ public class FileSystemStorageService
   private final Path rootLocation;
 
   public FileSystemStorageService()
-    throws IOException
-  {
-    rootLocation = Paths.get("uploaded-files");
-  }
-
-  @Override
-  public void init()
     throws Exception
   {
+    rootLocation = Paths.get("uploaded-files");
     if (!exists(rootLocation))
     {
       createDirectories(rootLocation);
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Optional<Path> resolve(final String filenameKey,
                                 final String extension)
@@ -90,8 +88,29 @@ public class FileSystemStorageService
   }
 
   @Override
-  public void store(final String filenameKey,
-                    final MultipartFile file,
+  public void store(final InputStream stream,
+                    final String filenameKey,
+                    final String extension)
+    throws IOException
+  {
+    requireNonNull(stream);
+    if (StringUtils.isBlank(filenameKey))
+    {
+      throw new IOException(String.format("Failed to store file %s%s",
+                                          filenameKey,
+                                          extension));
+    }
+    final String filenameExt = fixFilenameExtension(extension);
+    final Path filePath = rootLocation.resolve(filenameKey + filenameExt);
+    copy(stream, filePath);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void store(final MultipartFile file,
+                    final String filenameKey,
                     final String extension)
     throws Exception
   {
@@ -104,9 +123,12 @@ public class FileSystemStorageService
     store(file.getInputStream(), filenameKey, extension);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public void store(final String fileNameKey,
-                    final Path file,
+  public void store(final Path file,
+                    final String filenameKey,
                     final String extension)
     throws Exception
   {
@@ -115,14 +137,13 @@ public class FileSystemStorageService
     {
       throw new IOException("Failed to store file " + file);
     }
-    if (StringUtils.isBlank(fileNameKey))
-    {
-      throw new IOException("Failed to store file " + file);
-    }
 
-    store(new FileInputStream(file.toFile()), fileNameKey, extension);
+    store(new FileInputStream(file.toFile()), filenameKey, extension);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public InputStream stream(final String filenameKey, final String extension)
     throws Exception
@@ -138,22 +159,18 @@ public class FileSystemStorageService
     }
   }
 
+  /**
+   * Checks the extension, and prefixes with a dot.
+   *
+   * @param extension
+   *        Extension prefixed with a dot.
+   * @return Filename extension.
+   */
   private String fixFilenameExtension(final String extension)
   {
     final String filenameExt = StringUtils
-      .trimToNull(extension) == null? ".dat": "." + StringUtils.trim(extension);
-    return filenameExt;
-  }
-
-  private void store(final InputStream stream,
-                     final String filenameKey,
-                     final String extension)
-    throws IOException
-  {
-    final String filenameExt = fixFilenameExtension(extension);
-    final Path serverLocalPath = rootLocation
-      .resolve(filenameKey + filenameExt);
-    copy(stream, serverLocalPath);
+      .trimToNull(extension) == null? "": "." + StringUtils.trim(extension);
+    return filenameExt.replaceAll("\\.\\.", ".");
   }
 
 }
