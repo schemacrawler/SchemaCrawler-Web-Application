@@ -25,27 +25,27 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.schemacrawler;
+package us.fatehi.schemacrawler.webapp;
 
 
-import java.nio.file.Path;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.web.multipart.MultipartFile;
 
-import org.springframework.stereotype.Service;
-
-import schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility;
-
-@Service
-public class SchemaCrawlerSQLiteService
-  implements SchemaCrawlerService
+public class MultipartFileConverter
+  implements Converter<MultipartFile, String>
 {
 
   @Override
-  public Path createSchemaCrawlerDiagram(final Path dbFile,
-                                         final String extension)
-    throws Exception
+  public String convert(final MultipartFile file)
   {
-    return SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram(dbFile,
-                                                                 extension);
+    if (file == null)
+    {
+      return null;
+    }
+    else
+    {
+      return file.getOriginalFilename();
+    }
   }
 
 }

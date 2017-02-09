@@ -11,19 +11,21 @@
 			<div class="form-group">
 				<label for="name">Name:</label> <input type="text"
 					class="form-control" id="name" th:field="*{name}" />
-				<div class="alert alert-warning"
+				<div class="alert alert-warning text-muted small"
 					th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 			</div>
 			<div class="form-group">
 				<label for="email">Email:</label> <input type="email"
 					class="form-control" id="email" th:field="*{email}" />
-				<div class="alert alert-warning"
+				<div class="alert alert-warning text-muted small"
 					th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 			</div>
 
 			<div class="form-group">
 				<label for="file">SQLite database (to upload):</label> <input
 					type="file" class="form-control" id="file" name="file" />
+				<div class="alert alert-warning text-muted small"
+					th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
 			</div>
 			<hr />
 			<button type="submit" class="btn btn-default">Submit</button>

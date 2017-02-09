@@ -68,6 +68,10 @@ public class SchemaCrawlerSQLiteDiagramRequest
   @Pattern(regexp = "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z", message = "Please enter a valid email address")
   private String email;
 
+  @NotNull
+  @Size(min = 1, message = "Please select a file to upload")
+  private String file;
+
   @Column(unique = true)
   private final String key;
 
@@ -88,6 +92,14 @@ public class SchemaCrawlerSQLiteDiagramRequest
   public String getEmail()
   {
     return email;
+  }
+
+  /**
+   * @return the file
+   */
+  public String getFile()
+  {
+    return file;
   }
 
   public Long getId()
@@ -119,6 +131,15 @@ public class SchemaCrawlerSQLiteDiagramRequest
   public void setEmail(final String email)
   {
     this.email = email;
+  }
+
+  /**
+   * @param file
+   *        the file to set
+   */
+  public void setFile(final String file)
+  {
+    this.file = file;
   }
 
   public void setName(final String name)
