@@ -59,7 +59,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerSQLiteDiagramRequest;
+import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
 import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.storage.StorageService;
 
@@ -111,14 +111,13 @@ public class SchemaCrawlerSQLiteDiagramController
   @GetMapping("/schemacrawler")
   public String schemacrawlerSQLiteDiagramForm(final Model model)
   {
-    model.addAttribute("diagramRequest",
-                       new SchemaCrawlerSQLiteDiagramRequest());
+    model.addAttribute("diagramRequest", new SchemaCrawlerDiagramRequest());
     return "SchemaCrawlerSQLiteDiagramForm";
   }
 
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = "/schemacrawler")
-  public String schemacrawlerSQLiteDiagramFormSubmit(@ModelAttribute("diagramRequest") @Valid final SchemaCrawlerSQLiteDiagramRequest diagramRequest,
+  public String schemacrawlerSQLiteDiagramFormSubmit(@ModelAttribute("diagramRequest") @Valid final SchemaCrawlerDiagramRequest diagramRequest,
                                                      final BindingResult bindingResult,
                                                      @RequestParam("file") final MultipartFile file)
     throws Exception
@@ -140,14 +139,14 @@ public class SchemaCrawlerSQLiteDiagramController
   {
     final Path jsonFile = storageService.resolve(key, "json")
       .orElseThrow(() -> new Exception("Cannot find diagram for " + key));
-    final SchemaCrawlerSQLiteDiagramRequest diagramRequest = SchemaCrawlerSQLiteDiagramRequest
+    final SchemaCrawlerDiagramRequest diagramRequest = SchemaCrawlerDiagramRequest
       .fromJson(new String(Files.readAllBytes(jsonFile)));
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerSQLiteDiagram";
   }
 
-  private void generateSchemaCrawlerSQLiteDiagram(final SchemaCrawlerSQLiteDiagramRequest diagramRequest,
+  private void generateSchemaCrawlerSQLiteDiagram(final SchemaCrawlerDiagramRequest diagramRequest,
                                                   final MultipartFile file)
     throws Exception
   {

@@ -43,7 +43,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class SchemaCrawlerSQLiteDiagramRequest
+public class SchemaCrawlerDiagramRequest
   implements Serializable
 {
 
@@ -58,13 +58,13 @@ public class SchemaCrawlerSQLiteDiagramRequest
    *        JSON serialized request.
    * @return Deserialzied Java request.
    */
-  public static SchemaCrawlerSQLiteDiagramRequest fromJson(final String jsonRequest)
+  public static SchemaCrawlerDiagramRequest fromJson(final String jsonRequest)
   {
     if (StringUtils.isBlank(jsonRequest))
     {
       return null;
     }
-    return gson.fromJson(jsonRequest, SchemaCrawlerSQLiteDiagramRequest.class);
+    return gson.fromJson(jsonRequest, SchemaCrawlerDiagramRequest.class);
   }
 
   @NotNull
@@ -87,7 +87,7 @@ public class SchemaCrawlerSQLiteDiagramRequest
    * Public constructor. Generates a random key, and sets the creation
    * timestamp.
    */
-  public SchemaCrawlerSQLiteDiagramRequest()
+  public SchemaCrawlerDiagramRequest()
   {
     timestamp = LocalDateTime.now();
     key = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
