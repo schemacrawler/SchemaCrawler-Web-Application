@@ -73,7 +73,7 @@ public class SchemaCrawlerSQLiteDiagramController
   @Autowired
   private StorageService storageService;
   @Autowired
-  private SchemaCrawlerService schemacrawlerService;
+  private SchemaCrawlerService scSqliteService;
 
   @ExceptionHandler(Throwable.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -161,7 +161,7 @@ public class SchemaCrawlerSQLiteDiagramController
 
     // Generate a database diagram, and store the generated image
     final Path dbFile = storageService.resolve(key, DATABASE_EXT).get();
-    final Path schemaCrawlerDiagram = schemacrawlerService
+    final Path schemaCrawlerDiagram = scSqliteService
       .createSchemaCrawlerDiagram(dbFile, DIAGRAM_EXT);
     storageService.store(schemaCrawlerDiagram, key, DIAGRAM_EXT);
 

@@ -39,7 +39,7 @@ import schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility;
  *
  * @author Sualeh Fatehi
  */
-@Service
+@Service("scSqliteService")
 public class SchemaCrawlerSQLiteService
   implements SchemaCrawlerService
 {
