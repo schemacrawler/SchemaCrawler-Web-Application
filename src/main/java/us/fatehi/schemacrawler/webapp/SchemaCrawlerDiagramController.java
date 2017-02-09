@@ -64,16 +64,16 @@ import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.storage.StorageService;
 
 @Controller
-public class SchemaCrawlerSQLiteDiagramController
+public class SchemaCrawlerDiagramController
 {
 
   private static Logger logger = LoggerFactory
-    .getLogger(SchemaCrawlerSQLiteDiagramController.class);
+    .getLogger(SchemaCrawlerDiagramController.class);
 
   @Autowired
   private StorageService storageService;
   @Autowired
-  private SchemaCrawlerService scSqliteService;
+  private SchemaCrawlerService scService;
 
   @ExceptionHandler(Throwable.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -95,8 +95,8 @@ public class SchemaCrawlerSQLiteDiagramController
   }
 
   @GetMapping(value = "/schemacrawler/diagrams/images/{key}")
-  public HttpEntity schemacrawlerSQLiteDiagram(final HttpServletResponse response,
-                                               @PathVariable final String key)
+  public HttpEntity schemacrawlerDiagram(final HttpServletResponse response,
+                                         @PathVariable final String key)
     throws Exception
   {
     response.setContentType(MediaType.IMAGE_PNG_VALUE);
@@ -109,32 +109,32 @@ public class SchemaCrawlerSQLiteDiagramController
   }
 
   @GetMapping("/schemacrawler")
-  public String schemacrawlerSQLiteDiagramForm(final Model model)
+  public String schemacrawlerDiagramForm(final Model model)
   {
     model.addAttribute("diagramRequest", new SchemaCrawlerDiagramRequest());
-    return "SchemaCrawlerSQLiteDiagramForm";
+    return "SchemaCrawlerDiagramForm";
   }
 
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = "/schemacrawler")
-  public String schemacrawlerSQLiteDiagramFormSubmit(@ModelAttribute("diagramRequest") @Valid final SchemaCrawlerDiagramRequest diagramRequest,
-                                                     final BindingResult bindingResult,
-                                                     @RequestParam("file") final MultipartFile file)
+  public String schemacrawlerDiagramFormSubmit(@ModelAttribute("diagramRequest") @Valid final SchemaCrawlerDiagramRequest diagramRequest,
+                                               final BindingResult bindingResult,
+                                               @RequestParam("file") final MultipartFile file)
     throws Exception
   {
     if (bindingResult.hasErrors())
     {
-      return "SchemaCrawlerSQLiteDiagramForm";
+      return "SchemaCrawlerDiagramForm";
     }
 
-    generateSchemaCrawlerSQLiteDiagram(diagramRequest, file);
+    generateSchemaCrawlerDiagram(diagramRequest, file);
 
-    return "SchemaCrawlerSQLiteDiagramResult";
+    return "SchemaCrawlerDiagramResult";
   }
 
   @GetMapping(value = "/schemacrawler/diagrams/{key}")
-  public String schemacrawlerSQLiteDiagramPage(final Model model,
-                                               @PathVariable final String key)
+  public String schemacrawlerDiagramPage(final Model model,
+                                         @PathVariable final String key)
     throws Exception
   {
     final Path jsonFile = storageService.resolve(key, "json")
@@ -143,11 +143,11 @@ public class SchemaCrawlerSQLiteDiagramController
       .fromJson(new String(Files.readAllBytes(jsonFile)));
     model.addAttribute("diagramRequest", diagramRequest);
 
-    return "SchemaCrawlerSQLiteDiagram";
+    return "SchemaCrawlerDiagram";
   }
 
-  private void generateSchemaCrawlerSQLiteDiagram(final SchemaCrawlerDiagramRequest diagramRequest,
-                                                  final MultipartFile file)
+  private void generateSchemaCrawlerDiagram(final SchemaCrawlerDiagramRequest diagramRequest,
+                                            final MultipartFile file)
     throws Exception
   {
     final String DATABASE_EXT = "db";
@@ -155,12 +155,12 @@ public class SchemaCrawlerSQLiteDiagramController
 
     final String key = diagramRequest.getKey();
 
-    // Store the uploaded SQLite database file
+    // Store the uploaded database file
     storageService.store(file, key, DATABASE_EXT);
 
     // Generate a database diagram, and store the generated image
     final Path dbFile = storageService.resolve(key, DATABASE_EXT).get();
-    final Path schemaCrawlerDiagram = scSqliteService
+    final Path schemaCrawlerDiagram = scService
       .createSchemaCrawlerDiagram(dbFile, DIAGRAM_EXT);
     storageService.store(schemaCrawlerDiagram, key, DIAGRAM_EXT);
 
