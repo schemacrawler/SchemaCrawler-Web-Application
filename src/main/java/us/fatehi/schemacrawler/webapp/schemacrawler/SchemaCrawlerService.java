@@ -30,14 +30,11 @@ package us.fatehi.schemacrawler.webapp.schemacrawler;
 
 import java.nio.file.Path;
 
-import org.springframework.stereotype.Service;
-
 /**
  * Service for SchemaCrawler functions.
  *
  * @author Sualeh Fatehi
  */
-@Service
 public interface SchemaCrawlerService
 {
 

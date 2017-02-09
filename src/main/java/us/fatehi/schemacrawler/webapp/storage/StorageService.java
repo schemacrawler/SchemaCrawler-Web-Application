@@ -33,7 +33,6 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -41,9 +40,17 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Sualeh Fatehi
  */
-@Service
 public interface StorageService
 {
+
+  /**
+   * Initializes the service.
+   *
+   * @throws Exception
+   *         On an exception.
+   */
+  void init()
+    throws Exception;
 
   /**
    * Resolves a filename key and extension into a local default

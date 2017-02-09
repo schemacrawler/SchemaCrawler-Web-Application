@@ -43,6 +43,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,9 +54,11 @@ public class FileSystemStorageService
   implements StorageService
 {
 
-  private final Path rootLocation;
+  private Path rootLocation;
 
-  public FileSystemStorageService()
+  @Override
+  @PostConstruct
+  public void init()
     throws Exception
   {
     rootLocation = Paths.get("uploaded-files");

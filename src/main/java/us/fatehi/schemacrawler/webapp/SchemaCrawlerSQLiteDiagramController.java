@@ -70,17 +70,10 @@ public class SchemaCrawlerSQLiteDiagramController
   private static Logger logger = LoggerFactory
     .getLogger(SchemaCrawlerSQLiteDiagramController.class);
 
-  private final StorageService storageService;
-  private final SchemaCrawlerService schemacrawlerService;
-
   @Autowired
-  public SchemaCrawlerSQLiteDiagramController(final StorageService storageService,
-                                              final SchemaCrawlerService schemacrawlerService)
-    throws Exception
-  {
-    this.storageService = storageService;
-    this.schemacrawlerService = schemacrawlerService;
-  }
+  private StorageService storageService;
+  @Autowired
+  private SchemaCrawlerService schemacrawlerService;
 
   @ExceptionHandler(Throwable.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
