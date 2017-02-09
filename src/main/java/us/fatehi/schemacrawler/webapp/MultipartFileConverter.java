@@ -28,26 +28,24 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp;
 
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.format.FormatterRegistry;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-@SpringBootApplication
-public class SchemaCrawlerApplication
-  extends WebMvcConfigurerAdapter
+public class MultipartFileConverter
+  implements Converter<MultipartFile, String>
 {
 
-  public static void main(final String[] args)
-  {
-    SpringApplication.run(SchemaCrawlerApplication.class, args);
-  }
-
   @Override
-  public void addFormatters(final FormatterRegistry registry)
+  public String convert(final MultipartFile file)
   {
-    registry.addConverter(new MultipartFileConverter());
+    if (file == null)
+    {
+      return null;
+    }
+    else
+    {
+      return file.getOriginalFilename();
+    }
   }
 
 }
