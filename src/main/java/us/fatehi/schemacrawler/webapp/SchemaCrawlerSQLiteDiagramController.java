@@ -77,7 +77,13 @@ public class SchemaCrawlerSQLiteDiagramController
     this.requestRepository = requestRepository;
   }
 
-  @GetMapping(value = "/images/{key}")
+  @GetMapping(value = "/")
+  public String index()
+  {
+    return "redirect:/schemacrawler";
+  }
+
+  @GetMapping(value = "/schemacrawler/diagrams/images/{key}")
   public HttpEntity schemacrawlerSQLiteDiagram(final HttpServletResponse response,
                                                @PathVariable final String key)
   {
@@ -120,7 +126,7 @@ public class SchemaCrawlerSQLiteDiagramController
     return "SchemaCrawlerSQLiteDiagramResult";
   }
 
-  @GetMapping(value = "/diagrams/{key}")
+  @GetMapping(value = "/schemacrawler/diagrams/{key}")
   public String schemacrawlerSQLiteDiagramPage(final Model model,
                                                @PathVariable final String key)
   {
