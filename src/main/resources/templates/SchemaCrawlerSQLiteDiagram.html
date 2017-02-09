@@ -45,6 +45,16 @@
 			</div>
 		</div>
 		<div class="row">
+			<div class="col-lg-4">
+				<p>
+					<strong>Time:</strong>
+				</p>
+			</div>
+			<div class="col-lg-8">
+				<p th:text="${diagramRequest.timestamp}" />
+			</div>
+		</div>
+		<div class="row">
 			<div class="span-12">
 				<img class="img-responsive"
 					th:src="'/schemacrawler/diagrams/images/' + ${diagramRequest.key}" />
