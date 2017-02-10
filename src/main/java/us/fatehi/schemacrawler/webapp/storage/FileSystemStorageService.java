@@ -32,7 +32,7 @@ import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.exists;
 import static java.nio.file.Files.isReadable;
-import static java.nio.file.Files.isRegularFile;
+import static java.nio.file.Files.*;
 import static java.util.Objects.requireNonNull;
 
 import java.io.ByteArrayInputStream;
@@ -46,6 +46,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,17 +55,30 @@ public class FileSystemStorageService
   implements StorageService
 {
 
-  private Path rootLocation;
+  @Value("${schemacrawler.webapp.storage-root}")
+  private String storageRootPath;
+  private Path storageRoot;
 
   @Override
   @PostConstruct
   public void init()
     throws Exception
   {
-    rootLocation = Paths.get("uploaded-files");
-    if (!exists(rootLocation))
+    if (StringUtils.isBlank(storageRootPath))
     {
-      createDirectories(rootLocation);
+      throw new Exception("'schemacrawler.webapp.storage-root' is not configured");
+    }
+    
+    storageRoot = Paths.get(storageRootPath).toAbsolutePath();
+    
+    // Create storage root if it does not exist
+    if (!exists(storageRoot))
+    {
+      createDirectories(storageRoot);
+    }
+    else if (!isDirectory(storageRoot))
+    {
+      throw new Exception("'schemacrawler.webapp.storage-root' is not a directory");
     }
   }
 
@@ -81,7 +95,7 @@ public class FileSystemStorageService
       return Optional.ofNullable(null);
     }
     final String filenameExt = fixFilenameExtension(extension);
-    final Path serverLocalPath = rootLocation
+    final Path serverLocalPath = storageRoot
       .resolve(filenameKey + filenameExt);
     if (!exists(serverLocalPath) || !isRegularFile(serverLocalPath)
         || !isReadable(serverLocalPath))
@@ -105,7 +119,7 @@ public class FileSystemStorageService
                                           extension));
     }
     final String filenameExt = fixFilenameExtension(extension);
-    final Path filePath = rootLocation.resolve(filenameKey + filenameExt);
+    final Path filePath = storageRoot.resolve(filenameKey + filenameExt);
     copy(stream, filePath);
   }
 
