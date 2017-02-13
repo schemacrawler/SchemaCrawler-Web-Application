@@ -34,7 +34,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
-public class SchemaCrawlerApplication
+public class SchemaCrawlerWebApplication
   extends WebMvcConfigurerAdapter
 {
 
@@ -46,7 +46,7 @@ public class SchemaCrawlerApplication
    */
   public static void main(final String[] args)
   {
-    SpringApplication.run(SchemaCrawlerApplication.class, args);
+    SpringApplication.run(SchemaCrawlerWebApplication.class, args);
   }
 
   @Override
