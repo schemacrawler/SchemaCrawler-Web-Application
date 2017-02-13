@@ -31,8 +31,9 @@ package us.fatehi.schemacrawler.webapp.storage;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.exists;
+import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
-import static java.nio.file.Files.*;
+import static java.nio.file.Files.isRegularFile;
 import static java.util.Objects.requireNonNull;
 
 import java.io.ByteArrayInputStream;
@@ -68,9 +69,9 @@ public class FileSystemStorageService
     {
       throw new Exception("'schemacrawler.webapp.storage-root' is not configured");
     }
-    
+
     storageRoot = Paths.get(storageRootPath).toAbsolutePath();
-    
+
     // Create storage root if it does not exist
     if (!exists(storageRoot))
     {
@@ -95,8 +96,7 @@ public class FileSystemStorageService
       return Optional.ofNullable(null);
     }
     final String filenameExt = fixFilenameExtension(extension);
-    final Path serverLocalPath = storageRoot
-      .resolve(filenameKey + filenameExt);
+    final Path serverLocalPath = storageRoot.resolve(filenameKey + filenameExt);
     if (!exists(serverLocalPath) || !isRegularFile(serverLocalPath)
         || !isReadable(serverLocalPath))
     {
