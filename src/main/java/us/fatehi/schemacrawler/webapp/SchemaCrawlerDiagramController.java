@@ -159,7 +159,11 @@ public class SchemaCrawlerDiagramController
     storageService.store(file, key, DATABASE_EXT);
 
     // Generate a database diagram, and store the generated image
-    final Path dbFile = storageService.resolve(key, DATABASE_EXT).get();
+    final Path dbFile = storageService.resolve(key, DATABASE_EXT)
+      .orElseThrow(() -> new Exception(String
+        .format("Cannot locate database file %s.%s",
+                key,
+                DATABASE_EXT)));
     final Path schemaCrawlerDiagram = scService
       .createSchemaCrawlerDiagram(dbFile, DIAGRAM_EXT);
     storageService.store(schemaCrawlerDiagram, key, DIAGRAM_EXT);

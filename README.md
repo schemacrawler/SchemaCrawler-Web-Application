@@ -5,13 +5,7 @@
 ## To Build and Run
 
 ```
-mvn package 
-```
-
-followed by
-
-```
-mvn spring-boot:run
+mvn clean package spring-boot:run
 ```
 
 From the jar file,
