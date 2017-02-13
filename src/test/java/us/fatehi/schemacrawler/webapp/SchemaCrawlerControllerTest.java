@@ -33,10 +33,10 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -60,9 +60,6 @@ import us.fatehi.schemacrawler.webapp.storage.StorageService;
 @AutoConfigureMockMvc
 public class SchemaCrawlerControllerTest
 {
-
-  @Autowired
-  private MockMvc mockMvc;
 
   @Autowired
   private MockMvc mvc;
@@ -95,11 +92,20 @@ public class SchemaCrawlerControllerTest
   }
 
   @Test
+  public void formWithUploadWithErrors()
+    throws Exception
+  {
+    mvc.perform(post("/schemacrawler"))
+      // .andExpect(model().errorCount(3))
+      .andExpect(status().is5xxServerError());
+  }
+
+  @Test
   public void index()
     throws Exception
   {
-    mockMvc.perform(get("/schemacrawler"))
+    mvc.perform(get("/schemacrawler"))
       .andExpect(content().string(containsString("SchemaCrawler Diagram")));
   }
-  
+
 }
