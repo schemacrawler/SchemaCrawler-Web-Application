@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -87,6 +88,7 @@ public class SchemaCrawlerControllerTest
     mvc
       .perform(fileUpload("/schemacrawler").file(multipartFile)
         .param("name", "Sualeh").param("email", "sualeh@hotmail.com"))
+      .andExpect(view().name("SchemaCrawlerDiagramResult"))
       .andExpect(status().is2xxSuccessful());
 
     then(storageService).should().store(eq(multipartFile), any(), eq("db"));
@@ -96,7 +98,32 @@ public class SchemaCrawlerControllerTest
   public void formWithUploadWithErrors()
     throws Exception
   {
+    final MockMultipartFile multipartFile = new MockMultipartFile("file",
+                                                                  "test.db",
+                                                                  "application/octet-stream",
+                                                                  RandomUtils
+                                                                    .nextBytes(5));
+
+    when(storageService.resolve(any(), eq("db")))
+      .thenReturn(Optional.ofNullable(null));
+    when(scService.createSchemaCrawlerDiagram(any(), eq("png")))
+      .thenReturn(Paths.get("/"));
+
+    mvc
+      .perform(fileUpload("/schemacrawler").file(multipartFile)
+        .param("name", "Sualeh").param("email", "sualeh@hotmail.com"))
+      // TODO: Check for the correct exception
+      .andExpect(status().is5xxServerError());
+
+    then(storageService).should().store(eq(multipartFile), any(), eq("db"));
+  }
+
+  @Test
+  public void formWithNoParameters()
+    throws Exception
+  {
     mvc.perform(post("/schemacrawler"))
+      // TODO: Check for the correct validation errors
       // .andExpect(model().errorCount(3))
       .andExpect(status().is5xxServerError());
   }
