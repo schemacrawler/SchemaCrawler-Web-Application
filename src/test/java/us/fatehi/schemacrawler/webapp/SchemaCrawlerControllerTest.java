@@ -35,8 +35,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.SQLITE_DB;
@@ -70,6 +70,23 @@ public class SchemaCrawlerControllerTest
   private StorageService storageService;
   @MockBean
   private SchemaCrawlerService scService;
+
+  @Test
+  public void formWithNoParameters()
+    throws Exception
+  {
+    final MockMultipartFile multipartFile = new MockMultipartFile("file",
+                                                                  "test.db",
+                                                                  "application/octet-stream",
+                                                                  RandomUtils
+                                                                    .nextBytes(5));
+    mvc.perform(fileUpload("/schemacrawler").file(multipartFile))
+      .andExpect(model().errorCount(2))
+      .andExpect(model().attributeHasFieldErrors("diagramRequest",
+                                                 "name",
+                                                 "email"))
+      .andExpect(status().is2xxSuccessful());
+  }
 
   @Test
   public void formWithUpload()
@@ -108,7 +125,8 @@ public class SchemaCrawlerControllerTest
                                                                     .nextBytes(5));
 
     when(storageService.resolve(any(), eq(SQLITE_DB)))
-      .thenReturn(Optional.ofNullable(null));
+      .thenReturn(Optional.ofNullable(null)); // Do not "find" the
+                                              // SQLite database
     when(scService.createSchemaCrawlerDiagram(any(), eq("png")))
       .thenReturn(Paths.get("/"));
 
@@ -121,16 +139,6 @@ public class SchemaCrawlerControllerTest
     then(storageService).should().store(eq(multipartFile),
                                         any(),
                                         eq(SQLITE_DB));
-  }
-
-  @Test
-  public void formWithNoParameters()
-    throws Exception
-  {
-    mvc.perform(post("/schemacrawler"))
-      // TODO: Check for the correct validation errors
-      // .andExpect(model().errorCount(3))
-      .andExpect(status().is5xxServerError());
   }
 
   @Test
