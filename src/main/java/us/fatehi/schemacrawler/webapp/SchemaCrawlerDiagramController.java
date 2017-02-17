@@ -29,6 +29,9 @@ package us.fatehi.schemacrawler.webapp;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.JSON;
+import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.PNG;
+import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.SQLITE_DB;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -100,7 +103,7 @@ public class SchemaCrawlerDiagramController
     throws Exception
   {
     response.setContentType(MediaType.IMAGE_PNG_VALUE);
-    try (final InputStream inputStream = storageService.stream(key, "png");
+    try (final InputStream inputStream = storageService.stream(key, PNG);
         final ServletOutputStream outputStream = response.getOutputStream();)
     {
       StreamUtils.copy(inputStream, outputStream);
@@ -137,7 +140,7 @@ public class SchemaCrawlerDiagramController
                                          @PathVariable final String key)
     throws Exception
   {
-    final Path jsonFile = storageService.resolve(key, "json")
+    final Path jsonFile = storageService.resolve(key, JSON)
       .orElseThrow(() -> new Exception("Cannot find diagram for " + key));
     final SchemaCrawlerDiagramRequest diagramRequest = SchemaCrawlerDiagramRequest
       .fromJson(new String(Files.readAllBytes(jsonFile)));
@@ -150,27 +153,25 @@ public class SchemaCrawlerDiagramController
                                             final MultipartFile file)
     throws Exception
   {
-    final String DATABASE_EXT = "db";
-    final String DIAGRAM_EXT = "png";
 
     final String key = diagramRequest.getKey();
 
     // Store the uploaded database file
-    storageService.store(file, key, DATABASE_EXT);
+    storageService.store(file, key, SQLITE_DB);
 
     // Generate a database diagram, and store the generated image
-    final Path dbFile = storageService.resolve(key, DATABASE_EXT)
+    final Path dbFile = storageService.resolve(key, SQLITE_DB)
       .orElseThrow(() -> new Exception(String
         .format("Cannot locate database file %s.%s",
                 key,
-                DATABASE_EXT)));
+                SQLITE_DB)));
     final Path schemaCrawlerDiagram = scService
-      .createSchemaCrawlerDiagram(dbFile, DIAGRAM_EXT);
-    storageService.store(schemaCrawlerDiagram, key, DIAGRAM_EXT);
+      .createSchemaCrawlerDiagram(dbFile, PNG.getExtension());
+    storageService.store(schemaCrawlerDiagram, key, PNG);
 
     // Save the JSON request to disk
     storageService.store(new ByteArrayInputStream(diagramRequest.toString()
-      .getBytes(UTF_8)), key, "json");
+      .getBytes(UTF_8)), key, JSON);
   }
 
 }

@@ -56,6 +56,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.storage.StorageService;
+import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.JSON;
+import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.PNG;
+import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.SQLITE_DB;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -80,7 +83,7 @@ public class SchemaCrawlerControllerTest
                                                                   RandomUtils
                                                                     .nextBytes(5));
 
-    when(storageService.resolve(any(), eq("db")))
+    when(storageService.resolve(any(), eq(SQLITE_DB)))
       .thenReturn(Optional.ofNullable(Paths.get("/")));
     when(scService.createSchemaCrawlerDiagram(any(), eq("png")))
       .thenReturn(Paths.get("/"));
@@ -91,7 +94,9 @@ public class SchemaCrawlerControllerTest
       .andExpect(view().name("SchemaCrawlerDiagramResult"))
       .andExpect(status().is2xxSuccessful());
 
-    then(storageService).should().store(eq(multipartFile), any(), eq("db"));
+    then(storageService).should().store(eq(multipartFile),
+                                        any(),
+                                        eq(SQLITE_DB));
   }
 
   @Test
@@ -104,7 +109,7 @@ public class SchemaCrawlerControllerTest
                                                                   RandomUtils
                                                                     .nextBytes(5));
 
-    when(storageService.resolve(any(), eq("db")))
+    when(storageService.resolve(any(), eq(SQLITE_DB)))
       .thenReturn(Optional.ofNullable(null));
     when(scService.createSchemaCrawlerDiagram(any(), eq("png")))
       .thenReturn(Paths.get("/"));
@@ -115,7 +120,9 @@ public class SchemaCrawlerControllerTest
       // TODO: Check for the correct exception
       .andExpect(status().is5xxServerError());
 
-    then(storageService).should().store(eq(multipartFile), any(), eq("db"));
+    then(storageService).should().store(eq(multipartFile),
+                                        any(),
+                                        eq(SQLITE_DB));
   }
 
   @Test

@@ -34,7 +34,6 @@ import static java.nio.file.Files.exists;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
-import static java.util.Objects.requireNonNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -88,15 +87,15 @@ public class FileSystemStorageService
    */
   @Override
   public Optional<Path> resolve(final String filenameKey,
-                                final String extension)
+                                final FileExtensionType extension)
     throws Exception
   {
-    if (StringUtils.isBlank(filenameKey))
+    if (StringUtils.isBlank(filenameKey) || extension == null)
     {
       return Optional.ofNullable(null);
     }
-    final String filenameExt = fixFilenameExtension(extension);
-    final Path serverLocalPath = storageRoot.resolve(filenameKey + filenameExt);
+    final Path serverLocalPath = storageRoot
+      .resolve(filenameKey + "." + extension.getExtension());
     if (!exists(serverLocalPath) || !isRegularFile(serverLocalPath)
         || !isReadable(serverLocalPath))
     {
@@ -105,21 +104,23 @@ public class FileSystemStorageService
     return Optional.of(serverLocalPath);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void store(final InputStream stream,
                     final String filenameKey,
-                    final String extension)
+                    final FileExtensionType extension)
     throws IOException
   {
-    requireNonNull(stream);
-    if (StringUtils.isBlank(filenameKey))
+    if (stream == null || StringUtils.isBlank(filenameKey) || extension == null)
     {
       throw new IOException(String.format("Failed to store file %s%s",
                                           filenameKey,
                                           extension));
     }
-    final String filenameExt = fixFilenameExtension(extension);
-    final Path filePath = storageRoot.resolve(filenameKey + filenameExt);
+    final Path filePath = storageRoot
+      .resolve(filenameKey + "." + extension.getExtension());
     copy(stream, filePath);
   }
 
@@ -129,7 +130,7 @@ public class FileSystemStorageService
   @Override
   public void store(final MultipartFile file,
                     final String filenameKey,
-                    final String extension)
+                    final FileExtensionType extension)
     throws Exception
   {
     if (file == null || file.isEmpty())
@@ -147,7 +148,7 @@ public class FileSystemStorageService
   @Override
   public void store(final Path file,
                     final String filenameKey,
-                    final String extension)
+                    final FileExtensionType extension)
     throws Exception
   {
     if (file == null || !exists(file) || !isRegularFile(file)
@@ -163,9 +164,16 @@ public class FileSystemStorageService
    * {@inheritDoc}
    */
   @Override
-  public InputStream stream(final String filenameKey, final String extension)
+  public InputStream stream(final String filenameKey,
+                            final FileExtensionType extension)
     throws Exception
   {
+    if (StringUtils.isBlank(filenameKey) || extension == null)
+    {
+      throw new IOException(String.format("Failed to stream file %s%s",
+                                          filenameKey,
+                                          extension));
+    }
     final Optional<Path> serverLocalPath = resolve(filenameKey, extension);
     if (serverLocalPath.isPresent())
     {
@@ -175,20 +183,6 @@ public class FileSystemStorageService
     {
       return new ByteArrayInputStream(new byte[0]);
     }
-  }
-
-  /**
-   * Checks the extension, and prefixes with a dot.
-   *
-   * @param extension
-   *        Extension prefixed with a dot.
-   * @return Filename extension.
-   */
-  private String fixFilenameExtension(final String extension)
-  {
-    final String filenameExt = StringUtils
-      .trimToNull(extension) == null? "": "." + StringUtils.trim(extension);
-    return filenameExt.replaceAll("\\.\\.", ".");
   }
 
 }

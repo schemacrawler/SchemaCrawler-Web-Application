@@ -64,7 +64,7 @@ public interface StorageService
    * @throws Exception
    *         Exception resolving a path.
    */
-  Optional<Path> resolve(String filenameKey, String extension)
+  Optional<Path> resolve(String filenameKey, FileExtensionType extension)
     throws Exception;
 
   /**
@@ -79,7 +79,9 @@ public interface StorageService
    * @throws Exception
    *         Exception storing a file.
    */
-  void store(InputStream stream, String filenameKey, String extension)
+  void store(InputStream stream,
+             String filenameKey,
+             FileExtensionType extension)
     throws IOException;
 
   /**
@@ -94,7 +96,9 @@ public interface StorageService
    * @throws Exception
    *         Exception storing a file.
    */
-  void store(MultipartFile file, String filenameKey, String extension)
+  void store(MultipartFile file,
+             String filenameKey,
+             FileExtensionType extension)
     throws Exception;
 
   /**
@@ -109,7 +113,7 @@ public interface StorageService
    * @throws Exception
    *         Exception storing a file.
    */
-  void store(Path file, String filenameKey, String extension)
+  void store(Path file, String filenameKey, FileExtensionType extension)
     throws Exception;
 
   /**
@@ -124,7 +128,7 @@ public interface StorageService
    * @throws Exception
    *         Exception storing a file.
    */
-  InputStream stream(String filenameKey, String extension)
+  InputStream stream(String filenameKey, FileExtensionType extension)
     throws Exception;
 
 }
