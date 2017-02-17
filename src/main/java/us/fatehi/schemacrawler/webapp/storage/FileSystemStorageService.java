@@ -35,9 +35,7 @@ import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -46,8 +44,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service("storageService")
 public class FileSystemStorageService
@@ -108,57 +106,32 @@ public class FileSystemStorageService
    * {@inheritDoc}
    */
   @Override
-  public void store(final InputStream stream,
+  public void store(final InputStreamSource streamSource,
                     final String filenameKey,
                     final FileExtensionType extension)
     throws Exception
   {
     validateFilenameKey(filenameKey);
-    if (stream == null || extension == null)
+    if (streamSource == null || extension == null)
     {
-      throw new IOException(String.format("Failed to store file %s%s",
-                                          filenameKey,
-                                          extension));
+      throw new Exception(String.format("Failed to store file %s%s",
+                                        filenameKey,
+                                        extension));
     }
+
+    // Save stream to a file
     final Path filePath = storageRoot
       .resolve(filenameKey + "." + extension.getExtension());
-    copy(stream, filePath);
-  }
+    copy(streamSource.getInputStream(), filePath);
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void store(final MultipartFile file,
-                    final String filenameKey,
-                    final FileExtensionType extension)
-    throws Exception
-  {
-    if (file == null || file.isEmpty())
+    // Check that the file is not empty
+    if (Files.size(filePath) == 0)
     {
-      throw new IOException("Failed to store empty file "
-                            + file.getOriginalFilename());
+      Files.delete(filePath);
+      throw new Exception(String.format("No data for file %s.%s",
+                                        filenameKey,
+                                        extension));
     }
-
-    store(file.getInputStream(), filenameKey, extension);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void store(final Path file,
-                    final String filenameKey,
-                    final FileExtensionType extension)
-    throws Exception
-  {
-    if (file == null || !exists(file) || !isRegularFile(file)
-        || !isReadable(file))
-    {
-      throw new IOException("Failed to store file " + file);
-    }
-
-    store(new FileInputStream(file.toFile()), filenameKey, extension);
   }
 
   /**

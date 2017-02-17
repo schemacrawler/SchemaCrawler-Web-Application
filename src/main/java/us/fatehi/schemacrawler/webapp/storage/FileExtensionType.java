@@ -54,4 +54,10 @@ public enum FileExtensionType
     return mimeType;
   }
 
+  @Override
+  public String toString()
+  {
+    return getExtension();
+  }
+
 }

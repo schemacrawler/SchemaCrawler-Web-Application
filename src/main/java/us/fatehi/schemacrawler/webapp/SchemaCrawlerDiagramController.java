@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -161,11 +162,14 @@ public class SchemaCrawlerDiagramController
                 SQLITE_DB)));
     final Path schemaCrawlerDiagram = scService
       .createSchemaCrawlerDiagram(dbFile, PNG.getExtension());
-    storageService.store(schemaCrawlerDiagram, key, PNG);
+    storageService.store(new FileSystemResource(schemaCrawlerDiagram.toFile()),
+                         key,
+                         PNG);
 
     // Save the JSON request to disk
-    storageService.store(new ByteArrayInputStream(diagramRequest.toString()
-      .getBytes(UTF_8)), key, JSON);
+    storageService
+      .store(new InputStreamResource(new ByteArrayInputStream(diagramRequest
+        .toString().getBytes(UTF_8))), key, JSON);
   }
 
 }

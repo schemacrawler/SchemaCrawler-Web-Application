@@ -28,11 +28,10 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.storage;
 
 
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.InputStreamSource;
 
 /**
  * Service to store files.
@@ -78,41 +77,9 @@ public interface StorageService
    * @throws Exception
    *         Exception storing a file.
    */
-  void store(InputStream stream,
+  void store(InputStreamSource stream,
              String filenameKey,
              FileExtensionType extension)
-    throws Exception;
-
-  /**
-   * Stores a multi-part file given a filename key and extension.
-   *
-   * @param file
-   *        Multi-part file
-   * @param filenameKey
-   *        Filename key.
-   * @param extension
-   *        Filename extension.
-   * @throws Exception
-   *         Exception storing a file.
-   */
-  void store(MultipartFile file,
-             String filenameKey,
-             FileExtensionType extension)
-    throws Exception;
-
-  /**
-   * Stores a file given a filename key and extension.
-   *
-   * @param file
-   *        File
-   * @param filenameKey
-   *        Filename key.
-   * @param extension
-   *        Filename extension.
-   * @throws Exception
-   *         Exception storing a file.
-   */
-  void store(Path file, String filenameKey, FileExtensionType extension)
     throws Exception;
 
 }
