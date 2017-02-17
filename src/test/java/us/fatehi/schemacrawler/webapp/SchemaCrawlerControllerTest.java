@@ -39,6 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.SQLITE_DB;
 
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -56,9 +57,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.storage.StorageService;
-import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.JSON;
-import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.PNG;
-import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.SQLITE_DB;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

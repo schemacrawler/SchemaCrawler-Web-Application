@@ -35,7 +35,6 @@ import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,7 +68,7 @@ public class FileSystemStorageService
       throw new Exception("'schemacrawler.webapp.storage-root' is not configured");
     }
 
-    storageRoot = Paths.get(storageRootPath).toAbsolutePath();
+    storageRoot = Paths.get(storageRootPath).normalize().toAbsolutePath();
 
     // Create storage root if it does not exist
     if (!exists(storageRoot))
@@ -90,7 +89,8 @@ public class FileSystemStorageService
                                 final FileExtensionType extension)
     throws Exception
   {
-    if (StringUtils.isBlank(filenameKey) || extension == null)
+    validateFilenameKey(filenameKey);
+    if (extension == null)
     {
       return Optional.ofNullable(null);
     }
@@ -111,9 +111,10 @@ public class FileSystemStorageService
   public void store(final InputStream stream,
                     final String filenameKey,
                     final FileExtensionType extension)
-    throws IOException
+    throws Exception
   {
-    if (stream == null || StringUtils.isBlank(filenameKey) || extension == null)
+    validateFilenameKey(filenameKey);
+    if (stream == null || extension == null)
     {
       throw new IOException(String.format("Failed to store file %s%s",
                                           filenameKey,
@@ -161,27 +162,21 @@ public class FileSystemStorageService
   }
 
   /**
-   * {@inheritDoc}
+   * Prevent malicious injection attacks.
+   *
+   * @param filenameKey
+   *        Filename key
+   * @throws Exception
+   *         On a badly constructed filename key.
    */
-  @Override
-  public InputStream stream(final String filenameKey,
-                            final FileExtensionType extension)
+  private void validateFilenameKey(final String filenameKey)
     throws Exception
   {
-    if (StringUtils.isBlank(filenameKey) || extension == null)
+    if (StringUtils.length(filenameKey) != 12
+        || !StringUtils.isAlphanumeric(filenameKey))
     {
-      throw new IOException(String.format("Failed to stream file %s%s",
-                                          filenameKey,
-                                          extension));
-    }
-    final Optional<Path> serverLocalPath = resolve(filenameKey, extension);
-    if (serverLocalPath.isPresent())
-    {
-      return new FileInputStream(serverLocalPath.get().toFile());
-    }
-    else
-    {
-      return new ByteArrayInputStream(new byte[0]);
+      throw new Exception(String.format("Invalid filename key \"%s\"",
+                                        filenameKey));
     }
   }
 

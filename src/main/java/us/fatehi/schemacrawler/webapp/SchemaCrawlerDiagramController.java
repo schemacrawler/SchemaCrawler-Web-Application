@@ -34,24 +34,20 @@ import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.SQLITE_DB;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StreamUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +55,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -97,18 +94,15 @@ public class SchemaCrawlerDiagramController
     return "redirect:/schemacrawler";
   }
 
-  @GetMapping(value = "/schemacrawler/diagrams/images/{key}")
-  public HttpEntity schemacrawlerDiagram(final HttpServletResponse response,
-                                         @PathVariable final String key)
+  @ResponseBody
+  @GetMapping(value = "/schemacrawler/diagrams/images/{key}", produces = MediaType.IMAGE_PNG_VALUE)
+  public Resource schemacrawlerDiagram(@PathVariable final String key)
     throws Exception
   {
-    response.setContentType(MediaType.IMAGE_PNG_VALUE);
-    try (final InputStream inputStream = storageService.stream(key, PNG);
-        final ServletOutputStream outputStream = response.getOutputStream();)
-    {
-      StreamUtils.copy(inputStream, outputStream);
-    }
-    return new ResponseEntity(HttpStatus.OK);
+    return storageService.resolve(key, PNG)
+      .map(path -> new FileSystemResource(path.toFile()))
+      .orElseThrow(() -> new Exception("Cannot find image /schemacrawler/diagrams/images/"
+                                       + key));
   }
 
   @GetMapping("/schemacrawler")

@@ -28,7 +28,6 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.storage;
 
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -82,7 +81,7 @@ public interface StorageService
   void store(InputStream stream,
              String filenameKey,
              FileExtensionType extension)
-    throws IOException;
+    throws Exception;
 
   /**
    * Stores a multi-part file given a filename key and extension.
@@ -114,21 +113,6 @@ public interface StorageService
    *         Exception storing a file.
    */
   void store(Path file, String filenameKey, FileExtensionType extension)
-    throws Exception;
-
-  /**
-   * Streams a file given a filename key and extension. If a file cannot
-   * be resolved, streams an empty stream.
-   *
-   * @param filenameKey
-   *        Filename key.
-   * @param extension
-   *        Filename extension.
-   * @return An input stream for the file.
-   * @throws Exception
-   *         Exception storing a file.
-   */
-  InputStream stream(String filenameKey, FileExtensionType extension)
     throws Exception;
 
 }
