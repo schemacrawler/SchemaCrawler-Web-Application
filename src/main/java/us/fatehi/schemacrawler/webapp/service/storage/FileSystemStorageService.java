@@ -25,7 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.storage;
+package us.fatehi.schemacrawler.webapp.service.storage;
 
 
 import static java.nio.file.Files.copy;

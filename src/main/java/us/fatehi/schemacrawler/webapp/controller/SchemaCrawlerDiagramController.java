@@ -25,13 +25,13 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp;
+package us.fatehi.schemacrawler.webapp.controller;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.JSON;
-import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.PNG;
-import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.SQLITE_DB;
+import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
+import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
+import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
@@ -61,8 +61,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
-import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
-import us.fatehi.schemacrawler.webapp.storage.StorageService;
+import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
+import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
 public class SchemaCrawlerDiagramController

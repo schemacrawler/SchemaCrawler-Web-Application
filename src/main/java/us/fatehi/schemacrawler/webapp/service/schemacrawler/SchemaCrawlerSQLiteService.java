@@ -25,35 +25,35 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.schemacrawler;
+package us.fatehi.schemacrawler.webapp.service.schemacrawler;
 
 
 import java.nio.file.Path;
 
+import org.springframework.stereotype.Service;
+
+import schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility;
+
 /**
- * Service for SchemaCrawler functions.
+ * Service for SchemaCrawler functions, using SQLite.
  *
  * @author Sualeh Fatehi
  */
-public interface SchemaCrawlerService
+@Service("scSqliteService")
+public class SchemaCrawlerSQLiteService
+  implements SchemaCrawlerService
 {
 
   /**
-   * Reads in a database file, and generates a database diagram, in the
-   * file format specified by the extension. All files are on the local
-   * default file-system.
-   *
-   * @param dbFile
-   *        Path to a database file.
-   * @param extension
-   *        Filename extension for a diagram image. Should be a file
-   *        type supported by GraphViz.
-   * @return Path to a diagram file.
-   * @throws Exception
-   *         Any exceptions thrown in the process of generating a
-   *         diagram.
+   * Works with SQLite database files. {@inheritDoc}
    */
-  Path createSchemaCrawlerDiagram(Path dbFile, String extension)
-    throws Exception;
+  @Override
+  public Path createSchemaCrawlerDiagram(final Path dbFile,
+                                         final String extension)
+    throws Exception
+  {
+    return SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram(dbFile,
+                                                                 extension);
+  }
 
 }

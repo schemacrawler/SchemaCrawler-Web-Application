@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static us.fatehi.schemacrawler.webapp.storage.FileExtensionType.SQLITE_DB;
+import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -55,8 +55,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import us.fatehi.schemacrawler.webapp.schemacrawler.SchemaCrawlerService;
-import us.fatehi.schemacrawler.webapp.storage.StorageService;
+import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
+import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

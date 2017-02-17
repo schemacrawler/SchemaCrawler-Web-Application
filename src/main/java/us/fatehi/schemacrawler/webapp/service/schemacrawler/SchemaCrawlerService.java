@@ -25,61 +25,35 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.storage;
+package us.fatehi.schemacrawler.webapp.service.schemacrawler;
 
 
 import java.nio.file.Path;
-import java.util.Optional;
-
-import org.springframework.core.io.InputStreamSource;
 
 /**
- * Service to store files.
+ * Service for SchemaCrawler functions.
  *
  * @author Sualeh Fatehi
  */
-public interface StorageService
+public interface SchemaCrawlerService
 {
 
   /**
-   * Initializes the service.
+   * Reads in a database file, and generates a database diagram, in the
+   * file format specified by the extension. All files are on the local
+   * default file-system.
    *
-   * @throws Exception
-   *         On an exception.
-   */
-  void init()
-    throws Exception;
-
-  /**
-   * Resolves a filename key and extension into a local default
-   * file-system path to a file.
-   *
-   * @param filenameKey
-   *        Filename key.
+   * @param dbFile
+   *        Path to a database file.
    * @param extension
-   *        Filename extension.
-   * @return a local file-system path to a file, if one is found.
+   *        Filename extension for a diagram image. Should be a file
+   *        type supported by GraphViz.
+   * @return Path to a diagram file.
    * @throws Exception
-   *         Exception resolving a path.
+   *         Any exceptions thrown in the process of generating a
+   *         diagram.
    */
-  Optional<Path> resolve(String filenameKey, FileExtensionType extension)
-    throws Exception;
-
-  /**
-   * Stores a stream given a filename key and extension.
-   *
-   * @param Stream
-   *        Input stream
-   * @param filenameKey
-   *        Filename key.
-   * @param extension
-   *        Filename extension.
-   * @throws Exception
-   *         Exception storing a file.
-   */
-  void store(InputStreamSource stream,
-             String filenameKey,
-             FileExtensionType extension)
+  Path createSchemaCrawlerDiagram(Path dbFile, String extension)
     throws Exception;
 
 }

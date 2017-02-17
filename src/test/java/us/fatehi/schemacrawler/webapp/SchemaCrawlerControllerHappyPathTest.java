@@ -58,8 +58,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
-import us.fatehi.schemacrawler.webapp.storage.FileExtensionType;
-import us.fatehi.schemacrawler.webapp.storage.StorageService;
+import us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType;
+import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
