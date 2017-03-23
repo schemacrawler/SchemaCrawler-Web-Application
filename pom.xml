@@ -84,8 +84,11 @@
         <artifactId>docker-maven-plugin</artifactId>
         <version>0.4.13</version>
         <configuration>
-          <imageName>sualeh/${project.artifactId}</imageName>
+          <!-- Docker Hub, and credentials from ~/.docker/config.json -->
+          <registryUrl>https://index.docker.io/v1/</registryUrl>
+          <useConfigFile>true</useConfigFile>
           <dockerDirectory>src/main/docker</dockerDirectory>
+          <!-- Docker image details -->
           <resources>
             <resource>
               <targetPath>/</targetPath>
@@ -93,6 +96,12 @@
               <include>${project.build.finalName}.jar</include>
             </resource>
           </resources>
+          <imageName>sualeh/${project.artifactId}</imageName>
+          <imageTags>
+            <imageTag>${project.version}</imageTag>
+            <imageTag>latest</imageTag>
+          </imageTags>
+          <forceTags>true</forceTags>
         </configuration>
       </plugin>
     </plugins>
