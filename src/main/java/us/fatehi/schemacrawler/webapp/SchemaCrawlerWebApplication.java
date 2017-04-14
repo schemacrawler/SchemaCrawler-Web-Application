@@ -33,6 +33,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import us.fatehi.schemacrawler.webapp.utility.BareBonesBrowserLaunch;
+
 @SpringBootApplication
 public class SchemaCrawlerWebApplication
   extends WebMvcConfigurerAdapter
@@ -47,6 +49,8 @@ public class SchemaCrawlerWebApplication
   public static void main(final String[] args)
   {
     SpringApplication.run(SchemaCrawlerWebApplication.class, args);
+
+    BareBonesBrowserLaunch.openURL("http://localhost:8080");
   }
 
   @Override
