@@ -11,7 +11,7 @@ mvn clean package spring-boot:run
 
 Start application from the jar file, run
 ```
-java -jar target/webapp-0.0.1-SNAPSHOT.jar
+java -jar target/schemacrawler-webapp-14.16.01.01.jar
 ```
 
 -----
