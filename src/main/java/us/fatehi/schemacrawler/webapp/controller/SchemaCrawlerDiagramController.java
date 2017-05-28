@@ -39,6 +39,7 @@ import java.nio.file.Path;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -57,12 +59,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
+@ControllerAdvice
 public class SchemaCrawlerDiagramController
 {
 
@@ -75,15 +79,16 @@ public class SchemaCrawlerDiagramController
   private SchemaCrawlerService scService;
 
   @ExceptionHandler(Throwable.class)
-  public String exception(final Throwable throwable, final Model model)
+  public String handleException(final Throwable throwable,
+                                final RedirectAttributes redirectAttributes)
   {
     logger.error(throwable.getMessage(), throwable);
 
-    final String errorMessage = throwable != null? throwable.getMessage()
-                                                 : "Unknown error";
-    model.addAttribute("errorMessage", errorMessage);
+    final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
 
-    return "error";
+    redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+
+    return "redirect:error";
   }
 
   @GetMapping(value = "/")
