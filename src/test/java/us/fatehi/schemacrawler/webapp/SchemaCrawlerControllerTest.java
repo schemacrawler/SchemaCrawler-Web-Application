@@ -134,8 +134,8 @@ public class SchemaCrawlerControllerTest
       .perform(fileUpload("/schemacrawler").file(multipartFile)
         .param("name", "Sualeh").param("email", "sualeh@hotmail.com"))
       // TODO: Check for the correct exception
-      .andExpect(view().name("error"))
-      .andExpect(status().is5xxServerError());
+      .andExpect(view().name("redirect:error"))
+      .andExpect(status().is3xxRedirection());
 
     then(storageService).should().store(eq(multipartFile),
                                         any(),
