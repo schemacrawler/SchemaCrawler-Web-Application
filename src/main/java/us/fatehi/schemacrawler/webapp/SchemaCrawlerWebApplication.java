@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp;
 
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.format.FormatterRegistry;
@@ -38,6 +39,7 @@ import us.fatehi.schemacrawler.webapp.utility.BareBonesBrowserLaunch;
 @SpringBootApplication
 public class SchemaCrawlerWebApplication
   extends WebMvcConfigurerAdapter
+  implements CommandLineRunner
 {
 
   /**
@@ -49,14 +51,19 @@ public class SchemaCrawlerWebApplication
   public static void main(final String[] args)
   {
     SpringApplication.run(SchemaCrawlerWebApplication.class, args);
-
-    BareBonesBrowserLaunch.openURL("http://localhost:8080");
   }
 
   @Override
   public void addFormatters(final FormatterRegistry registry)
   {
     registry.addConverter(new MultipartFileConverter());
+  }
+
+  @Override
+  public void run(final String... args)
+    throws Exception
+  {
+    BareBonesBrowserLaunch.openURL("http://localhost:8080");
   }
 
 }
