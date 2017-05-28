@@ -82,6 +82,8 @@ public class SchemaCrawlerDiagramController
   public String handleException(final Throwable throwable,
                                 final RedirectAttributes redirectAttributes)
   {
+    // See http://www.mkyong.com/spring-boot/spring-boot-file-upload-example/
+    
     logger.error(throwable.getMessage(), throwable);
 
     final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
