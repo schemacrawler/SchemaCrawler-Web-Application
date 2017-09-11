@@ -4,6 +4,11 @@
 
 ## To Build and Run
 
+Install [Graphviz](http://www.graphviz.org), which is a prerequisite for SchemaCrawler
+
+Modify `schemacrawler.webapp.storage-root` in `src/main/resources/application.properties` 
+to point to a temporary directory on your system. 
+
 Build and start application from Maven, run
 ```
 mvn clean package spring-boot:run
@@ -31,6 +36,8 @@ docker run -p 8080:8080 -t sualeh/schemacrawler-webapp
 -----
 
 ## To Use the Web Application 
+
+### Run Locally
 
 Ensure that the web server is running, either from the command-line,
 or the Docker container.
