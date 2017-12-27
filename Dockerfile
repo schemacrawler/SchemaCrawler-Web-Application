@@ -44,7 +44,7 @@ RUN useradd -ms /bin/bash schemacrawler
 USER schemacrawler
 WORKDIR /home/schemacrawler
 
-ADD target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacrawler-webapp.jar
+ADD ./target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacrawler-webapp.jar
 
 # Run the web-application.  CMD is required to run on Heroku
 # $JAVA_OPTS and $PORT are set by Heroku

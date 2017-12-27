@@ -1,8 +1,9 @@
 .git/
-target/
 !.mvn/wrapper/maven-wrapper.jar
 ~/
 src/
+target/
+!target/schemacrawler-webapp-*.jar
 pom.xml
 Procfile
 
