@@ -2,6 +2,9 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 ~/
+src/
+pom.xml
+Procfile
 
 ### STS ###
 .apt_generated
@@ -10,6 +13,7 @@ target/
 .project
 .settings
 .springBeans
+*.launch
 
 ### IntelliJ IDEA ###
 .idea
