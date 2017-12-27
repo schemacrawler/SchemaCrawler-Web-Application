@@ -40,8 +40,9 @@ RUN \
  && rm -rf /var/lib/apt/lists/*
 
 # Run the image as a non-root user
-RUN adduser -D schemacrawler
+RUN useradd -ms /bin/bash schemacrawler
 USER schemacrawler
+WORKDIR /home/schemacrawler
 
 ADD target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacrawler-webapp.jar
 
