@@ -38,19 +38,14 @@ RUN \
     apt-get update \
  && apt-get install -y graphviz \
  && rm -rf /var/lib/apt/lists/*
- 
-# Map directories
-VOLUME /tmp
-
-ADD schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacrawler-webapp.jar
-
-RUN sh -c 'touch /schemacrawler-webapp.jar'
 
 # Run the image as a non-root user
 RUN adduser -D schemacrawler
 USER schemacrawler
 
-# Run the app.  CMD is required to run on Heroku
+ADD target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacrawler-webapp.jar
+
+# Run the web-application.  CMD is required to run on Heroku
 # $JAVA_OPTS and $PORT are set by Heroku
 CMD java $JAVA_OPTS -Dserver.port=$PORT  -Djava.security.egd=file:/dev/./urandom -jar /schemacrawler-webapp.jar
 
