@@ -48,6 +48,6 @@ ADD ./target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacraw
 
 # Run the web-application.  CMD is required to run on Heroku
 # $JAVA_OPTS and $PORT are set by Heroku
-CMD java $JAVA_OPTS -Dserver.port=$PORT  -Djava.security.egd=file:/dev/./urandom -jar /schemacrawler-webapp.jar
+CMD java $JAVA_OPTS -Dserver.port=$PORT -Djava.security.egd=file:/dev/./urandom -jar schemacrawler-webapp.jar
 
 MAINTAINER Sualeh Fatehi <sualeh@hotmail.com>
