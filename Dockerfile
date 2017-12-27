@@ -1,7 +1,7 @@
 # ========================================================================
 # SchemaCrawler
 # http://www.schemacrawler.com
-# Copyright (c) 2000-2017, Sualeh Fatehi <sualeh@hotmail.com>.
+# Copyright (c) 2000-2018, Sualeh Fatehi <sualeh@hotmail.com>.
 # All rights reserved.
 # ------------------------------------------------------------------------
 #
@@ -26,7 +26,8 @@
 
 FROM openjdk
 
-ARG SCHEMACRAWLER_VERSION=14.15.01
+ARG SCHEMACRAWLER_VERSION=14.17.04
+ARG SCHEMACRAWLER_WEBAPP_VERSION=14.17.04.02
 
 LABEL "us.fatehi.schemacrawler.product-version"="SchemaCrawler ${SCHEMACRAWLER_VERSION}" \
       "us.fatehi.schemacrawler.website"="http://www.schemacrawler.com" \
@@ -41,12 +42,16 @@ RUN \
 # Map directories
 VOLUME /tmp
 
-ADD schemacrawler-webapp-${SCHEMACRAWLER_VERSION}.01.jar schemacrawler-webapp.jar
+ADD schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacrawler-webapp.jar
 
 RUN sh -c 'touch /schemacrawler-webapp.jar'
 
-ENV JAVA_OPTS=""
+# Run the image as a non-root user
+RUN adduser -D schemacrawler
+USER schemacrawler
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /schemacrawler-webapp.jar" ]
+# Run the app.  CMD is required to run on Heroku
+# $JAVA_OPTS and $PORT are set by Heroku
+CMD java $JAVA_OPTS -Dserver.port=$PORT  -Djava.security.egd=file:/dev/./urandom -jar /schemacrawler-webapp.jar
 
 MAINTAINER Sualeh Fatehi <sualeh@hotmail.com>

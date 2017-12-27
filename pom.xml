@@ -82,12 +82,12 @@
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
-        <version>0.4.13</version>
+        <version>1.0.0</version>
         <configuration>
           <!-- Docker Hub, and credentials from ~/.docker/config.json -->
           <registryUrl>https://index.docker.io/v1/</registryUrl>
           <useConfigFile>true</useConfigFile>
-          <dockerDirectory>src/main/docker</dockerDirectory>
+          <dockerDirectory>.</dockerDirectory>
           <!-- Docker image details -->
           <resources>
             <resource>
