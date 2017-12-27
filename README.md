@@ -21,6 +21,18 @@ java -jar target/schemacrawler-webapp-14.17.04.02.jar
 
 -----
 
+## To Use the Web Application 
+
+### Run Locally
+
+Ensure that the web server is running, either from the command-line,
+or the Docker container.
+
+To access the application, open a browser to
+[http://localhost:8080](http://localhost:8080)
+
+-----
+
 ## To Create Docker Image 
 
 To create the Docker image, and push it to Docker Hub, run
@@ -33,15 +45,14 @@ Run the local image in a Docker container, using
 ```
 docker run -p 8080:8080 -t sualeh/schemacrawler-webapp
 ```
+To access the application, open a browser to
+[http://localhost:8080](http://localhost:8080)
 
 -----
 
-## To Use the Web Application 
+## To Host Docker Image on Heroku
 
-### Run Locally
-
-Ensure that the web server is running, either from the command-line,
-or the Docker container.
+Follow instructions on [Container Registry & Runtime - Docker Deploys](https://devcenter.heroku.com/articles/container-registry-and-runtime).
 
 To access the application, open a browser to
-[http://localhost:8080](http://localhost:8080)
+[https://schemacrawler-webapp.herokuapp.com/](https://schemacrawler-webapp.herokuapp.com/)
