@@ -28,4 +28,3 @@ after_success:
   - docker push sualeh/schemacrawler-webapp
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker push sualeh/schemacrawler-webapp
-
