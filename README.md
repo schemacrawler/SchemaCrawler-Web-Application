@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sualeh/SchemaCrawler-Web-Application.svg?branch=master)](https://travis-ci.org/sualeh/SchemaCrawler-Web-Application)
+
 # SchemaCrawler Web Application
 
 -----

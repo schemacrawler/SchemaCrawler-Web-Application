@@ -1,0 +1,32 @@
+language: java
+jdk:
+  - oraclejdk8
+os:
+  - linux
+sudo: required
+services:
+  - docker
+notifications:
+  on_success:
+    - change
+  on_failure:
+    - change
+cache:
+  directories:
+    - .autoconf
+    - $HOME/.m2
+addons:
+  apt:
+    packages:
+      - graphviz
+script:
+  - mvn clean package
+before_deploy:
+  - git fetch --tags
+after_success:
+  # Deploy to Heroku
+  docker login --username=_ --password=ae3b3e29-2993-412f-8281-c3744046d729 registry.heroku.com;
+  docker push sualeh/schemacrawler-webapp;
+  # Deploy to Docker Hub
+  docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+  docker push sualeh/schemacrawler-webapp;
