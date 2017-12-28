@@ -20,14 +20,14 @@ addons:
     packages:
       - graphviz
 script:
-  - mvn clean package
+  - mvn clean package jacoco:report coveralls:report
 before_deploy:
   - git fetch --tags
 after_success:
   - docker version  
   # Build Docker image
   - docker build -t sualeh/schemacrawler-webapp .
-  - docker tag sualeh/schemacrawler-webapp sualeh/schemacrawler-webapp:v14.17.04.05
+  - docker tag sualeh/schemacrawler-webapp sualeh/schemacrawler-webapp:v14.17.04.06
   - docker tag sualeh/schemacrawler-webapp sualeh/schemacrawler-webapp:latest
   # Deploy image to Docker Hub
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"

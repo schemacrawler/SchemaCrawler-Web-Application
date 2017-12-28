@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/sualeh/SchemaCrawler-Web-Application.svg?branch=master)](https://travis-ci.org/sualeh/SchemaCrawler-Web-Application)
+[![Coverage Status](https://coveralls.io/repos/sualeh/SchemaCrawler-Web-Application/badge.svg?branch=master&service=github)](https://coveralls.io/github/sualeh/SchemaCrawler-Web-Application?branch=master)
 
 # SchemaCrawler Web Application
 
@@ -6,7 +7,7 @@
 
 ## Website
 
-This is a Spring Boot web application with a Bootstrap user interface, with source code control in GitHub, which is automatically built on every commit by Travis CI using a Maven build, and immediately deployed to Heroku using a Docker image, which generates an crows-foot ERD of a SQLite database.
+This is a Spring Boot web application with a Bootstrap user interface, with source code control in GitHub, which is automatically built on every commit by Travis CI using a Maven build, tests are run, and coverage measured with JaCoCo and Coveralls, and then immediately deployed to Heroku using a Docker image, which generates an crows-foot ERD of a SQLite database.
 
 To access the application, open a browser to
 [https://schemacrawler-webapp.herokuapp.com/](https://schemacrawler-webapp.herokuapp.com/)
@@ -27,7 +28,7 @@ mvn clean package spring-boot:run
 
 Start application from the jar file, run
 ```
-java -jar target/schemacrawler-webapp-14.17.04.05.jar
+java -jar target/schemacrawler-webapp-14.17.04.06.jar
 ```
 
 -----
