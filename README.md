@@ -4,6 +4,15 @@
 
 -----
 
+## Website
+
+Every git commit is automatically built by Travis CI, and deployed to Heroku as a Docker image.
+
+To access the application, open a browser to
+[https://schemacrawler-webapp.herokuapp.com/](https://schemacrawler-webapp.herokuapp.com/)
+
+-----
+
 ## To Build and Run
 
 Install [Graphviz](http://www.graphviz.org), which is a prerequisite for SchemaCrawler
