@@ -26,8 +26,9 @@ before_deploy:
 after_success:
   - docker version
   - docker build -t sualeh/schemacrawler-webapp .
+  - docker tag sualeh/schemacrawler-webapp registry.heroku.com/sualeh/schemacrawler-webapp
   - docker login --username=_ --password=ae3b3e29-2993-412f-8281-c3744046d729 registry.heroku.com
-  - docker push sualeh/schemacrawler-webapp
+  - docker push registry.heroku.com/sualeh/schemacrawler-webapp
   - docker logout registry.heroku.com
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker push sualeh/schemacrawler-webapp
