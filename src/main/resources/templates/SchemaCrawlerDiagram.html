@@ -1,58 +1,40 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head"></head>
-<body>
-    <header th:replace="fragments/header :: header"></header>
+  <head th:replace="fragments/head :: head" />
+  <body>
+    <header th:replace="fragments/header :: header" />
     <main>
       <div id="page-content" class="container-fluid">
-		<div class="row">
-			<div class="col-lg-4">
-				<p>
-					<strong>Name:</strong>
-				</p>
-			</div>
-			<div class="col-lg-8">
-				<p th:text="${diagramRequest.name}" />
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-4">
-				<p>
-					<strong>Email:</strong>
-				</p>
-			</div>
-			<div class="col-lg-8">
-				<p th:text="${diagramRequest.email}" />
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-4">
-				<p>
-					<strong>Database:</strong>
-				</p>
-			</div>
-			<div class="col-lg-8">
-				<p th:text="${diagramRequest.file}" />
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-4">
-				<p>
-					<strong>Time:</strong>
-				</p>
-			</div>
-			<div class="col-lg-8">
-				<p th:text="${diagramRequest.timestamp}" />
-			</div>
-		</div>
-		<div class="row">
-			<div class="span-12">
-				<img class="img-responsive"
-					th:src="'/schemacrawler/images/' + ${diagramRequest.key}" />
-			</div>
-		</div>
-	</div>
-  </main>
-  <footer th:replace="fragments/footer :: footer"></footer>
-</body>
+        <table class="table table-sm">
+          <tr>
+            <th scope="row"><p>Name:</p></th>
+            <td><p th:text="${diagramRequest.name}" /></td>
+          </tr>
+          <tr>
+            <th scope="row"><p>Email:</p></th>
+            <td><p th:text="${diagramRequest.email}" /></td>
+          </tr>
+          <tr>
+            <th scope="row"><p>Database:</p></th>
+            <td><p th:text="${diagramRequest.file}" /></td>
+          </tr>
+          <tr>
+            <th scope="row"><p>Time:</p></th>
+            <td><p th:text="${diagramRequest.timestamp}" /></td>
+          </tr>
+          <tr>
+            <th scope="row"><p>Key:</p></th>
+            <td><p th:text="${diagramRequest.key}" /></td>
+          </tr>
+        </table>
+        <hr />
+        <div class="row">
+          <div class="span-12">
+            <img class="img-responsive" th:src="'/schemacrawler/images/' + ${diagramRequest.key}" />
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer" />
+  </body>
 </html>

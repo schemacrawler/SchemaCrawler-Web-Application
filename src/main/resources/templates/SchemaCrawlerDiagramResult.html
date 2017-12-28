@@ -1,20 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head"></head>
-<body>
-    <header th:replace="fragments/header :: header"></header>
+  <head th:replace="fragments/head :: head" />
+  <body>
+    <header th:replace="fragments/header :: header" />
     <main>
       <div id="page-content" class="container-fluid">
-		<div class="row">
-			<div class="span-12">
-				<div class="alert alert-success">
-					<a th:href="'/schemacrawler/' + ${diagramRequest.key}">View
-						SchemaCrawler Diagram</a>
-				</div>
-			</div>
-		</div>
-	</div>
-  </main>
-  <footer th:replace="fragments/footer :: footer"></footer>
-</body>
+        <div class="row">
+          <div class="span-12">
+            <div class="alert alert-success">
+              <a th:href="'/schemacrawler/' + ${diagramRequest.key}">View SchemaCrawler Diagram</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer" />
+  </body>
 </html>
