@@ -1,7 +1,9 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"></head>
+<head th:replace="fragments/head :: head"></head>
 <body>
+    <header th:replace="fragments/header :: header"></header>
+    <main>
 	<div class="container">
 		<div class="page-header row">
 			<div class="span-12">
@@ -18,6 +20,7 @@
 			</div>
 		</div>
 	</div>
+	</main>
 	<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

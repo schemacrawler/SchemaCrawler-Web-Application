@@ -1,14 +1,13 @@
-<head th:fragment="header">
-<title>SchemaCrawler Diagrams</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta http-equiv="cache-control" content="max-age=0" />
-<meta http-equiv="cache-control" content="no-cache" />
-<meta http-equiv="expires" content="0" />
-<meta http-equiv="expires" content="Tue, 01 Jan 1990 12:00:00 GMT" />
-<link
-	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
-	th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
-	rel="stylesheet" media="screen" />
-<link href="/sc-web.css" rel="stylesheet" media="screen" />
-</head>
+<header th:fragment="header" id="header" class="header clearfix">
+
+    <div id="banner" class="jumbotron jumbotron-fluid bg-light">
+        <div class="container-fluid">
+            <img class="img-fluid" style="display: block; float: left; width: 8.0rem;" src="images/schemacrawler_logo.svg" alt="Schemacrawler logo" />
+            <h1>SchemaCrawler</h1>
+            <p class="lead">Free database schema discovery and comprehension tool</p>
+        </div>
+    </div>
+
+    <h1>SchemaCrawler Diagram</h1>
+
+</header>

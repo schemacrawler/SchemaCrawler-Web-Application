@@ -1,0 +1,40 @@
+body {
+  padding-left: 3.0rem;
+  padding-right: 3.0rem;
+  padding-bottom: 3.0rem;
+}
+
+@media (max-width: 767px) {
+body {
+  padding-left: 0rem;
+  padding-right: 0rem;
+}
+}
+
+#page-content h1 {
+  font-size: 2.0rem;
+  margin-top: 2.0rem;
+  color: rgb(92, 92, 92);
+}
+
+#page-content h2 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  color: rgb(92, 92, 92);
+}
+
+#page-content h3 {
+  font-size: 1.2rem;
+  margin-top: 1.2rem;
+  color: rgb(92, 92, 92);
+}
+
+#banner {
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+#banner h1 {
+  font-size: 3.0rem;
+  font-family: "Palatino Linotype", Georgia, "Times New Roman", serif;
+}

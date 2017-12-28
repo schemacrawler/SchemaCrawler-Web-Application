@@ -1,19 +1,10 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"></head>
+<head th:replace="fragments/head :: head"></head>
 <body>
-	<div class="container">
-		<div class="page-header row">
-			<div class="span-12">
-				<img src="/schemacrawler_logo.png" />
-				<h1>SchemaCrawler</h1>
-			</div>
-		</div>
-		<div class="row">
-			<div class="span-12">
-				<h2>SchemaCrawler Diagram</h2>
-			</div>
-		</div>
+    <header th:replace="fragments/header :: header"></header>
+    <main>
+      <div id="page-content" class="container-fluid">
 		<form action="#" th:action="@{/schemacrawler}"
 			th:object="${diagramRequest}" method="post"
 			enctype="multipart/form-data">
@@ -59,6 +50,7 @@
 			</div>
 		</form>
 	</div>
-	<footer th:replace="fragments/footer :: footer"></footer>
+  </main>
+  <footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>
