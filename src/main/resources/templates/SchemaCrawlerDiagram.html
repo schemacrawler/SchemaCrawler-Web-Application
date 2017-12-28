@@ -5,31 +5,26 @@
     <header th:replace="fragments/header :: header" />
     <main>
       <div id="page-content" class="container-fluid">
+      
+        <h1>SchemaCrawler Diagram</h1>
+            
         <table class="table table-sm">
           <tr>
-            <th scope="row"><p>Name:</p></th>
-            <td><p th:text="${diagramRequest.name}" /></td>
+            <th scope="row">Name:</th>
+            <td><span th:text="${diagramRequest.name}" /></td>
           </tr>
           <tr>
-            <th scope="row"><p>Email:</p></th>
-            <td><p th:text="${diagramRequest.email}" /></td>
+            <th scope="row">Email:</th>
+            <td><span th:text="${diagramRequest.email}" /></td>
           </tr>
           <tr>
-            <th scope="row"><p>Database:</p></th>
-            <td><p th:text="${diagramRequest.file}" /></td>
-          </tr>
-          <tr>
-            <th scope="row"><p>Time:</p></th>
-            <td><p th:text="${diagramRequest.timestamp}" /></td>
-          </tr>
-          <tr>
-            <th scope="row"><p>Key:</p></th>
-            <td><p th:text="${diagramRequest.key}" /></td>
+            <th scope="row">Database:</th>
+            <td><span th:text="${diagramRequest.file}" /></td>
           </tr>
         </table>
         <hr />
         <div class="row">
-          <div class="span-12">
+          <div class="col-lg-12">
             <img class="img-responsive" th:src="'/schemacrawler/images/' + ${diagramRequest.key}" />
           </div>
         </div>

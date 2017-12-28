@@ -4,23 +4,23 @@
 <body>
     <header th:replace="fragments/header :: header"></header>
     <main>
-	<div class="container">
-		<div class="page-header row">
-			<div class="span-12">
-				<img src="/schemacrawler_logo.png" />
-				<h1>SchemaCrawler</h1>
-			</div>
-		</div>
-		<div class="row">
-			<div class="span-12">
-				<div class="alert alert-danger">
-					<strong>Error: </strong> <span th:utext="${errorMessage}" />
-				</div>
-				<a href="/" th:href="@{/}">Back to Home Page</a>
-			</div>
-		</div>
-	</div>
-	</main>
-	<footer th:replace="fragments/footer :: footer"></footer>
+    <div class="container">
+        <div class="page-header row">
+            <div class="span-12">
+                <img src="/schemacrawler_logo.png" />
+                <h1>SchemaCrawler</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span-12">
+                <div class="alert alert-danger">
+                    <strong>Error: </strong> <span th:utext="${errorMessage}" />
+                </div>
+                <a href="/" th:href="@{/}">Back to Home Page</a>
+            </div>
+        </div>
+    </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

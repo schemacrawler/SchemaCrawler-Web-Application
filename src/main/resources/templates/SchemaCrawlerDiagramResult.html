@@ -5,13 +5,13 @@
     <header th:replace="fragments/header :: header" />
     <main>
       <div id="page-content" class="container-fluid">
-        <div class="row">
-          <div class="span-12">
-            <div class="alert alert-success">
+      
+        <h1>SchemaCrawler Diagram</h1>
+         
+            <div class="alert alert-dark">
               <a th:href="'/schemacrawler/' + ${diagramRequest.key}">View SchemaCrawler Diagram</a>
             </div>
-          </div>
-        </div>
+
       </div>
     </main>
     <footer th:replace="fragments/footer :: footer" />
