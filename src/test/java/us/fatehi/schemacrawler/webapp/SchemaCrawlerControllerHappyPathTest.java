@@ -109,14 +109,14 @@ public class SchemaCrawlerControllerHappyPathTest
     assertThat(diagramRequest,
                is(equalTo(schemaCrawlerDiagramRequestFromJson)));
 
-    final MvcResult result2 = mvc.perform(get("/schemacrawler/diagrams/" + key))
+    final MvcResult result2 = mvc.perform(get("/schemacrawler/" + key))
       .andExpect(view().name("SchemaCrawlerDiagram"))
       .andExpect(status().is2xxSuccessful()).andReturn();
     assertThat(result2.getResponse().getContentAsString(),
-               containsString("/schemacrawler/diagrams/images/" + key));
+               containsString("/schemacrawler/images/" + key));
 
     final MvcResult result3 = mvc
-      .perform(get("/schemacrawler/diagrams/images/" + key)
+      .perform(get("/schemacrawler/images/" + key)
         .accept(MediaType.IMAGE_PNG))
       .andExpect(status().isOk()).andReturn();
     final int contentLength = result3.getResponse().getContentLength();

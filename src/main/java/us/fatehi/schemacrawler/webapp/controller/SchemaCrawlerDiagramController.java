@@ -100,13 +100,13 @@ public class SchemaCrawlerDiagramController
   }
 
   @ResponseBody
-  @GetMapping(value = "/schemacrawler/diagrams/images/{key}", produces = MediaType.IMAGE_PNG_VALUE)
+  @GetMapping(value = "/schemacrawler/images/{key}", produces = MediaType.IMAGE_PNG_VALUE)
   public Resource schemacrawlerDiagram(@PathVariable final String key)
     throws Exception
   {
     return storageService.resolve(key, PNG)
       .map(path -> new FileSystemResource(path.toFile()))
-      .orElseThrow(() -> new Exception("Cannot find image /schemacrawler/diagrams/images/"
+      .orElseThrow(() -> new Exception("Cannot find image /schemacrawler/images/"
                                        + key));
   }
 
@@ -134,7 +134,7 @@ public class SchemaCrawlerDiagramController
     return "SchemaCrawlerDiagramResult";
   }
 
-  @GetMapping(value = "/schemacrawler/diagrams/{key}")
+  @GetMapping(value = "/schemacrawler/{key}")
   public String schemacrawlerDiagramPage(final Model model,
                                          @PathVariable final String key)
     throws Exception
