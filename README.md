@@ -6,7 +6,7 @@
 
 ## Website
 
-Every git commit is automatically built by Travis CI, and deployed to Heroku as a Docker image.
+This is a Spring Boot web application with a Bootstrap user interface, with source code control in GitHub, which is automatically built on every commit by Travis CI using a Maven build, and immediately deployed to Heroku using a Docker image, which generates an crows-foot ERD of a SQLite database.
 
 To access the application, open a browser to
 [https://schemacrawler-webapp.herokuapp.com/](https://schemacrawler-webapp.herokuapp.com/)
