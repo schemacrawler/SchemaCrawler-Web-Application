@@ -26,8 +26,8 @@
 
 FROM openjdk
 
-ARG SCHEMACRAWLER_VERSION=14.17.04
-ARG SCHEMACRAWLER_WEBAPP_VERSION=14.17.04.07
+ARG SCHEMACRAWLER_VERSION=14.17.05
+ARG SCHEMACRAWLER_WEBAPP_VERSION=14.17.05.01
 
 LABEL "us.fatehi.schemacrawler.product-version"="SchemaCrawler ${SCHEMACRAWLER_VERSION}" \
       "us.fatehi.schemacrawler.website"="http://www.schemacrawler.com" \

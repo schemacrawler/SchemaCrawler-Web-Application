@@ -27,7 +27,7 @@ after_success:
   - docker version  
   # Build Docker image
   - docker build -t sualeh/schemacrawler-webapp .
-  - docker tag sualeh/schemacrawler-webapp sualeh/schemacrawler-webapp:v14.17.04.07
+  - docker tag sualeh/schemacrawler-webapp sualeh/schemacrawler-webapp:v14.17.05.01
   - docker tag sualeh/schemacrawler-webapp sualeh/schemacrawler-webapp:latest
   # Deploy image to Docker Hub
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"

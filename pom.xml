@@ -5,7 +5,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>14.17.04.07</version>
+  <version>14.17.05.01</version>
   <packaging>jar</packaging>
 
   <name>webapp</name>
@@ -59,7 +59,7 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>14.17.04</version>
+      <version>14.17.05</version>
     </dependency>
 
   </dependencies>
