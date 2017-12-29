@@ -5,7 +5,7 @@
 
 -----
 
-## Website
+## Web Application
 
 This is a Spring Boot web application with a Bootstrap user interface, with source code control in GitHub, which is automatically built on every commit by Travis CI using a Maven build, tests are run, and coverage measured with JaCoCo and Coveralls, and then immediately deployed to Heroku using a Docker image, which generates an crows-foot ERD of a SQLite database.
 
