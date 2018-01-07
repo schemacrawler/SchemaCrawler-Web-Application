@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
   <head th:replace="fragments/head :: head" />
@@ -7,11 +8,11 @@
       <div id="page-content" class="container-fluid">
       
         <h1>SchemaCrawler Diagram</h1>
-         
-            <div class="alert alert-dark">
-              <a th:href="'/schemacrawler/' + ${diagramRequest.key}">View SchemaCrawler Diagram</a>
-            </div>
-
+        
+        <div class="alert alert-dark">
+          <a th:href="'/schemacrawler/' + ${diagramRequest.key}">View SchemaCrawler Diagram</a>
+        </div>
+        
       </div>
     </main>
     <footer th:replace="fragments/footer :: footer" />
