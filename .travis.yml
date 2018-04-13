@@ -26,17 +26,17 @@ before_deploy:
 after_success:
   - docker version  
   # Build Docker image
-  - docker build -t sualeh/schemacrawler-webapp .
-  - docker tag sualeh/schemacrawler-webapp sualeh/schemacrawler-webapp:v14.17.05.01
-  - docker tag sualeh/schemacrawler-webapp sualeh/schemacrawler-webapp:latest
+  - docker build -t schemacrawler/schemacrawler-webapp .
+  - docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v14.20.04.01
+  - docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:latest
   # Deploy image to Docker Hub
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker push sualeh/schemacrawler-webapp
+  - docker push schemacrawler/schemacrawler-webapp
   - docker logout  
   # Deploy image to Heroku
-  - docker tag sualeh/schemacrawler-webapp registry.heroku.com/schemacrawler-webapp/web
+  - docker tag schemacrawler/schemacrawler-webapp registry.heroku.com/schemacrawler-webapp/web
   - docker login --username=_ --password=ae3b3e29-2993-412f-8281-c3744046d729 registry.heroku.com
   - docker push registry.heroku.com/schemacrawler-webapp/web
   - docker logout registry.heroku.com
   # Remove the image, so Travis does not cache it
-  - docker rm sualeh/schemacrawler-webapp
+  - docker rm schemacrawler/schemacrawler-webapp

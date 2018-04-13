@@ -26,8 +26,8 @@
 
 FROM openjdk
 
-ARG SCHEMACRAWLER_VERSION=14.17.05
-ARG SCHEMACRAWLER_WEBAPP_VERSION=14.17.05.01
+ARG SCHEMACRAWLER_VERSION=14.20.04
+ARG SCHEMACRAWLER_WEBAPP_VERSION=14.20.04.01
 
 LABEL "us.fatehi.schemacrawler.product-version"="SchemaCrawler ${SCHEMACRAWLER_VERSION}" \
       "us.fatehi.schemacrawler.website"="http://www.schemacrawler.com" \
@@ -44,7 +44,7 @@ RUN useradd -ms /bin/bash schemacrawler
 USER schemacrawler
 WORKDIR /home/schemacrawler
 
-ADD ./target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacrawler-webapp.jar
+ADD ./schemacrawler-distrib/target/_distribution/_schemacrawler schemacrawler
 
 # Run the web-application.  CMD is required to run on Heroku
 # $JAVA_OPTS and $PORT are set by Heroku
