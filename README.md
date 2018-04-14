@@ -59,14 +59,15 @@ To access the application, open a browser to
 
 To create the Docker image, and push it to Docker Hub, run
 ```
-docker build -t sualeh/schemacrawler-webapp .
-docker push sualeh/schemacrawler-webapp
+docker build -t schemacrawler/schemacrawler-webapp .
+docker push schemacrawler/schemacrawler-webapp
 ```
 
 Run the local image in a Docker container, using
 ```
-docker run -p 8080:8080 -t sualeh/schemacrawler-webapp
+docker run -p 8080:8080 -t schemacrawler/schemacrawler-webapp
 ```
+
 To access the application, open a browser to
 [http://localhost:8080](http://localhost:8080)
 
