@@ -6,11 +6,10 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>14.20.04.01</version>
+  <version>15.01.01.01</version>
   <packaging>jar</packaging>
 
-  <name>webapp</name>
-  <description>SchemaCrawler Web Application</description>
+  <name>SchemaCrawler Web Application</name>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -63,7 +62,7 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>14.20.04</version>
+      <version>15.01.01</version>
     </dependency>
 
   </dependencies>
