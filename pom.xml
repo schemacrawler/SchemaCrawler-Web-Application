@@ -3,10 +3,13 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <prerequisites>
+    <maven>3.5.4</maven>
+  </prerequisites>
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>15.01.01.01</version>
+  <version>15.01.05.01</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
@@ -52,7 +55,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.7</version>
+      <version>3.8.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -62,7 +65,7 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>15.01.01</version>
+      <version>15.01.05</version>
     </dependency>
 
   </dependencies>
@@ -76,7 +79,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.9</version>
+        <version>0.8.2</version>
         <executions>
           <execution>
             <goals>
