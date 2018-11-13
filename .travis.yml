@@ -1,42 +1,38 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
 os:
-  - linux
+- linux
 sudo: required
 services:
-  - docker
+- docker
 notifications:
   on_success:
-    - change
+  - change
   on_failure:
-    - change
+  - change
 cache:
   directories:
-    - .autoconf
-    - $HOME/.m2
+  - ".autoconf"
+  - "$HOME/.m2"
 addons:
   apt:
     packages:
-      - graphviz
+    - graphviz
 script:
-  - mvn clean package jacoco:report coveralls:report
+- mvn clean package jacoco:report coveralls:report
 before_deploy:
-  - git fetch --tags
+- git fetch --tags
 after_success:
-  - docker version  
-  # Build Docker image
-  - docker build -t schemacrawler/schemacrawler-webapp .
-  - docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v15.01.06.01
-  - docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:latest
-  # Deploy image to Docker Hub
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker push schemacrawler/schemacrawler-webapp
-  - docker logout  
-  # Deploy image to Heroku
-  - docker tag schemacrawler/schemacrawler-webapp registry.heroku.com/schemacrawler-webapp/web
-  - docker login --username=_ --password=ae3b3e29-2993-412f-8281-c3744046d729 registry.heroku.com
-  - docker push registry.heroku.com/schemacrawler-webapp/web
-  - docker logout registry.heroku.com
-  # Remove the image, so Travis does not cache it
-  - docker rm schemacrawler/schemacrawler-webapp
+- docker version
+- docker build -t schemacrawler/schemacrawler-webapp .
+- docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v15.01.06.01
+- docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:latest
+- docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+- docker push schemacrawler/schemacrawler-webapp
+- docker logout
+- docker rm schemacrawler/schemacrawler-webapp
+deploy:
+  provider: heroku
+  api_key:
+    secure: LQmIAdRml8eZwuz36jv5xZVQhkZiIF6gN+0Yq538cMjz4598EEGyd0/LsBQJchO0PkDLDPdYXaO/WIIe1s3DARe+9XxNqeNo2Hv3cgzQw/znSyphhXpfDkIS0LW27NijJRLo7htZXuRHKPcKtGWZdRin5eHFYya7n4EuvhyH8G5C5aKeUmey+pURpYwx/vXE/+xKfNkEOQFpTb3roxCEH3f/QULStZPNbRKBY5rgy4T6k7L2mOI05h2yJD6IlObwRcateILU1/7CP24zLg8m6Fadnke4TKVpmQMZ4WN+/7h2BdfOo1S2gfq8uu0C+pf/2VKdDXSu5D42kAMzIMMTbJNLitD7Q/bvK41GWPegtZj2XX/pOk9NfWc45EJQ0td7rohb7VdJDkaSbGNu7dkIIT3l1fFyJWmKys2jKRoNeFJR5+q9CvFaZhKMTPk9kvs7E0AOi4W4H1MbAJeDgHuv83W4M9dB5Ekp58R1mCMbpHviMhAJYRq6zBhCRFhopgnr4JZAkeR6fXCqlcVFh3c4QuuGwbbTaMWIQOw9tIeKLeTb0ppjpRM+3uBmpZygydRQLRnirEXDLKVsz1MOPUBh4YWDpHL27Aw+oHDDJWo8YkC3XmZ9mAOOPjI8J0y7NpL8iv/UPGMK/hoDQj1rE0CMUbX4XhHeHc662D1T9mOCHUc=
