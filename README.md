@@ -43,7 +43,7 @@ mvn spring-boot:run
 
 Start application from the jar file, run
 ```
-java -jar target/schemacrawler-webapp-15.03.02.01.jar
+java -jar target/schemacrawler-webapp-15.03.03.01.jar
 ```
 
 ### Use the Application
