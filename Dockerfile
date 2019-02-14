@@ -1,7 +1,7 @@
 # ========================================================================
 # SchemaCrawler
 # http://www.schemacrawler.com
-# Copyright (c) 2000-2018, Sualeh Fatehi <sualeh@hotmail.com>.
+# Copyright (c) 2000-2019, Sualeh Fatehi <sualeh@hotmail.com>.
 # All rights reserved.
 # ------------------------------------------------------------------------
 #
@@ -24,27 +24,36 @@
 #
 # ========================================================================
 
-FROM openjdk
+FROM openjdk:8-jdk-alpine
 
-ARG SCHEMACRAWLER_VERSION=15.03.03
-ARG SCHEMACRAWLER_WEBAPP_VERSION=15.03.03.01
+ARG SCHEMACRAWLER_VERSION=15.04.01
+ARG SCHEMACRAWLER_WEBAPP_VERSION=15.04.01.01
 
-LABEL "us.fatehi.schemacrawler.product-version"="SchemaCrawler ${SCHEMACRAWLER_VERSION}" \
-      "us.fatehi.schemacrawler.website"="http://www.schemacrawler.com" \
-      "us.fatehi.schemacrawler.docker-hub"="https://hub.docker.com/r/sualeh/schemacrawler"
+LABEL \
+  "us.fatehi.schemacrawler.product-version"="SchemaCrawler ${SCHEMACRAWLER_VERSION}" \
+  "us.fatehi.schemacrawler.website"="http://www.schemacrawler.com" \
+  "us.fatehi.schemacrawler.docker-hub"="https://hub.docker.com/r/schemacrawler/schemacrawler"
 
 # Install GraphViz
 RUN \
-    apt-get update \
- && apt-get install -y graphviz \
- && rm -rf /var/lib/apt/lists/*
+  apk add --update --no-cache \
+  bash \
+  bash-completion \
+  graphviz \
+  ttf-freefont
 
 # Run the image as a non-root user
-RUN useradd -ms /bin/bash schemacrawler
-USER schemacrawler
-WORKDIR /home/schemacrawler
+RUN \
+    addgroup -g 1000 -S schcrwlr \
+ && adduser -u 1000 -S schcrwlr -G schcrwlr
+USER schcrwlr
+WORKDIR /home/schcrwlr
 
-ADD ./target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar schemacrawler-webapp.jar
+# Copy SchemaCrawler Web Application files for the current user
+COPY \
+  --chown=schcrwlr:schcrwlr \
+  ./target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar \
+  schemacrawler-webapp.jar
 
 # Run the web-application.  CMD is required to run on Heroku
 # $JAVA_OPTS and $PORT are set by Heroku

@@ -2,7 +2,7 @@
 ========================================================================
 SchemaCrawler
 http://www.schemacrawler.com
-Copyright (c) 2000-2017, Sualeh Fatehi <sualeh@hotmail.com>.
+Copyright (c) 2000-2019, Sualeh Fatehi <sualeh@hotmail.com>.
 All rights reserved.
 ------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ public class SchemaCrawlerDiagramController
                                 final RedirectAttributes redirectAttributes)
   {
     // See http://www.mkyong.com/spring-boot/spring-boot-file-upload-example/
-    
+
     logger.error(throwable.getMessage(), throwable);
 
     final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
