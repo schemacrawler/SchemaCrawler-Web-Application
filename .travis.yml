@@ -26,7 +26,7 @@ before_deploy:
 after_success:
 - docker version
 - docker build -t schemacrawler/schemacrawler-webapp .
-- docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v15.05.01.01
+- docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v16.2.2.1
 - docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:latest
 - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 - docker push schemacrawler/schemacrawler-webapp
