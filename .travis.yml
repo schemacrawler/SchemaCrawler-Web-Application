@@ -14,8 +14,8 @@ notifications:
   - change
 cache:
   directories:
-  - ".autoconf"
-  - "$HOME/.m2"
+  - .autoconf
+  - $HOME/.m2
 addons:
   apt:
     packages:
