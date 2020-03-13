@@ -140,7 +140,7 @@ public class SchemaCrawlerDiagramController
     throws Exception
   {
     final Path jsonFile = storageService.resolve(key, JSON)
-      .orElseThrow(() -> new Exception("Cannot find diagram for " + key));
+      .orElseThrow(() -> new Exception("Cannot find integration for " + key));
     final SchemaCrawlerDiagramRequest diagramRequest = SchemaCrawlerDiagramRequest
       .fromJson(new String(Files.readAllBytes(jsonFile)));
     model.addAttribute("diagramRequest", diagramRequest);
@@ -158,7 +158,7 @@ public class SchemaCrawlerDiagramController
     // Store the uploaded database file
     storageService.store(file, key, SQLITE_DB);
 
-    // Generate a database diagram, and store the generated image
+    // Generate a database integration, and store the generated image
     final Path dbFile = storageService.resolve(key, SQLITE_DB)
       .orElseThrow(() -> new Exception(String
         .format("Cannot locate database file %s.%s",
