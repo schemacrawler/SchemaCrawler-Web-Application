@@ -1,11 +1,11 @@
 [![Build Status](https://travis-ci.org/schemacrawler/SchemaCrawler-Web-Application.svg?branch=master)](https://travis-ci.org/schemacrawler/SchemaCrawler-Web-Application)
 [![Coverage Status](https://coveralls.io/repos/github/schemacrawler/SchemaCrawler-Web-Application/badge.svg)](https://coveralls.io/github/schemacrawler/SchemaCrawler-Web-Application)
 
-![SchemaCrawler](https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/master/schemacrawler-distrib/src/site/resources/images/schemacrawler_logo.png) 
+<img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/master/schemacrawler-distrib/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" align="right" />
 
 # SchemaCrawler Web Application
 
-> **Please see the [SchemaCrawler website](http://www.schemacrawler.com/) for more details.**
+> **Please see the [SchemaCrawler website](https://www.schemacrawler.com/) for more details.**
 
 
 ## Web Application
