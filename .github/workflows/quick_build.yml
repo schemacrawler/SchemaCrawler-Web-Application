@@ -33,7 +33,7 @@ jobs:
 
 # BUILD AND TEST
     - id: build-test
-      name: Build all modules and run tests
+      name: Build and run tests
       run: |
         mvn \
           --no-transfer-progress \
