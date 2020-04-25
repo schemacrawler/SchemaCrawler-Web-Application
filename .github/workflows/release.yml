@@ -84,7 +84,6 @@ jobs:
         docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
         docker push schemacrawler/schemacrawler-webapp
         docker logout
-        docker rm schemacrawler/schemacrawler-webapp
 
 # DEPLOY TO HEORKU
     - name: Deploy to Heroku
