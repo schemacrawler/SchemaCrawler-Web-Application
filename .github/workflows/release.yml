@@ -66,7 +66,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: ./schemacrawler-distrib/target/schemacrawler-webapp-16.6.1.1.jar
+        asset_path: ./target/schemacrawler-webapp-16.6.1.1.jar
         asset_name: schemacrawler-webapp-16.6.1.1.jar
         asset_content_type: application/zip
 
@@ -87,8 +87,8 @@ jobs:
         docker rm schemacrawler/schemacrawler-webapp
 
 # DEPLOY TO HEORKU
-    - id: deploy-to-heroku
     - name: Deploy to Heroku
+      id: deploy-to-heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_APP_NAME: schemacrawler-webapp
