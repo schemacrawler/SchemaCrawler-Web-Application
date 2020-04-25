@@ -87,8 +87,8 @@ jobs:
         docker rm schemacrawler/schemacrawler-webapp
 
 # DEPLOY TO HEORKU
-    - id: deploy-to-heroku
     - name: Deploy to Heroku
+      id: deploy-to-heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_APP_NAME: schemacrawler-webapp
