@@ -34,6 +34,8 @@ LABEL \
   "us.fatehi.schemacrawler.website"="http://www.schemacrawler.com" \
   "us.fatehi.schemacrawler.docker-hub"="https://hub.docker.com/r/schemacrawler/schemacrawler"
 
+LABEL "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>"
+
 # Install GraphViz
 RUN \
   apk add --update --no-cache \
@@ -58,5 +60,3 @@ COPY \
 # Run the web-application.  CMD is required to run on Heroku
 # $JAVA_OPTS and $PORT are set by Heroku
 CMD java $JAVA_OPTS -Dserver.port=$PORT -Djava.security.egd=file:/dev/./urandom -jar schemacrawler-webapp.jar
-
-MAINTAINER Sualeh Fatehi <sualeh@hotmail.com>

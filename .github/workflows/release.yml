@@ -1,0 +1,98 @@
+name: Create Release
+
+on:
+  create:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+
+# SETUP BUILD ENVIRONMENT
+    - id: checkout-code
+      name: Checkout code
+      uses: actions/checkout@v1
+    - id: setup-jdk
+      name: Setup JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+        server-id: sonatype-nexus
+        server-username: MAVEN_USERNAME
+        server-password: MAVEN_PASSWORD
+    - id: install-packages
+      name: Install packages
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -q install graphviz
+    - id: show-environment
+      name: Show environment
+      run: |
+        echo github.repository: ${{ github.repository }}
+        echo github.ref: ${{ github.head_ref || github.ref }}
+        echo github.sha: ${{ github.sha }}
+        mvn -v
+        cat ~/.m2/settings.xml
+
+# BUILD FOR DISTRIBUTION
+    - id: build
+      name: Build and test for distribution
+      run: |
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          clean install
+
+# CREATE GITHUB RELEASE AND ADD ASSETS
+    - id: create-release
+      name: Create GitHub release
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        body: |
+          SchemaCrawler Webapp Release ${{ github.sha }}
+        draft: false
+        prerelease: false
+    - id: upload-release-zip
+      name: Upload SchemaCrawler Webapp distribution
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: ./schemacrawler-distrib/target/schemacrawler-webapp-16.6.1.1.jar
+        asset_name: schemacrawler-webapp-16.6.1.1.jar
+        asset_content_type: application/zip
+
+# CREATE AND PUBLISH DOCKER IMAGE
+    - id: create-docker-image
+      name: Create and publish Docker image
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker version
+        docker build -t schemacrawler/schemacrawler-webapp .
+        docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v16.6.1.1
+        docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:latest
+        docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        docker push schemacrawler/schemacrawler-webapp
+        docker logout
+        docker rm schemacrawler/schemacrawler-webapp
+
+# DEPLOY TO HEORKU
+    - id: deploy-to-heroku
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP_NAME: schemacrawler-webapp
+      run: |
+        heroku container:login
+        heroku container:push -a ${{ env.HEROKU_APP_NAME }} web
+        heroku container:release -a ${{ env.HEROKU_APP_NAME }} web
