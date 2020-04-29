@@ -1,7 +1,9 @@
 name: Create Release
 
 on:
-  create:
+  push:
+    branches-ignore:
+      - '*'
     tags:
       - v[0-9]+.[0-9]+.[0-9]+
 
@@ -66,8 +68,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: ./target/schemacrawler-webapp-16.6.1.1.jar
-        asset_name: schemacrawler-webapp-16.6.1.1.jar
+        asset_path: ./target/schemacrawler-webapp-16.7.1.1.jar
+        asset_name: schemacrawler-webapp-16.7.1.1.jar
         asset_content_type: application/zip
 
 # CREATE AND PUBLISH DOCKER IMAGE
@@ -79,7 +81,7 @@ jobs:
       run: |
         docker version
         docker build -t schemacrawler/schemacrawler-webapp .
-        docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v16.6.1.1
+        docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v16.7.1.1
         docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:latest
         docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
         docker push schemacrawler/schemacrawler-webapp
