@@ -68,7 +68,7 @@ public interface StorageService
   /**
    * Stores a stream given a filename key and extension.
    *
-   * @param Stream
+   * @param stream
    *        Input stream
    * @param filenameKey
    *        Filename key.
