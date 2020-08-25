@@ -38,6 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -73,10 +74,16 @@ public class SchemaCrawlerDiagramController
   private static Logger logger = LoggerFactory
     .getLogger(SchemaCrawlerDiagramController.class);
 
+  private final StorageService storageService;
+  private final SchemaCrawlerService scService;
+
   @Autowired
-  private StorageService storageService;
-  @Autowired
-  private SchemaCrawlerService scService;
+  public SchemaCrawlerDiagramController(@NotNull final StorageService storageService,
+                                        @NotNull final SchemaCrawlerService scService)
+  {
+    this.storageService = storageService;
+    this.scService = scService;
+  }
 
   @ExceptionHandler(Throwable.class)
   public String handleException(final Throwable throwable,
