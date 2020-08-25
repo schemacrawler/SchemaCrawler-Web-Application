@@ -142,6 +142,7 @@ public class SchemaCrawlerDiagramController
       return "SchemaCrawlerDiagramForm";
     }
 
+    // TODO: Asynchronous process to generate diagram
     generateSchemaCrawlerDiagram(diagramRequest, file);
 
     return "SchemaCrawlerDiagramResult";
