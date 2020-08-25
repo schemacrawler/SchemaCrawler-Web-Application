@@ -36,6 +36,8 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.S
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -108,7 +110,9 @@ public class SchemaCrawlerDiagramController
   @ResponseBody
   @GetMapping(value = "/schemacrawler/images/{key}",
               produces = MediaType.IMAGE_PNG_VALUE)
-  public Resource schemacrawlerDiagram(@PathVariable final String key)
+  public Resource schemacrawlerDiagram(
+    @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}")
+    @Size(min = 12, max = 12) final String key)
     throws Exception
   {
     return storageService
@@ -145,7 +149,10 @@ public class SchemaCrawlerDiagramController
 
   @GetMapping(value = "/schemacrawler/{key}")
   public String schemacrawlerDiagramPage(final Model model,
-                                         @PathVariable final String key)
+                                         @PathVariable @NotNull
+                                         @Pattern(regexp = "[A-Za-z0-9]{12}")
+                                         @Size(min = 12, max = 12)
+                                         final String key)
     throws Exception
   {
     final Path jsonFile = storageService
