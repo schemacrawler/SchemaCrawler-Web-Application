@@ -122,7 +122,7 @@ public class SchemaCrawlerDiagramController
   }
 
   @GetMapping("/schemacrawler")
-  public String schemacrawlerDiagramForm(final Model model)
+  public String schemacrawlerDiagramForm(@NotNull final Model model)
   {
     model.addAttribute("diagramRequest", new SchemaCrawlerDiagramRequest());
     return "SchemaCrawlerDiagramForm";
@@ -131,7 +131,7 @@ public class SchemaCrawlerDiagramController
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = "/schemacrawler")
   public String schemacrawlerDiagramFormSubmit(
-    @ModelAttribute("diagramRequest") @Valid
+    @ModelAttribute("diagramRequest") @NotNull @Valid
     final SchemaCrawlerDiagramRequest diagramRequest,
     final BindingResult bindingResult,
     @RequestParam("file") final MultipartFile file)
