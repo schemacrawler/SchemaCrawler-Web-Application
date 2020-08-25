@@ -165,10 +165,9 @@ public class SchemaCrawlerDiagramController
 
     // Generate a database integration, and store the generated image
     final Path dbFile = storageService.resolve(key, SQLITE_DB)
-      .orElseThrow(() -> new Exception(String
-        .format("Cannot locate database file %s.%s",
-                key,
-                SQLITE_DB)));
+      .orElseThrow(() -> new Exception(String.format(
+          "Cannot locate database file, %s",
+          key)));
     final Path schemaCrawlerDiagram = scService
       .createSchemaCrawlerDiagram(dbFile, PNG.getExtension());
     storageService.store(new PathResource(schemaCrawlerDiagram),
