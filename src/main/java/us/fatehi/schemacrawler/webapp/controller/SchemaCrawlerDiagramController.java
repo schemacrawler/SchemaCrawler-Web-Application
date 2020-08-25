@@ -29,13 +29,13 @@ package us.fatehi.schemacrawler.webapp.controller;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.io.IOUtils.toInputStream;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -175,9 +175,8 @@ public class SchemaCrawlerDiagramController
                          PNG);
 
     // Save the JSON request to disk
-    storageService
-      .store(new InputStreamResource(new ByteArrayInputStream(diagramRequest
-        .toString().getBytes(UTF_8))), key, JSON);
+    storageService.store(
+        new InputStreamResource(toInputStream(diagramRequest.toString(), UTF_8)), key, JSON);
   }
 
 }
