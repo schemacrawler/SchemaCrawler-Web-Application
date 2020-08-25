@@ -33,19 +33,18 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.J
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -61,7 +60,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
@@ -112,8 +110,8 @@ public class SchemaCrawlerDiagramController
     throws Exception
   {
     return storageService.resolve(key, PNG)
-      .map(path -> new FileSystemResource(path.toFile()))
-      .orElseThrow(() -> new Exception("Cannot find image /schemacrawler/images/"
+      .map(path -> new PathResource(path))
+      .orElseThrow(() -> new Exception("Cannot find image, "
                                        + key));
   }
 
@@ -173,7 +171,7 @@ public class SchemaCrawlerDiagramController
                 SQLITE_DB)));
     final Path schemaCrawlerDiagram = scService
       .createSchemaCrawlerDiagram(dbFile, PNG.getExtension());
-    storageService.store(new FileSystemResource(schemaCrawlerDiagram.toFile()),
+    storageService.store(new PathResource(schemaCrawlerDiagram),
                          key,
                          PNG);
 
