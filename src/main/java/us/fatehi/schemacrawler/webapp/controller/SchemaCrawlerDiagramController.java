@@ -41,9 +41,6 @@ import javax.validation.constraints.Size;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.PathResource;
@@ -52,8 +49,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,18 +56,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
-@ControllerAdvice
 public class SchemaCrawlerDiagramController
 {
-
-  private static final Logger logger =
-    LoggerFactory.getLogger(SchemaCrawlerDiagramController.class);
 
   private final StorageService storageService;
   private final SchemaCrawlerService scService;
@@ -84,21 +74,6 @@ public class SchemaCrawlerDiagramController
   {
     this.storageService = storageService;
     this.scService = scService;
-  }
-
-  @ExceptionHandler(Throwable.class)
-  public String handleException(final Throwable throwable,
-                                final RedirectAttributes redirectAttributes)
-  {
-    // See http://www.mkyong.com/spring-boot/spring-boot-file-upload-example/
-
-    logger.error(throwable.getMessage(), throwable);
-
-    final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
-
-    redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
-
-    return "redirect:error";
   }
 
   @GetMapping(value = "/")
