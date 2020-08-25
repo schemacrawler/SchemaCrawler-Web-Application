@@ -124,11 +124,11 @@ public class SchemaCrawlerDiagramController
   }
 
   @GetMapping(value = "/schemacrawler/{key}")
-  public String schemacrawlerDiagramPage(final Model model,
-                                         @PathVariable @NotNull
-                                         @Pattern(regexp = "[A-Za-z0-9]{12}")
-                                         @Size(min = 12, max = 12)
-                                         final String key)
+  public String retrieveSchemaCrawlerDiagram(final Model model,
+                                             @PathVariable @NotNull
+                                             @Pattern(regexp = "[A-Za-z0-9]{12}")
+                                             @Size(min = 12, max = 12)
+                                             final String key)
     throws Exception
   {
     final Path jsonFile = storageService
