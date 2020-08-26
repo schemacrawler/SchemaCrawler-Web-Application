@@ -85,7 +85,7 @@ public class SchemaCrawlerDiagramController
   @ResponseBody
   @GetMapping(value = "/schemacrawler/images/{key}",
               produces = MediaType.IMAGE_PNG_VALUE)
-  public Resource schemacrawlerDiagram(
+  public Resource diagramImage(
     @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}")
     @Size(min = 12, max = 12) final String key)
     throws Exception
@@ -97,7 +97,7 @@ public class SchemaCrawlerDiagramController
   }
 
   @GetMapping("/schemacrawler")
-  public String schemacrawlerDiagramForm(@NotNull final Model model)
+  public String diagramRequestForm(@NotNull final Model model)
   {
     model.addAttribute("diagramRequest", new SchemaCrawlerDiagramRequest());
     return "SchemaCrawlerDiagramForm";
@@ -105,7 +105,7 @@ public class SchemaCrawlerDiagramController
 
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = "/schemacrawler")
-  public String schemacrawlerDiagramFormSubmit(
+  public String diagramRequestFormSubmit(
     @ModelAttribute("diagramRequest") @NotNull @Valid
     final SchemaCrawlerDiagramRequest diagramRequest,
     final BindingResult bindingResult,
@@ -124,11 +124,10 @@ public class SchemaCrawlerDiagramController
   }
 
   @GetMapping(value = "/schemacrawler/{key}")
-  public String retrieveSchemaCrawlerDiagram(final Model model,
-                                             @PathVariable @NotNull
-                                             @Pattern(regexp = "[A-Za-z0-9]{12}")
-                                             @Size(min = 12, max = 12)
-                                             final String key)
+  public String retrieveResults(final Model model,
+                                @PathVariable @NotNull
+                                @Pattern(regexp = "[A-Za-z0-9]{12}")
+                                @Size(min = 12, max = 12) final String key)
     throws Exception
   {
     final Path jsonFile = storageService
