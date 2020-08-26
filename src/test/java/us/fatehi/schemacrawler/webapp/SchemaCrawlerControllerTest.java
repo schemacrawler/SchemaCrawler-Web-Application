@@ -29,12 +29,12 @@ package us.fatehi.schemacrawler.webapp;
 
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,7 +54,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
@@ -80,7 +79,7 @@ public class SchemaCrawlerControllerTest
                                                                   "application/octet-stream",
                                                                   RandomUtils
                                                                     .nextBytes(5));
-    mvc.perform(fileUpload("/schemacrawler").file(multipartFile))
+    mvc.perform(multipart("/schemacrawler").file(multipartFile))
       .andExpect(model().errorCount(2))
       .andExpect(model().attributeHasFieldErrors("diagramRequest",
                                                  "name",
@@ -104,7 +103,7 @@ public class SchemaCrawlerControllerTest
       .thenReturn(Paths.get("/"));
 
     mvc
-      .perform(fileUpload("/schemacrawler").file(multipartFile)
+      .perform(multipart("/schemacrawler").file(multipartFile)
         .param("name", "Sualeh").param("email", "sualeh@hotmail.com"))
       .andExpect(view().name("SchemaCrawlerDiagramResult"))
       .andExpect(status().is2xxSuccessful());
@@ -131,7 +130,7 @@ public class SchemaCrawlerControllerTest
       .thenReturn(Paths.get("/"));
 
     mvc
-      .perform(fileUpload("/schemacrawler").file(multipartFile)
+      .perform(multipart("/schemacrawler").file(multipartFile)
         .param("name", "Sualeh").param("email", "sualeh@hotmail.com"))
       // TODO: Check for the correct exception
       .andExpect(view().name("redirect:error"))
