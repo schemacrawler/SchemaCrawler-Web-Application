@@ -57,7 +57,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
-import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
+import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
@@ -65,15 +65,15 @@ public class SchemaCrawlerDiagramController
 {
 
   private final StorageService storageService;
-  private final SchemaCrawlerService scService;
+  private final ProcessingService processingService;
 
   @Autowired
   public SchemaCrawlerDiagramController(
     @NotNull final StorageService storageService,
-    @NotNull final SchemaCrawlerService scService)
+    @NotNull final ProcessingService processingService)
   {
     this.storageService = storageService;
-    this.scService = scService;
+    this.processingService = processingService;
   }
 
   @GetMapping(value = "/")
@@ -117,8 +117,18 @@ public class SchemaCrawlerDiagramController
       return "SchemaCrawlerDiagramForm";
     }
 
-    // TODO: Asynchronous process to generate diagram
-    generateSchemaCrawlerDiagram(diagramRequest, file);
+    final String key = diagramRequest.getKey();
+
+    // Store the uploaded database file
+    storageService.store(file, key, SQLITE_DB);
+    // Save the JSON request to disk
+    storageService.store(new InputStreamResource(toInputStream(diagramRequest.toString(),
+                                                               UTF_8)),
+                         key,
+                         JSON);
+
+    // Make asynchronous call to generate diagram
+    processingService.generateSchemaCrawlerDiagram(key);
 
     return "SchemaCrawlerDiagramResult";
   }
@@ -132,7 +142,7 @@ public class SchemaCrawlerDiagramController
   {
     final Path jsonFile = storageService
       .resolve(key, JSON)
-      .orElseThrow(() -> new Exception("Cannot find integration for " + key));
+      .orElseThrow(() -> new Exception("Cannot find request for " + key));
     final SchemaCrawlerDiagramRequest diagramRequest =
       SchemaCrawlerDiagramRequest.fromJson(new String(Files.readAllBytes(
         jsonFile)));
@@ -141,30 +151,4 @@ public class SchemaCrawlerDiagramController
     return "SchemaCrawlerDiagram";
   }
 
-  private void generateSchemaCrawlerDiagram(final SchemaCrawlerDiagramRequest diagramRequest,
-                                            final MultipartFile file)
-    throws Exception
-  {
-
-    final String key = diagramRequest.getKey();
-
-    // Store the uploaded database file
-    storageService.store(file, key, SQLITE_DB);
-
-    // Generate a database integration, and store the generated image
-    final Path dbFile = storageService
-      .resolve(key, SQLITE_DB)
-      .orElseThrow(() -> new Exception(String.format(
-        "Cannot locate database file, %s",
-        key)));
-    final Path schemaCrawlerDiagram =
-      scService.createSchemaCrawlerDiagram(dbFile, PNG.getExtension());
-    storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
-
-    // Save the JSON request to disk
-    storageService.store(new InputStreamResource(toInputStream(diagramRequest.toString(),
-                                                               UTF_8)),
-                         key,
-                         JSON);
-  }
 }
