@@ -29,29 +29,26 @@ package us.fatehi.schemacrawler.webapp.controller;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.Files.newBufferedReader;
+import static org.apache.commons.io.IOUtils.toInputStream;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
-import java.io.ByteArrayInputStream;
-import java.nio.file.Files;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.nio.file.Path;
 
-import javax.validation.Valid;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,38 +56,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
-import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
+import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
-@ControllerAdvice
 public class SchemaCrawlerDiagramController
 {
 
-  private static Logger logger = LoggerFactory
-    .getLogger(SchemaCrawlerDiagramController.class);
+  private final StorageService storageService;
+  private final ProcessingService processingService;
 
   @Autowired
-  private StorageService storageService;
-  @Autowired
-  private SchemaCrawlerService scService;
-
-  @ExceptionHandler(Throwable.class)
-  public String handleException(final Throwable throwable,
-                                final RedirectAttributes redirectAttributes)
+  public SchemaCrawlerDiagramController(
+    @NotNull final StorageService storageService,
+    @NotNull final ProcessingService processingService)
   {
-    // See http://www.mkyong.com/spring-boot/spring-boot-file-upload-example/
-
-    logger.error(throwable.getMessage(), throwable);
-
-    final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
-
-    redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
-
-    return "redirect:error";
+    this.storageService = storageService;
+    this.processingService = processingService;
   }
 
   @GetMapping(value = "/")
@@ -100,18 +83,21 @@ public class SchemaCrawlerDiagramController
   }
 
   @ResponseBody
-  @GetMapping(value = "/schemacrawler/images/{key}", produces = MediaType.IMAGE_PNG_VALUE)
-  public Resource schemacrawlerDiagram(@PathVariable final String key)
+  @GetMapping(value = "/schemacrawler/images/{key}",
+              produces = MediaType.IMAGE_PNG_VALUE)
+  public Resource diagramImage(
+    @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}")
+    @Size(min = 12, max = 12) final String key)
     throws Exception
   {
-    return storageService.resolve(key, PNG)
-      .map(path -> new FileSystemResource(path.toFile()))
-      .orElseThrow(() -> new Exception("Cannot find image /schemacrawler/images/"
-                                       + key));
+    return storageService
+      .resolve(key, PNG)
+      .map(path -> new PathResource(path))
+      .orElseThrow(() -> new Exception("Cannot find image, " + key));
   }
 
   @GetMapping("/schemacrawler")
-  public String schemacrawlerDiagramForm(final Model model)
+  public String diagramRequestForm(@NotNull final Model model)
   {
     model.addAttribute("diagramRequest", new SchemaCrawlerDiagramRequest());
     return "SchemaCrawlerDiagramForm";
@@ -119,9 +105,11 @@ public class SchemaCrawlerDiagramController
 
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = "/schemacrawler")
-  public String schemacrawlerDiagramFormSubmit(@ModelAttribute("diagramRequest") @Valid final SchemaCrawlerDiagramRequest diagramRequest,
-                                               final BindingResult bindingResult,
-                                               @RequestParam("file") final MultipartFile file)
+  public String diagramRequestFormSubmit(
+    @ModelAttribute("diagramRequest") @NotNull @Valid
+    final SchemaCrawlerDiagramRequest diagramRequest,
+    final BindingResult bindingResult,
+    @RequestParam("file") final MultipartFile file)
     throws Exception
   {
     if (bindingResult.hasErrors())
@@ -129,51 +117,37 @@ public class SchemaCrawlerDiagramController
       return "SchemaCrawlerDiagramForm";
     }
 
-    generateSchemaCrawlerDiagram(diagramRequest, file);
+    final String key = diagramRequest.getKey();
+
+    // Store the uploaded database file
+    storageService.store(file, key, SQLITE_DB);
+    // Save the JSON request to disk
+    storageService.store(new InputStreamResource(toInputStream(diagramRequest.toJson(),
+                                                               UTF_8)),
+                         key,
+                         JSON);
+
+    // Make asynchronous call to generate diagram
+    processingService.generateSchemaCrawlerDiagram(key);
 
     return "SchemaCrawlerDiagramResult";
   }
 
   @GetMapping(value = "/schemacrawler/{key}")
-  public String schemacrawlerDiagramPage(final Model model,
-                                         @PathVariable final String key)
+  public String retrieveResults(final Model model,
+                                @PathVariable @NotNull
+                                @Pattern(regexp = "[A-Za-z0-9]{12}")
+                                @Size(min = 12, max = 12) final String key)
     throws Exception
   {
-    final Path jsonFile = storageService.resolve(key, JSON)
-      .orElseThrow(() -> new Exception("Cannot find integration for " + key));
-    final SchemaCrawlerDiagramRequest diagramRequest = SchemaCrawlerDiagramRequest
-      .fromJson(new String(Files.readAllBytes(jsonFile)));
+    final Path jsonFile = storageService
+      .resolve(key, JSON)
+      .orElseThrow(() -> new Exception("Cannot find request for " + key));
+    final SchemaCrawlerDiagramRequest diagramRequest =
+      SchemaCrawlerDiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerDiagram";
-  }
-
-  private void generateSchemaCrawlerDiagram(final SchemaCrawlerDiagramRequest diagramRequest,
-                                            final MultipartFile file)
-    throws Exception
-  {
-
-    final String key = diagramRequest.getKey();
-
-    // Store the uploaded database file
-    storageService.store(file, key, SQLITE_DB);
-
-    // Generate a database integration, and store the generated image
-    final Path dbFile = storageService.resolve(key, SQLITE_DB)
-      .orElseThrow(() -> new Exception(String
-        .format("Cannot locate database file %s.%s",
-                key,
-                SQLITE_DB)));
-    final Path schemaCrawlerDiagram = scService
-      .createSchemaCrawlerDiagram(dbFile, PNG.getExtension());
-    storageService.store(new FileSystemResource(schemaCrawlerDiagram.toFile()),
-                         key,
-                         PNG);
-
-    // Save the JSON request to disk
-    storageService
-      .store(new InputStreamResource(new ByteArrayInputStream(diagramRequest
-        .toString().getBytes(UTF_8))), key, JSON);
   }
 
 }

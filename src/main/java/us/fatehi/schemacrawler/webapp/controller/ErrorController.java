@@ -25,39 +25,35 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.service.storage;
+package us.fatehi.schemacrawler.webapp.controller;
 
 
-public enum FileExtensionType
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@Controller
+@ControllerAdvice
+public class ErrorController
 {
 
-  SQLITE_DB("db", "application/x-sqlite3"),
-  PNG("png", "image/png"),
-  JSON("json", "application/json");
+  private static final Logger logger =
+    LoggerFactory.getLogger(ErrorController.class);
 
-  private final String extension;
-  private final String mimeType;
-
-  FileExtensionType(final String extension, final String mimeType)
+  @ExceptionHandler(Throwable.class)
+  public String handleException(final Throwable throwable,
+                                final RedirectAttributes redirectAttributes)
   {
-    this.extension = extension;
-    this.mimeType = mimeType;
-  }
+    logger.error(throwable.getMessage(), throwable);
 
-  public String getExtension()
-  {
-    return extension;
-  }
+    final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
+    redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 
-  public String getMimeType()
-  {
-    return mimeType;
-  }
-
-  @Override
-  public String toString()
-  {
-    return getExtension();
+    return "redirect:error";
   }
 
 }

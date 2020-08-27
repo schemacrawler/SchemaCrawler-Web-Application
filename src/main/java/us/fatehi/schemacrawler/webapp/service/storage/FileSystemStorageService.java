@@ -63,10 +63,14 @@ public class FileSystemStorageService
   {
     if (StringUtils.isBlank(storageRootPath))
     {
-      throw new Exception("'schemacrawler.webapp.storage-root' is not configured");
+      throw new Exception(
+        "'schemacrawler.webapp.storage-root' is not configured");
     }
 
-    storageRoot = Paths.get(storageRootPath).normalize().toAbsolutePath();
+    storageRoot = Paths
+      .get(storageRootPath)
+      .normalize()
+      .toAbsolutePath();
 
     // Create storage root if it does not exist
     if (!exists(storageRoot))
@@ -75,7 +79,8 @@ public class FileSystemStorageService
     }
     else if (!isDirectory(storageRoot))
     {
-      throw new Exception("'schemacrawler.webapp.storage-root' is not a directory");
+      throw new Exception(
+        "'schemacrawler.webapp.storage-root' is not a directory");
     }
   }
 
@@ -92,9 +97,10 @@ public class FileSystemStorageService
     {
       return Optional.ofNullable(null);
     }
-    final Path serverLocalPath = storageRoot
-      .resolve(filenameKey + "." + extension.getExtension());
-    if (!exists(serverLocalPath) || !isRegularFile(serverLocalPath)
+    final Path serverLocalPath =
+      storageRoot.resolve(filenameKey + "." + extension.getExtension());
+    if (!exists(serverLocalPath)
+        || !isRegularFile(serverLocalPath)
         || !isReadable(serverLocalPath))
     {
       return Optional.ofNullable(null);
@@ -120,8 +126,8 @@ public class FileSystemStorageService
     }
 
     // Save stream to a file
-    final Path filePath = storageRoot
-      .resolve(filenameKey + "." + extension.getExtension());
+    final Path filePath =
+      storageRoot.resolve(filenameKey + "." + extension.getExtension());
     copy(streamSource.getInputStream(), filePath);
 
     // Check that the file is not empty
@@ -138,15 +144,15 @@ public class FileSystemStorageService
    * Prevent malicious injection attacks.
    *
    * @param filenameKey
-   *        Filename key
+   *   Filename key
    * @throws Exception
-   *         On a badly constructed filename key.
+   *   On a badly constructed filename key.
    */
   private void validateFilenameKey(final String filenameKey)
     throws Exception
   {
-    if (StringUtils.length(filenameKey) != 12
-        || !StringUtils.isAlphanumeric(filenameKey))
+    if (StringUtils.length(filenameKey) != 12 || !StringUtils.isAlphanumeric(
+      filenameKey))
     {
       throw new Exception(String.format("Invalid filename key \"%s\"",
                                         filenameKey));

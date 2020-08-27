@@ -28,20 +28,21 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.model;
 
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import static java.util.Objects.requireNonNull;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Reader;
+import java.io.Serializable;
+import java.time.Instant;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class SchemaCrawlerDiagramRequest
   implements Serializable
@@ -49,13 +50,15 @@ public class SchemaCrawlerDiagramRequest
 
   private static final long serialVersionUID = 2065519510282344200L;
 
-  private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+  private static final Gson gson = new GsonBuilder()
+    .setPrettyPrinting()
+    .create();
 
   /**
    * Factory method to deserialize a JSON request.
    *
    * @param jsonRequest
-   *        JSON serialized request.
+   *   JSON serialized request.
    * @return Deserialzied Java request.
    */
   public static SchemaCrawlerDiagramRequest fromJson(final String jsonRequest)
@@ -67,21 +70,31 @@ public class SchemaCrawlerDiagramRequest
     return gson.fromJson(jsonRequest, SchemaCrawlerDiagramRequest.class);
   }
 
+  /**
+   * Factory method to deserialize a JSON request.
+   *
+   * @param jsonReader
+   *   JSON serialized request reader.
+   * @return Deserialzied Java request.
+   */
+  public static SchemaCrawlerDiagramRequest fromJson(final Reader jsonReader)
+  {
+    requireNonNull(jsonReader, "No reader provided");
+    return gson.fromJson(jsonReader, SchemaCrawlerDiagramRequest.class);
+  }
+
+  private final String key;
+  private final Instant timestamp;
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
   private String name;
-
   @NotNull
-  @Pattern(regexp = "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z", message = "Please enter a valid email address")
+  @Pattern(regexp = "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z",
+           message = "Please enter a valid email address")
   private String email;
-
   @NotNull
   @Size(min = 1, message = "Please select a file to upload")
   private String file;
-
-  private final String key;
-
-  private final LocalDateTime timestamp;
 
   /**
    * Public constructor. Generates a random key, and sets the creation
@@ -89,17 +102,10 @@ public class SchemaCrawlerDiagramRequest
    */
   public SchemaCrawlerDiagramRequest()
   {
-    timestamp = LocalDateTime.now();
-    key = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean equals(final Object obj)
-  {
-    return EqualsBuilder.reflectionEquals(this, obj);
+    timestamp = Instant.now();
+    key = RandomStringUtils
+      .randomAlphanumeric(12)
+      .toLowerCase();
   }
 
   /**
@@ -112,6 +118,11 @@ public class SchemaCrawlerDiagramRequest
     return email;
   }
 
+  public void setEmail(final String email)
+  {
+    this.email = email;
+  }
+
   /**
    * Returns the uploaded file name.
    *
@@ -120,6 +131,17 @@ public class SchemaCrawlerDiagramRequest
   public String getFile()
   {
     return file;
+  }
+
+  /**
+   * Sets the uploaded file name.
+   *
+   * @param file
+   *   Uploaded file name.
+   */
+  public void setFile(final String file)
+  {
+    this.file = file;
   }
 
   /**
@@ -143,11 +165,22 @@ public class SchemaCrawlerDiagramRequest
   }
 
   /**
+   * Sets the name of the requester.
+   *
+   * @param name
+   *   Name of the requester.
+   */
+  public void setName(final String name)
+  {
+    this.name = name;
+  }
+
+  /**
    * Returns the request creation timestamp.
    *
    * @return Request creation timestamp.
    */
-  public LocalDateTime getTimestamp()
+  public Instant getTimestamp()
   {
     return timestamp;
   }
@@ -161,31 +194,13 @@ public class SchemaCrawlerDiagramRequest
     return HashCodeBuilder.reflectionHashCode(this, false);
   }
 
-  public void setEmail(final String email)
-  {
-    this.email = email;
-  }
-
   /**
-   * Sets the uploaded file name.
-   *
-   * @param file
-   *        Uploaded file name.
+   * {@inheritDoc}
    */
-  public void setFile(final String file)
+  @Override
+  public boolean equals(final Object obj)
   {
-    this.file = file;
-  }
-
-  /**
-   * Sets the name of the requester.
-   *
-   * @param name
-   *        Name of the requester.
-   */
-  public void setName(final String name)
-  {
-    this.name = name;
+    return EqualsBuilder.reflectionEquals(this, obj);
   }
 
   /**
@@ -193,6 +208,16 @@ public class SchemaCrawlerDiagramRequest
    */
   @Override
   public String toString()
+  {
+    return toJson();
+  }
+
+  /**
+   * Converts this object to JSON.
+   *
+   * @return JSON string
+   */
+  public String toJson()
   {
     return gson.toJson(this);
   }

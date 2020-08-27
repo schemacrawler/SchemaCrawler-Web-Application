@@ -29,12 +29,12 @@ package us.fatehi.schemacrawler.webapp;
 
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,10 +51,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
+import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
@@ -70,6 +71,8 @@ public class SchemaCrawlerControllerTest
   private StorageService storageService;
   @MockBean
   private SchemaCrawlerService scService;
+  @SpyBean
+  private ProcessingService processingService;
 
   @Test
   public void formWithNoParameters()
@@ -78,9 +81,10 @@ public class SchemaCrawlerControllerTest
     final MockMultipartFile multipartFile = new MockMultipartFile("file",
                                                                   "test.db",
                                                                   "application/octet-stream",
-                                                                  RandomUtils
-                                                                    .nextBytes(5));
-    mvc.perform(fileUpload("/schemacrawler").file(multipartFile))
+                                                                  RandomUtils.nextBytes(
+                                                                    5));
+    mvc
+      .perform(multipart("/schemacrawler").file(multipartFile))
       .andExpect(model().errorCount(2))
       .andExpect(model().attributeHasFieldErrors("diagramRequest",
                                                  "name",
@@ -95,23 +99,28 @@ public class SchemaCrawlerControllerTest
     final MockMultipartFile multipartFile = new MockMultipartFile("file",
                                                                   "test.db",
                                                                   "application/octet-stream",
-                                                                  RandomUtils
-                                                                    .nextBytes(5));
+                                                                  RandomUtils.nextBytes(
+                                                                    5));
 
-    when(storageService.resolve(any(), eq(SQLITE_DB)))
-      .thenReturn(Optional.ofNullable(Paths.get("/")));
-    when(scService.createSchemaCrawlerDiagram(any(), eq("png")))
-      .thenReturn(Paths.get("/"));
+    when(storageService.resolve(any(),
+                                eq(SQLITE_DB))).thenReturn(Optional.ofNullable(
+      Paths.get("/")));
+    when(scService.createSchemaCrawlerDiagram(any(), eq("png"))).thenReturn(
+      Paths.get("/"));
 
     mvc
-      .perform(fileUpload("/schemacrawler").file(multipartFile)
-        .param("name", "Sualeh").param("email", "sualeh@hotmail.com"))
+      .perform(multipart("/schemacrawler")
+                 .file(multipartFile)
+                 .param("name", "Sualeh")
+                 .param("email", "sualeh@hotmail.com"))
       .andExpect(view().name("SchemaCrawlerDiagramResult"))
       .andExpect(status().is2xxSuccessful());
 
-    then(storageService).should().store(eq(multipartFile),
-                                        any(),
-                                        eq(SQLITE_DB));
+    then(storageService)
+      .should()
+      .store(eq(multipartFile), any(), eq(SQLITE_DB));
+
+    // NOTE: The image file is not created - assert that by testing the service itself
   }
 
   @Test
@@ -121,32 +130,35 @@ public class SchemaCrawlerControllerTest
     final MockMultipartFile multipartFile = new MockMultipartFile("file",
                                                                   "test.db",
                                                                   "application/octet-stream",
-                                                                  RandomUtils
-                                                                    .nextBytes(5));
+                                                                  RandomUtils.nextBytes(
+                                                                    5));
 
-    when(storageService.resolve(any(), eq(SQLITE_DB)))
-      .thenReturn(Optional.ofNullable(null)); // Do not "find" the
-                                              // SQLite database
-    when(scService.createSchemaCrawlerDiagram(any(), eq("png")))
-      .thenReturn(Paths.get("/"));
+    when(storageService.resolve(any(),
+                                eq(SQLITE_DB))).thenReturn(Optional.ofNullable(
+      null)); // Do not "find" the
+    // SQLite database
+    when(scService.createSchemaCrawlerDiagram(any(), eq("png"))).thenReturn(
+      Paths.get("/"));
 
     mvc
-      .perform(fileUpload("/schemacrawler").file(multipartFile)
-        .param("name", "Sualeh").param("email", "sualeh@hotmail.com"))
-      // TODO: Check for the correct exception
-      .andExpect(view().name("redirect:error"))
-      .andExpect(status().is3xxRedirection());
+      .perform(multipart("/schemacrawler")
+                 .file(multipartFile)
+                 .param("name", "Sualeh")
+                 .param("email", "sualeh@hotmail.com"))
+      .andExpect(view().name("SchemaCrawlerDiagramResult"))
+      .andExpect(status().is2xxSuccessful());
 
-    then(storageService).should().store(eq(multipartFile),
-                                        any(),
-                                        eq(SQLITE_DB));
+    then(storageService)
+      .should()
+      .store(eq(multipartFile), any(), eq(SQLITE_DB));
   }
 
   @Test
   public void index()
     throws Exception
   {
-    mvc.perform(get("/schemacrawler"))
+    mvc
+      .perform(get("/schemacrawler"))
       .andExpect(content().string(containsString("SchemaCrawler Diagram")));
   }
 

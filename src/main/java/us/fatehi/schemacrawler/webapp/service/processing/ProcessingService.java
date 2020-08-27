@@ -25,39 +25,28 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.service.storage;
+package us.fatehi.schemacrawler.webapp.service.processing;
 
 
-public enum FileExtensionType
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.nio.file.Path;
+
+/**
+ * Service for processing.
+ *
+ * @author Sualeh Fatehi
+ */
+public interface ProcessingService
 {
 
-  SQLITE_DB("db", "application/x-sqlite3"),
-  PNG("png", "image/png"),
-  JSON("json", "application/json");
-
-  private final String extension;
-  private final String mimeType;
-
-  FileExtensionType(final String extension, final String mimeType)
-  {
-    this.extension = extension;
-    this.mimeType = mimeType;
-  }
-
-  public String getExtension()
-  {
-    return extension;
-  }
-
-  public String getMimeType()
-  {
-    return mimeType;
-  }
-
-  @Override
-  public String toString()
-  {
-    return getExtension();
-  }
+  /**
+   * Generate SchemaCrawler diagram, and store it in storage
+   * @param key Key to use to retrieve database, and store results
+   * @throws Exception On an exception
+   */
+  void generateSchemaCrawlerDiagram(String key)
+    throws Exception;
 
 }
