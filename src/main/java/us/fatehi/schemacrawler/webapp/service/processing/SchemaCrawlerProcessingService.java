@@ -67,7 +67,7 @@ public class SchemaCrawlerProcessingService
   /**
    * {@inheritDoc}
    */
-  // @Async
+  @Async
   @Override
   public void generateSchemaCrawlerDiagram(
     @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)

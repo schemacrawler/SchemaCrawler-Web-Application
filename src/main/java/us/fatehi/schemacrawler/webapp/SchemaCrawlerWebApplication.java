@@ -36,7 +36,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-@EnableAsync
 public class SchemaCrawlerWebApplication
   implements WebMvcConfigurer, CommandLineRunner
 {

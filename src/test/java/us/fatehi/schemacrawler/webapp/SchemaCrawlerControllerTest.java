@@ -31,6 +31,7 @@ package us.fatehi.schemacrawler.webapp;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -39,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
 import java.nio.file.Paths;
@@ -51,9 +53,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
@@ -69,6 +73,8 @@ public class SchemaCrawlerControllerTest
   private StorageService storageService;
   @MockBean
   private SchemaCrawlerService scService;
+  @SpyBean
+  private ProcessingService processingService;
 
   @Test
   public void formWithNoParameters()
@@ -111,6 +117,8 @@ public class SchemaCrawlerControllerTest
     then(storageService).should().store(eq(multipartFile),
                                         any(),
                                         eq(SQLITE_DB));
+
+    // NOTE: The image file is not created - assert that by testing the service itself
   }
 
   @Test
@@ -132,9 +140,8 @@ public class SchemaCrawlerControllerTest
     mvc
       .perform(multipart("/schemacrawler").file(multipartFile)
         .param("name", "Sualeh").param("email", "sualeh@hotmail.com"))
-      // TODO: Check for the correct exception
-      .andExpect(view().name("redirect:error"))
-      .andExpect(status().is3xxRedirection());
+      .andExpect(view().name("SchemaCrawlerDiagramResult"))
+      .andExpect(status().is2xxSuccessful());
 
     then(storageService).should().store(eq(multipartFile),
                                         any(),

@@ -29,6 +29,7 @@ package us.fatehi.schemacrawler.webapp.controller;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.Files.readAllBytes;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
@@ -38,7 +39,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,8 +144,8 @@ public class SchemaCrawlerDiagramController
       .resolve(key, JSON)
       .orElseThrow(() -> new Exception("Cannot find request for " + key));
     final SchemaCrawlerDiagramRequest diagramRequest =
-      SchemaCrawlerDiagramRequest.fromJson(new String(Files.readAllBytes(
-        jsonFile)));
+      SchemaCrawlerDiagramRequest.fromJson(new String(readAllBytes(jsonFile),
+                                                      UTF_8));
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerDiagram";
