@@ -29,7 +29,7 @@ package us.fatehi.schemacrawler.webapp.controller;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.nio.file.Files.readAllBytes;
+import static java.nio.file.Files.newBufferedReader;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
@@ -122,7 +122,7 @@ public class SchemaCrawlerDiagramController
     // Store the uploaded database file
     storageService.store(file, key, SQLITE_DB);
     // Save the JSON request to disk
-    storageService.store(new InputStreamResource(toInputStream(diagramRequest.toString(),
+    storageService.store(new InputStreamResource(toInputStream(diagramRequest.toJson(),
                                                                UTF_8)),
                          key,
                          JSON);
@@ -144,8 +144,7 @@ public class SchemaCrawlerDiagramController
       .resolve(key, JSON)
       .orElseThrow(() -> new Exception("Cannot find request for " + key));
     final SchemaCrawlerDiagramRequest diagramRequest =
-      SchemaCrawlerDiagramRequest.fromJson(new String(readAllBytes(jsonFile),
-                                                      UTF_8));
+      SchemaCrawlerDiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerDiagram";

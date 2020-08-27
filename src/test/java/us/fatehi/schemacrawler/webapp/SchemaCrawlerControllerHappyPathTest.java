@@ -29,7 +29,7 @@ package us.fatehi.schemacrawler.webapp;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.nio.file.Files.readAllBytes;
+import static java.nio.file.Files.newBufferedReader;
 import static java.time.Duration.ofMillis;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -118,8 +118,8 @@ public class SchemaCrawlerControllerHappyPathTest
     });
 
     final SchemaCrawlerDiagramRequest schemaCrawlerDiagramRequestFromJson =
-      SchemaCrawlerDiagramRequest.fromJson(new String(readAllBytes(
-        jsonPathOptional.get()), UTF_8));
+      SchemaCrawlerDiagramRequest.fromJson(newBufferedReader(jsonPathOptional.get(),
+                                                             UTF_8));
     assertThat(diagramRequest,
                is(equalTo(schemaCrawlerDiagramRequestFromJson)));
 

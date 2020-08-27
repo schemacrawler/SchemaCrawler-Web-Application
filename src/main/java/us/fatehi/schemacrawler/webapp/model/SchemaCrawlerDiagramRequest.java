@@ -28,11 +28,14 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.model;
 
 
+import static java.util.Objects.requireNonNull;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Reader;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -66,8 +69,22 @@ public class SchemaCrawlerDiagramRequest
     }
     return gson.fromJson(jsonRequest, SchemaCrawlerDiagramRequest.class);
   }
+
+  /**
+   * Factory method to deserialize a JSON request.
+   *
+   * @param jsonReader
+   *   JSON serialized request reader.
+   * @return Deserialzied Java request.
+   */
+  public static SchemaCrawlerDiagramRequest fromJson(final Reader jsonReader)
+  {
+    requireNonNull(jsonReader, "No reader provided");
+    return gson.fromJson(jsonReader, SchemaCrawlerDiagramRequest.class);
+  }
+
   private final String key;
-  private final LocalDateTime timestamp;
+  private final Instant timestamp;
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
   private String name;
@@ -85,7 +102,7 @@ public class SchemaCrawlerDiagramRequest
    */
   public SchemaCrawlerDiagramRequest()
   {
-    timestamp = LocalDateTime.now();
+    timestamp = Instant.now();
     key = RandomStringUtils
       .randomAlphanumeric(12)
       .toLowerCase();
@@ -163,7 +180,7 @@ public class SchemaCrawlerDiagramRequest
    *
    * @return Request creation timestamp.
    */
-  public LocalDateTime getTimestamp()
+  public Instant getTimestamp()
   {
     return timestamp;
   }
@@ -191,6 +208,16 @@ public class SchemaCrawlerDiagramRequest
    */
   @Override
   public String toString()
+  {
+    return toJson();
+  }
+
+  /**
+   * Converts this object to JSON.
+   *
+   * @return JSON string
+   */
+  public String toJson()
   {
     return gson.toJson(this);
   }
