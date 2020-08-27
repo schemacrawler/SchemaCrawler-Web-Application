@@ -45,22 +45,22 @@ public interface StorageService
    * Initializes the service.
    *
    * @throws Exception
-   *         On an exception.
+   *   On an exception.
    */
   void init()
     throws Exception;
 
   /**
-   * Resolves a filename key and extension into a local default
-   * file-system path to a file.
+   * Resolves a filename key and extension into a local default file-system path
+   * to a file.
    *
    * @param filenameKey
-   *        Filename key.
+   *   Filename key.
    * @param extension
-   *        Filename extension.
+   *   Filename extension.
    * @return a local file-system path to a file, if one is found.
    * @throws Exception
-   *         Exception resolving a path.
+   *   Exception resolving a path.
    */
   Optional<Path> resolve(String filenameKey, FileExtensionType extension)
     throws Exception;
@@ -69,13 +69,13 @@ public interface StorageService
    * Stores a stream given a filename key and extension.
    *
    * @param stream
-   *        Input stream
+   *   Input stream
    * @param filenameKey
-   *        Filename key.
+   *   Filename key.
    * @param extension
-   *        Filename extension.
+   *   Filename extension.
    * @throws Exception
-   *         Exception storing a file.
+   *   Exception storing a file.
    */
   void store(InputStreamSource stream,
              String filenameKey,

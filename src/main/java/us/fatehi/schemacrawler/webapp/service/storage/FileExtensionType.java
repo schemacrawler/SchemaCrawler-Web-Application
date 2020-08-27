@@ -31,14 +31,14 @@ package us.fatehi.schemacrawler.webapp.service.storage;
 public enum FileExtensionType
 {
 
- SQLITE_DB("db", "application/x-sqlite3"),
- PNG("png", "image/png"),
- JSON("json", "application/json");
+  SQLITE_DB("db", "application/x-sqlite3"),
+  PNG("png", "image/png"),
+  JSON("json", "application/json");
 
   private final String extension;
   private final String mimeType;
 
-  private FileExtensionType(final String extension, final String mimeType)
+  FileExtensionType(final String extension, final String mimeType)
   {
     this.extension = extension;
     this.mimeType = mimeType;
