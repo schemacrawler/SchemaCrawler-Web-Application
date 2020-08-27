@@ -102,8 +102,8 @@ public class SchemaCrawlerControllerTest
                                                                   RandomUtils.nextBytes(
                                                                     5));
 
-    when(storageService.resolve(any(),
-                                eq(SQLITE_DB))).thenReturn(Optional.ofNullable(
+    when(storageService.retrieveLocal(any(),
+                                      eq(SQLITE_DB))).thenReturn(Optional.ofNullable(
       Paths.get("/")));
     when(scService.createSchemaCrawlerDiagram(any(), eq("png"))).thenReturn(
       Paths.get("/"));
@@ -118,7 +118,7 @@ public class SchemaCrawlerControllerTest
 
     then(storageService)
       .should()
-      .store(eq(multipartFile), any(), eq(SQLITE_DB));
+      .storeLocal(eq(multipartFile), any(), eq(SQLITE_DB));
 
     // NOTE: The image file is not created - assert that by testing the service itself
   }
@@ -133,8 +133,8 @@ public class SchemaCrawlerControllerTest
                                                                   RandomUtils.nextBytes(
                                                                     5));
 
-    when(storageService.resolve(any(),
-                                eq(SQLITE_DB))).thenReturn(Optional.ofNullable(
+    when(storageService.retrieveLocal(any(),
+                                      eq(SQLITE_DB))).thenReturn(Optional.ofNullable(
       null)); // Do not "find" the
     // SQLite database
     when(scService.createSchemaCrawlerDiagram(any(), eq("png"))).thenReturn(
@@ -150,7 +150,7 @@ public class SchemaCrawlerControllerTest
 
     then(storageService)
       .should()
-      .store(eq(multipartFile), any(), eq(SQLITE_DB));
+      .storeLocal(eq(multipartFile), any(), eq(SQLITE_DB));
   }
 
   @Test

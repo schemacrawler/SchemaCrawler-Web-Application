@@ -102,15 +102,15 @@ public class SchemaCrawlerControllerHappyPathTest
     final String key = diagramRequest.getKey();
 
     final Optional<Path> sqlitePathOptional =
-      storageService.resolve(key, SQLITE_DB);
+      storageService.retrieveLocal(key, SQLITE_DB);
     assertThat(sqlitePathOptional.isPresent(), is(equalTo(true)));
-    final Optional<Path> jsonPathOptional = storageService.resolve(key, JSON);
+    final Optional<Path> jsonPathOptional = storageService.retrieveLocal(key, JSON);
     assertThat(jsonPathOptional.isPresent(), is(equalTo(true)));
 
     // Wait for diagram to be created
     assertTimeoutPreemptively(ofMillis(5000), () -> {
       while (!storageService
-        .resolve(key, PNG)
+        .retrieveLocal(key, PNG)
         .isPresent())
       {
         Thread.sleep(200);

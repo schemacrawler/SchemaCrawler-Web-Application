@@ -42,7 +42,7 @@ public interface StorageService
 {
 
   /**
-   * Initializes the service.
+   * Initializes the service. Called via a Spring @PostConstruct.
    *
    * @throws Exception
    *   On an exception.
@@ -54,32 +54,48 @@ public interface StorageService
    * Resolves a filename key and extension into a local default file-system path
    * to a file.
    *
-   * @param filenameKey
-   *   Filename key.
+   * @param key
+   *   Key.
    * @param extension
    *   Filename extension.
    * @return a local file-system path to a file, if one is found.
    * @throws Exception
    *   Exception resolving a path.
    */
-  Optional<Path> resolve(String filenameKey, FileExtensionType extension)
+  Optional<Path> retrieveLocal(String key, FileExtensionType extension)
     throws Exception;
 
   /**
-   * Stores a stream given a filename key and extension.
+   * Stores a stream given a key and extension.
    *
    * @param stream
    *   Input stream
-   * @param filenameKey
-   *   Filename key.
+   * @param key
+   *   Key.
    * @param extension
    *   Filename extension.
    * @throws Exception
    *   Exception storing a file.
    */
-  void store(InputStreamSource stream,
-             String filenameKey,
-             FileExtensionType extension)
+  void store(InputStreamSource stream, String key, FileExtensionType extension)
+    throws Exception;
+
+  /**
+   * Stores a stream given a filename key and extension locally in a temporary
+   * file.
+   *
+   * @param stream
+   *   Input stream
+   * @param key
+   *   Key.
+   * @param extension
+   *   Filename extension.
+   * @throws Exception
+   *   Exception storing a file.
+   */
+  Path storeLocal(InputStreamSource stream,
+                  String key,
+                  FileExtensionType extension)
     throws Exception;
 
 }

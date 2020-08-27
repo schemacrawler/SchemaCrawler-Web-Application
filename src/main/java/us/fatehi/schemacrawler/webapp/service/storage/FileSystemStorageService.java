@@ -35,16 +35,16 @@ import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
 
+import javax.annotation.PostConstruct;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service("storageService")
@@ -88,17 +88,17 @@ public class FileSystemStorageService
    * {@inheritDoc}
    */
   @Override
-  public Optional<Path> resolve(final String filenameKey,
-                                final FileExtensionType extension)
+  public Optional<Path> retrieveLocal(final String key,
+                                      final FileExtensionType extension)
     throws Exception
   {
-    validateFilenameKey(filenameKey);
+    validateKey(key);
     if (extension == null)
     {
       return Optional.ofNullable(null);
     }
     final Path serverLocalPath =
-      storageRoot.resolve(filenameKey + "." + extension.getExtension());
+      storageRoot.resolve(key + "." + extension.getExtension());
     if (!exists(serverLocalPath)
         || !isRegularFile(serverLocalPath)
         || !isReadable(serverLocalPath))
@@ -112,22 +112,45 @@ public class FileSystemStorageService
    * {@inheritDoc}
    */
   @Override
-  public void store(final InputStreamSource streamSource,
-                    final String filenameKey,
-                    final FileExtensionType extension)
+  public void store(@NonNull final InputStreamSource streamSource,
+                    @NonNull final String key,
+                    @NonNull final FileExtensionType extension)
     throws Exception
   {
-    validateFilenameKey(filenameKey);
-    if (streamSource == null || extension == null)
-    {
-      throw new Exception(String.format("Failed to store file %s%s",
-                                        filenameKey,
-                                        extension));
-    }
+    final Path filePath =
+      storageRoot.resolve(key + "." + extension.getExtension());
+
+    saveFile(streamSource, key, extension, filePath);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Path storeLocal(@NonNull final InputStreamSource streamSource,
+                         @NonNull final String key,
+                         @NonNull final FileExtensionType extension)
+    throws Exception
+  {
+    final Path filePath = Paths.get(System.getProperty("java.io.tmpdir"),
+                                    String.format("%s.%s",
+                                                  key,
+                                                  extension.getExtension()));
+
+    saveFile(streamSource, key, extension, filePath);
+
+    return filePath;
+  }
+
+  private void saveFile(final InputStreamSource streamSource,
+                        final String key,
+                        final FileExtensionType extension,
+                        final Path filePath)
+    throws Exception
+  {
+    validateKey(key);
 
     // Save stream to a file
-    final Path filePath =
-      storageRoot.resolve(filenameKey + "." + extension.getExtension());
     copy(streamSource.getInputStream(), filePath);
 
     // Check that the file is not empty
@@ -135,7 +158,7 @@ public class FileSystemStorageService
     {
       Files.delete(filePath);
       throw new Exception(String.format("No data for file %s.%s",
-                                        filenameKey,
+                                        key,
                                         extension));
     }
   }
@@ -143,19 +166,17 @@ public class FileSystemStorageService
   /**
    * Prevent malicious injection attacks.
    *
-   * @param filenameKey
-   *   Filename key
+   * @param key
+   *   Key
    * @throws Exception
-   *   On a badly constructed filename key.
+   *   On a badly constructed key.
    */
-  private void validateFilenameKey(final String filenameKey)
+  private void validateKey(final String key)
     throws Exception
   {
-    if (StringUtils.length(filenameKey) != 12 || !StringUtils.isAlphanumeric(
-      filenameKey))
+    if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key))
     {
-      throw new Exception(String.format("Invalid filename key \"%s\"",
-                                        filenameKey));
+      throw new Exception(String.format("Invalid filename key \"%s\"", key));
     }
   }
 

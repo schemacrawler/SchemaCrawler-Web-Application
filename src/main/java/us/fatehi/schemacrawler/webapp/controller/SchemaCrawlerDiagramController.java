@@ -30,7 +30,6 @@ package us.fatehi.schemacrawler.webapp.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.newBufferedReader;
-import static org.apache.commons.io.IOUtils.toInputStream;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
@@ -42,7 +41,6 @@ import javax.validation.constraints.Size;
 import java.nio.file.Path;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -91,7 +89,7 @@ public class SchemaCrawlerDiagramController
     throws Exception
   {
     return storageService
-      .resolve(key, PNG)
+      .retrieveLocal(key, PNG)
       .map(path -> new PathResource(path))
       .orElseThrow(() -> new Exception("Cannot find image, " + key));
   }
@@ -120,15 +118,10 @@ public class SchemaCrawlerDiagramController
     final String key = diagramRequest.getKey();
 
     // Store the uploaded database file
-    storageService.store(file, key, SQLITE_DB);
-    // Save the JSON request to disk
-    storageService.store(new InputStreamResource(toInputStream(diagramRequest.toJson(),
-                                                               UTF_8)),
-                         key,
-                         JSON);
+    final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
 
     // Make asynchronous call to generate diagram
-    processingService.generateSchemaCrawlerDiagram(key);
+    processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
 
     return "SchemaCrawlerDiagramResult";
   }
@@ -141,7 +134,7 @@ public class SchemaCrawlerDiagramController
     throws Exception
   {
     final Path jsonFile = storageService
-      .resolve(key, JSON)
+      .retrieveLocal(key, JSON)
       .orElseThrow(() -> new Exception("Cannot find request for " + key));
     final SchemaCrawlerDiagramRequest diagramRequest =
       SchemaCrawlerDiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));

@@ -33,6 +33,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.nio.file.Path;
 
+import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
+
 /**
  * Service for processing.
  *
@@ -43,10 +45,13 @@ public interface ProcessingService
 
   /**
    * Generate SchemaCrawler diagram, and store it in storage
-   * @param key Key to use to retrieve database, and store results
+   *
+   * @param diagramRequest
+   * @param localPath
    * @throws Exception On an exception
    */
-  void generateSchemaCrawlerDiagram(String key)
+  void generateSchemaCrawlerDiagram(final SchemaCrawlerDiagramRequest diagramRequest,
+                                    final Path localPath)
     throws Exception;
 
 }
