@@ -42,7 +42,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -52,25 +52,20 @@ public class FileSystemStorageService
   implements StorageService
 {
 
-  @Value("${schemacrawler.webapp.storage-root}")
-  private String storageRootPath;
-  private Path storageRoot;
+  private final FileSystemStorageConfig config;
+
+  @Autowired
+  public FileSystemStorageService(@NonNull final FileSystemStorageConfig config)
+  {
+    this.config = config;
+  }
 
   @Override
   @PostConstruct
   public void init()
     throws Exception
   {
-    if (StringUtils.isBlank(storageRootPath))
-    {
-      throw new Exception(
-        "'schemacrawler.webapp.storage-root' is not configured");
-    }
-
-    storageRoot = Paths
-      .get(storageRootPath)
-      .normalize()
-      .toAbsolutePath();
+    final Path storageRoot = config.fileSystemStorageRootPath();
 
     // Create storage root if it does not exist
     if (!exists(storageRoot))
@@ -95,15 +90,16 @@ public class FileSystemStorageService
     validateKey(key);
     if (extension == null)
     {
-      return Optional.ofNullable(null);
+      return Optional.empty();
     }
-    final Path serverLocalPath =
-      storageRoot.resolve(key + "." + extension.getExtension());
+    final Path serverLocalPath = config
+      .fileSystemStorageRootPath()
+      .resolve(key + "." + extension.getExtension());
     if (!exists(serverLocalPath)
         || !isRegularFile(serverLocalPath)
         || !isReadable(serverLocalPath))
     {
-      return Optional.ofNullable(null);
+      return Optional.empty();
     }
     return Optional.of(serverLocalPath);
   }
@@ -117,8 +113,9 @@ public class FileSystemStorageService
                     @NonNull final FileExtensionType extension)
     throws Exception
   {
-    final Path filePath =
-      storageRoot.resolve(key + "." + extension.getExtension());
+    final Path filePath = config
+      .fileSystemStorageRootPath()
+      .resolve(key + "." + extension.getExtension());
 
     saveFile(streamSource, key, extension, filePath);
   }
