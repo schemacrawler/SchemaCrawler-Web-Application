@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-public class AmazonS3PropertiesConfig
+public class AmazonS3StorageConfig
 {
 
   @Value("${AWS_ACCESS_KEY_ID:bad-access-key}")
