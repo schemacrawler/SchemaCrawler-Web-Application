@@ -107,11 +107,8 @@ public class AmazonS3StorageService
       // Download file from S3
       filePath =
         Files.createTempFile("sc-webapp", "." + extension.getExtension());
-      final GetObjectRequest request = new GetObjectRequest(awsS3Bucket,
-                                                            String.format(
-                                                              "%s.%s",
-                                                              key,
-                                                              extension));
+      final GetObjectRequest request =
+        new GetObjectRequest(awsS3Bucket, key + "." + extension.getExtension());
       final S3Object s3Object = amazonS3.getObject(request);
       copy(s3Object.getObjectContent(), filePath, REPLACE_EXISTING);
     }
@@ -143,10 +140,9 @@ public class AmazonS3StorageService
       final ObjectMetadata metadata = new ObjectMetadata();
       metadata.setContentType(extension.getMimeType());
       final PutObjectRequest request = new PutObjectRequest(awsS3Bucket,
-                                                            String.format(
-                                                              "%s.%s",
-                                                              key,
-                                                              extension),
+                                                            key
+                                                            + "."
+                                                            + extension.getExtension(),
                                                             streamSource.getInputStream(),
                                                             metadata);
       amazonS3.putObject(request);
@@ -172,7 +168,7 @@ public class AmazonS3StorageService
 
     // Save stream to a file
     final Path filePath =
-      Files.createTempFile("sc-webapp", "." + extension.getExtension());
+      Files.createTempFile("sc-webapp.", "." + extension.getExtension());
     copy(streamSource.getInputStream(), filePath, REPLACE_EXISTING);
 
     // Check that the file is not empty
