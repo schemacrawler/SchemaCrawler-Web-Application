@@ -31,7 +31,6 @@ package us.fatehi.schemacrawler.webapp.service.schemacrawler;
 import java.nio.file.Path;
 
 import org.springframework.stereotype.Service;
-
 import schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility;
 
 /**
