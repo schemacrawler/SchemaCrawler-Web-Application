@@ -16,24 +16,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:/aws-s3-storage.properties")
 public class AmazonS3PropertiesConfig
-  implements AmazonS3Config
 {
 
-  @Value("${aws.access.key.id}")
+  @Value("${AWS_ACCESS_KEY_ID:bad-access-key}")
   @NotNull
   private String awsKeyId;
 
-  @Value("${aws.access.key.secret}")
+  @Value("${AWS_SECRET:bad-secret}")
   @NotNull
   private String awsKeySecret;
 
-  @Value("${aws.region}")
+  @Value("${AWS_REGION:us-east-1}")
   @NotNull
   private String awsRegion;
 
-  @Value("${aws.s3.bucket}")
+  @Value("${AWS_S3_BUCKET:sc-web-app-1}")
   @NotNull
   private String awsS3Bucket;
 
