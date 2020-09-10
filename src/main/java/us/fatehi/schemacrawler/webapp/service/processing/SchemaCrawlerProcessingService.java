@@ -95,13 +95,8 @@ public class SchemaCrawlerProcessingService
                          JSON);
 
     // Generate a database integration, and store the generated image
-    final Path dbFile = storageService
-      .retrieveLocal(key, SQLITE_DB)
-      .orElseThrow(() -> new Exception(String.format(
-        "Cannot locate database file, %s",
-        key)));
     final Path schemaCrawlerDiagram =
-      scService.createSchemaCrawlerDiagram(dbFile, PNG.getExtension());
+      scService.createSchemaCrawlerDiagram(localPath, PNG.getExtension());
     storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
   }
 

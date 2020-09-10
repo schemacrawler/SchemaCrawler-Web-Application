@@ -29,18 +29,23 @@ package us.fatehi.schemacrawler.webapp.service.storage;
 
 
 import static java.nio.file.Files.copy;
-import static java.nio.file.Files.createDirectories;
-import static java.nio.file.Files.exists;
-import static java.nio.file.Files.isDirectory;
-import static java.nio.file.Files.isReadable;
-import static java.nio.file.Files.isRegularFile;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.regions.Region;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -48,37 +53,37 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-@Service("fileSystemStorageService")
-@Profile("development")
-public class FileSystemStorageService
+@Service("amazonS3StorageService")
+@Profile("production")
+public class AmazonS3StorageService
   implements StorageService
 {
 
-  private final FileSystemStorageConfig config;
+  private final static Logger logger =
+    Logger.getLogger(AmazonS3StorageService.class.getName());
+
+  private final String awsS3Bucket;
+  private final AmazonS3 amazonS3;
 
   @Autowired
-  public FileSystemStorageService(@NonNull final FileSystemStorageConfig config)
+  public AmazonS3StorageService(@NonNull final Region awsRegion,
+                                @NonNull final String awsS3Bucket,
+                                @NonNull
+                                final AWSCredentialsProvider awsCredentialsProvider)
   {
-    this.config = config;
+    this.amazonS3 = AmazonS3ClientBuilder
+      .standard()
+      .withCredentials(awsCredentialsProvider)
+      .withRegion(awsRegion.getName())
+      .build();
+    this.awsS3Bucket = awsS3Bucket;
   }
 
   @Override
   @PostConstruct
   public void init()
-    throws Exception
   {
-    final Path storageRoot = config.fileSystemStorageRootPath();
 
-    // Create storage root if it does not exist
-    if (!exists(storageRoot))
-    {
-      createDirectories(storageRoot);
-    }
-    else if (!isDirectory(storageRoot))
-    {
-      throw new Exception(
-        "'schemacrawler.webapp.storage-root' is not a directory");
-    }
   }
 
   /**
@@ -90,20 +95,32 @@ public class FileSystemStorageService
     throws Exception
   {
     validateKey(key);
+
     if (extension == null)
     {
       return Optional.empty();
     }
-    final Path serverLocalPath = config
-      .fileSystemStorageRootPath()
-      .resolve(key + "." + extension.getExtension());
-    if (!exists(serverLocalPath)
-        || !isRegularFile(serverLocalPath)
-        || !isReadable(serverLocalPath))
+    final Path filePath;
+
+    try
     {
+      // Download file from S3
+      filePath =
+        Files.createTempFile("sc-webapp", "." + extension.getExtension());
+      final GetObjectRequest request =
+        new GetObjectRequest(awsS3Bucket, key + "." + extension.getExtension());
+      final S3Object s3Object = amazonS3.getObject(request);
+      copy(s3Object.getObjectContent(), filePath, REPLACE_EXISTING);
+    }
+    catch (final Exception e)
+    {
+      logger.log(Level.WARNING,
+                 String.format("Could not retrieve, %s.%s", key, extension),
+                 e);
       return Optional.empty();
     }
-    return Optional.of(serverLocalPath);
+
+    return Optional.of(filePath);
   }
 
   /**
@@ -115,11 +132,27 @@ public class FileSystemStorageService
                     @NonNull final FileExtensionType extension)
     throws Exception
   {
-    final Path filePath = config
-      .fileSystemStorageRootPath()
-      .resolve(key + "." + extension.getExtension());
+    validateKey(key);
 
-    saveFile(streamSource, key, extension, filePath);
+    try
+    {
+      // Save stream to a S3
+      final ObjectMetadata metadata = new ObjectMetadata();
+      metadata.setContentType(extension.getMimeType());
+      final PutObjectRequest request = new PutObjectRequest(awsS3Bucket,
+                                                            key
+                                                            + "."
+                                                            + extension.getExtension(),
+                                                            streamSource.getInputStream(),
+                                                            metadata);
+      amazonS3.putObject(request);
+    }
+    catch (final Exception e)
+    {
+      logger.log(Level.WARNING,
+                 String.format("Could not store, %s.%s", key, extension),
+                 e);
+    }
   }
 
   /**
@@ -131,26 +164,12 @@ public class FileSystemStorageService
                          @NonNull final FileExtensionType extension)
     throws Exception
   {
-    final Path filePath = Paths.get(System.getProperty("java.io.tmpdir"),
-                                    String.format("%s.%s",
-                                                  key,
-                                                  extension.getExtension()));
-
-    saveFile(streamSource, key, extension, filePath);
-
-    return filePath;
-  }
-
-  private void saveFile(final InputStreamSource streamSource,
-                        final String key,
-                        final FileExtensionType extension,
-                        final Path filePath)
-    throws Exception
-  {
     validateKey(key);
 
     // Save stream to a file
-    copy(streamSource.getInputStream(), filePath);
+    final Path filePath =
+      Files.createTempFile("sc-webapp.", "." + extension.getExtension());
+    copy(streamSource.getInputStream(), filePath, REPLACE_EXISTING);
 
     // Check that the file is not empty
     if (Files.size(filePath) == 0)
@@ -160,6 +179,8 @@ public class FileSystemStorageService
                                         key,
                                         extension));
     }
+
+    return filePath;
   }
 
   /**
@@ -175,7 +196,7 @@ public class FileSystemStorageService
   {
     if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key))
     {
-      throw new Exception(String.format("Invalid filename key \"%s\"", key));
+      throw new Exception(String.format("Invalid filename key, %s", key));
     }
   }
 

@@ -32,9 +32,9 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Converts a multi-part file to a string, which is the name of the
- * uploaded file. This is needed for input form validation, and also for
- * saving details of the request.
+ * Converts a multi-part file to a string, which is the name of the uploaded
+ * file. This is needed for input form validation, and also for saving details
+ * of the request.
  *
  * @author Sualeh Fatehi
  */
@@ -43,8 +43,8 @@ public class MultipartFileConverter
 {
 
   /**
-   * Converts a multi-part file to a string, which is the name of the
-   * uploaded file.
+   * Converts a multi-part file to a string, which is the name of the uploaded
+   * file.
    */
   @Override
   public String convert(final MultipartFile file)

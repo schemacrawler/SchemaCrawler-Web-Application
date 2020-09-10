@@ -25,34 +25,30 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.service.schemacrawler;
+package us.fatehi.schemacrawler.webapp.service.storage;
 
 
+import javax.validation.constraints.NotNull;
 import java.nio.file.Path;
 
-import org.springframework.stereotype.Service;
-import schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-/**
- * Service for SchemaCrawler functions, using SQLite.
- *
- * @author Sualeh Fatehi
- */
-@Service("scSqliteService")
-public class SchemaCrawlerSQLiteService
-  implements SchemaCrawlerService
+@Configuration
+public class FileSystemStorageConfig
 {
 
-  /**
-   * Works with SQLite database files. {@inheritDoc}
-   */
-  @Override
-  public Path createSchemaCrawlerDiagram(final Path dbFile,
-                                         final String extension)
-    throws Exception
+  @Value("${SC_WEBAPP_STORAGE:./target/sc-webapp-storage}")
+  @NotNull
+  private Path fileSystemStorageRootPath;
+
+  @Bean("fileSystemStorageRootPath")
+  public Path fileSystemStorageRootPath()
   {
-    return SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram(dbFile,
-                                                                 extension);
+    return fileSystemStorageRootPath
+      .normalize()
+      .toAbsolutePath();
   }
 
 }

@@ -90,7 +90,7 @@ public class SchemaCrawlerDiagramController
   {
     return storageService
       .retrieveLocal(key, PNG)
-      .map(path -> new PathResource(path))
+      .map(PathResource::new)
       .orElseThrow(() -> new Exception("Cannot find image, " + key));
   }
 

@@ -28,9 +28,6 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.service.processing;
 
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.nio.file.Path;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
@@ -46,9 +43,8 @@ public interface ProcessingService
   /**
    * Generate SchemaCrawler diagram, and store it in storage
    *
-   * @param diagramRequest
-   * @param localPath
-   * @throws Exception On an exception
+   * @throws Exception
+   *   On an exception
    */
   void generateSchemaCrawlerDiagram(final SchemaCrawlerDiagramRequest diagramRequest,
                                     final Path localPath)
