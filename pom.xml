@@ -6,7 +6,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>16.9.5.2</version>
+  <version>16.11.1.2</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
@@ -54,11 +54,6 @@
       <version>2.7</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.11</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
     </dependency>
@@ -67,11 +62,16 @@
       <artifactId>aws-java-sdk</artifactId>
       <version>1.11.850</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    <version>3.11</version>
+</dependency>
 
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>16.9.5</version>
+      <version>16.11.1</version>
     </dependency>
 
   </dependencies>
