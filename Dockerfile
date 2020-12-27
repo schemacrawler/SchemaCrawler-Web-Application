@@ -27,7 +27,7 @@
 FROM openjdk:8-jdk-alpine
 
 ARG SCHEMACRAWLER_VERSION=16.11.7
-ARG SCHEMACRAWLER_WEBAPP_VERSION=16.11.7.1
+ARG SCHEMACRAWLER_WEBAPP_VERSION=16.11.7.3
 
 LABEL \
   "us.fatehi.schemacrawler.product-version"="SchemaCrawler ${SCHEMACRAWLER_VERSION}" \
@@ -36,7 +36,7 @@ LABEL \
 
 LABEL "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>"
 
-# Install GraphViz
+# Install Graphviz
 RUN \
   apk add --update --no-cache \
   bash \
@@ -54,7 +54,7 @@ WORKDIR /home/schcrwlr
 # Copy SchemaCrawler Web Application files for the current user
 COPY \
   --chown=schcrwlr:schcrwlr \
-  ./target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar \
+  ./schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar \
   schemacrawler-webapp.jar
 
 # Run the web-application.  CMD is required to run on Heroku

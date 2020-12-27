@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>16.11.7.2</version>
+  <version>16.11.7.3</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
@@ -22,6 +22,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
+    <docker.skip>true</docker.skip>
   </properties>
 
   <dependencies>
@@ -65,8 +66,8 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-    <version>3.11</version>
-</dependency>
+      <version>3.11</version>
+    </dependency>
 
     <dependency>
       <groupId>us.fatehi</groupId>
@@ -85,7 +86,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.2</version>
+        <version>0.8.6</version>
         <executions>
           <execution>
             <goals>
@@ -106,6 +107,34 @@
         <artifactId>coveralls-maven-plugin</artifactId>
         <version>4.3.0</version>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>docker-build</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${docker.skip}</skip>
+              <executable>docker</executable>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <arguments>
+                <argument>build</argument>
+                <argument>-f</argument>
+                <argument>${project.basedir}/Dockerfile</argument>
+                <argument>-t</argument>
+                <argument>schemacrawler/schemacrawler-webapp:v${project.version}</argument>
+                <argument>-t</argument>
+                <argument>schemacrawler/schemacrawler:latest</argument>
+                <argument>${project.basedir}/target</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>	  
     </plugins>
   </build>
 
