@@ -1,7 +1,7 @@
 # ========================================================================
 # SchemaCrawler
 # http://www.schemacrawler.com
-# Copyright (c) 2000-2020, Sualeh Fatehi <sualeh@hotmail.com>.
+# Copyright (c) 2000-2021, Sualeh Fatehi <sualeh@hotmail.com>.
 # All rights reserved.
 # ------------------------------------------------------------------------
 #
@@ -26,8 +26,8 @@
 
 FROM openjdk:8-jdk-alpine
 
-ARG SCHEMACRAWLER_VERSION=16.11.6
-ARG SCHEMACRAWLER_WEBAPP_VERSION=16.11.6.1
+ARG SCHEMACRAWLER_VERSION=16.11.7
+ARG SCHEMACRAWLER_WEBAPP_VERSION=16.11.7.1
 
 LABEL \
   "us.fatehi.schemacrawler.product-version"="SchemaCrawler ${SCHEMACRAWLER_VERSION}" \
