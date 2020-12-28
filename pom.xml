@@ -82,6 +82,29 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.4.1</version>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <phase>package</phase>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>build-image</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build-image</goal>
+            </goals>
+            <configuration>
+              <image>
+                <name>docker.io/schemacrawler/${project.artifactId}</name>
+				<verboseLogging>true</verboseLogging>
+              </image>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -107,34 +130,6 @@
         <artifactId>coveralls-maven-plugin</artifactId>
         <version>4.3.0</version>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>docker-build</id>
-            <phase>package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <skip>${docker.skip}</skip>
-              <executable>docker</executable>
-              <workingDirectory>${project.basedir}</workingDirectory>
-              <arguments>
-                <argument>build</argument>
-                <argument>-f</argument>
-                <argument>${project.basedir}/Dockerfile</argument>
-                <argument>-t</argument>
-                <argument>schemacrawler/schemacrawler-webapp:v${project.version}</argument>
-                <argument>-t</argument>
-                <argument>schemacrawler/schemacrawler-webapp:latest</argument>
-                <argument>${project.basedir}/target</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>	  
     </plugins>
   </build>
 </project>
