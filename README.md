@@ -28,6 +28,8 @@ This is a Spring Boot 2.1 web application with a Bootstrap user interface, with 
 
 Install [Graphviz](http://www.graphviz.org), which is a prerequisite for SchemaCrawler
 
+Make sure that Docker is available and running
+
 Modify `schemacrawler.webapp.storage-root` in `src/main/resources/application.properties` 
 to point to a temporary directory on your system. 
 
@@ -45,7 +47,7 @@ mvn spring-boot:run
 
 Start application from the jar file, run
 ```
-java -jar target/schemacrawler-webapp-15.03.03.01.jar
+java -jar target/schemacrawler-webapp-16.11.7.5.jar
 ```
 
 ### Use the Application
@@ -59,13 +61,7 @@ To access the application, open a browser to
 
 ## Docker Container
 
-### To Create Docker Image 
-
-To create the Docker image, and push it to Docker Hub, run
-```
-docker build -t schemacrawler/schemacrawler-webapp .
-docker push schemacrawler/schemacrawler-webapp
-```
+### Run Docker Image Locally
 
 Run the local image in a Docker container, using
 ```
@@ -76,9 +72,7 @@ To access the application, open a browser to
 [http://localhost:8080](http://localhost:8080)
 
 
-### To Host Docker Image on Heroku
-
-Follow instructions on [Container Registry & Runtime - Docker Deploys](https://devcenter.heroku.com/articles/container-registry-and-runtime).
+### Access Application on Heroku
 
 To access the application, open a browser to
 [https://schemacrawler-webapp.herokuapp.com/](https://schemacrawler-webapp.herokuapp.com/)
