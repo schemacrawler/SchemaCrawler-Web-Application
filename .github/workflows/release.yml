@@ -81,7 +81,7 @@ jobs:
         docker push schemacrawler/schemacrawler-webapp
         docker logout
 
-# DEPLOY TO HEORKU
+# DEPLOY TO HEROKU
     - name: Deploy to Heroku
       id: deploy-to-heroku
       env:
@@ -89,8 +89,10 @@ jobs:
         HEROKU_APP_NAME: schemacrawler-webapp
       run: |
         heroku container:login
-        heroku container:push -a ${{ env.HEROKU_APP_NAME }} web
-        heroku container:release -a ${{ env.HEROKU_APP_NAME }} web
+        docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+        docker tag schemacrawler/schemacrawler-webapp registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
+        docker push registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
+        docker logout
 
 # CREATE GITHUB RELEASE AND ADD ASSETS
     - id: create-release
