@@ -100,7 +100,8 @@
             <configuration>
               <image>
                 <name>docker.io/schemacrawler/${project.artifactId}</name>
-				<verboseLogging>true</verboseLogging>
+                <builder>heroku/spring-boot-buildpacks</builder>
+                <verboseLogging>true</verboseLogging>
               </image>
             </configuration>
           </execution>
