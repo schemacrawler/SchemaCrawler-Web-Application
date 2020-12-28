@@ -49,3 +49,11 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           package
+    - id: publish-test-results
+      name: Upload results and coverage
+      if: contains(github.ref, 'master')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CODECOV_TOKEN: 350b716c-8f65-451b-b438-072f0662637d
+      run: |
+        bash <(curl -s https://codecov.io/bash)

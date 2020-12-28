@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/schemacrawler/SchemaCrawler-Web-Application.svg?branch=master)](https://travis-ci.org/schemacrawler/SchemaCrawler-Web-Application)
-[![Coverage Status](https://coveralls.io/repos/github/schemacrawler/SchemaCrawler-Web-Application/badge.svg)](https://coveralls.io/github/schemacrawler/SchemaCrawler-Web-Application)
+[![codecov](https://codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application/branch/master/graph/badge.svg?token=9cG2hav7Av)](https://codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application)
 
 <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/master/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" align="right" />
 
