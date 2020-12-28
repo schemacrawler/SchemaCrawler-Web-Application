@@ -92,7 +92,7 @@ jobs:
       run: |
         heroku container:login
         echo "$(heroku auth:token)" | docker login --username=_ --password-stdin registry.heroku.com
-        docker tag schemacrawler/schemacrawler-webapp:v16.11.7.4 registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
+        docker tag schemacrawler/schemacrawler-webapp registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
         docker push registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
         docker logout
 

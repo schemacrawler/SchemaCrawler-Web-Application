@@ -128,7 +128,7 @@
                 <argument>-t</argument>
                 <argument>schemacrawler/schemacrawler-webapp:v${project.version}</argument>
                 <argument>-t</argument>
-                <argument>schemacrawler/schemacrawler:latest</argument>
+                <argument>schemacrawler/schemacrawler-webapp:latest</argument>
                 <argument>${project.basedir}/target</argument>
               </arguments>
             </configuration>
