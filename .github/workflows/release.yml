@@ -6,8 +6,8 @@ on:
     branches-ignore:
       - '*'
     tags:
-      - v[0-9]+.[0-9]+.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+-[A-Z]
+      - v[0-9]+.[0-9]+.[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+.[0-9]+-[A-Z]
 
 jobs:
   build:
@@ -77,9 +77,6 @@ jobs:
       run: |
         # Publish Docker image
         docker version
-        docker build -t schemacrawler/schemacrawler-webapp .
-        docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v16.11.7.3
-        docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:latest
         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         docker push schemacrawler/schemacrawler-webapp
         docker logout
