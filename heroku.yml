@@ -1,6 +1,0 @@
-build:
-  docker:
-    web: Dockerfile
-run:
-  web: /bin/sh -c java\ \$JAVA_OPTS\ -Dserver.port\=\$PORT\ -Djava.security.egd\=file:/dev/./urandom\ -jar\ schemacrawler-webapp.jar
-
