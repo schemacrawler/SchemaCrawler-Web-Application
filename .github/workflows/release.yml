@@ -77,6 +77,8 @@ jobs:
       run: |
         # Publish Docker image
         docker version
+        docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:v16.11.7.4
+        docker tag schemacrawler/schemacrawler-webapp schemacrawler/schemacrawler-webapp:latest
         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         docker push schemacrawler/schemacrawler-webapp
         docker logout
@@ -89,8 +91,8 @@ jobs:
         HEROKU_APP_NAME: schemacrawler-webapp
       run: |
         heroku container:login
-        docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
-        docker tag schemacrawler/schemacrawler-webapp registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
+        echo "$(heroku auth:token)" | docker login --username=_ --password-stdin registry.heroku.com
+        docker tag schemacrawler/schemacrawler-webapp:v16.11.7.4 registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
         docker push registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
         docker logout
 
