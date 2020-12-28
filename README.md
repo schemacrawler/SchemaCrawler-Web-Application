@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/schemacrawler/SchemaCrawler-Web-Application.svg?branch=master)](https://travis-ci.org/schemacrawler/SchemaCrawler-Web-Application)
+![Quick Build](https://github.com/schemacrawler/SchemaCrawler-Web-Application/workflows/Quick%20Build/badge.svg)
 [![codecov](https://codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application/branch/master/graph/badge.svg?token=9cG2hav7Av)](https://codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application)
 
 <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/master/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" align="right" />
