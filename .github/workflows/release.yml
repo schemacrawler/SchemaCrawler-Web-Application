@@ -84,11 +84,12 @@ jobs:
         docker logout
 
 # RELEASE ON HEROKU
-    - name: Release on Heroku
-      id: release-on-heroku
+    - id: release-on-heroku
+      name: Release on Heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_APP_NAME: schemacrawler-webapp
+      if: false
       run: |
         # Release on Heroku
         docker tag docker.io/schemacrawler/schemacrawler-webapp registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
@@ -97,6 +98,33 @@ jobs:
         docker logout
         heroku container:login --verbose
         heroku container:release --verbose --app ${{ env.HEROKU_APP_NAME }} web
+
+# RELEASE ON AWS FARGATE
+    - id: configure-aws-credentials
+      name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+    - id: login-ecr
+      name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v1
+    - id:
+      name: Push image to Amazon ECR
+      env:
+        # public.ecr.aws/j3y1s4q8/schemacrawler-webapp-repo
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: schemacrawler-webapp-repo
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Push to Amazon ECR
+        echo "Registry: $ECR_REGISTRY/$ECR_REPOSITORY"
+        docker tag docker.io/schemacrawler/schemacrawler-webapp  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag docker.io/schemacrawler/schemacrawler-webapp $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker tag docker.io/schemacrawler/schemacrawler-webapp  $ECR_REGISTRY/$ECR_REPOSITORY:v16.11.7.5
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker logout
 
 # CREATE GITHUB RELEASE AND ADD ASSETS
     - id: create-release
