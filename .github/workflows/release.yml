@@ -110,7 +110,7 @@ jobs:
     - id: login-ecr
       name: Login to Amazon ECR
       uses: aws-actions/amazon-ecr-login@v1
-    - id:
+    - id: push-image-to-amazon-ecr
       name: Push image to Amazon ECR
       env:
         # public.ecr.aws/j3y1s4q8/schemacrawler-webapp-repo
