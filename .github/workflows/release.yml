@@ -65,6 +65,7 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
+          -Ddocker.skip=false \
           clean install
 
 # PUBLISH DOCKER IMAGE

@@ -98,6 +98,7 @@
               <goal>build-image</goal>
             </goals>
             <configuration>
+              <skip>${docker.skip}</skip>
               <image>
                 <name>docker.io/schemacrawler/${project.artifactId}</name>
                 <!--  <builder>heroku/spring-boot-buildpacks</builder>  -->
