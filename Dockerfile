@@ -24,7 +24,8 @@
 #
 # ========================================================================
 
-FROM openjdk:8-jdk-alpine
+FROM openjdk:11-slim-buster
+
 
 ARG SCHEMACRAWLER_VERSION=16.11.7
 ARG SCHEMACRAWLER_WEBAPP_VERSION=16.11.7.5
@@ -38,22 +39,14 @@ LABEL "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>"
 
 # Install Graphviz
 RUN \
-  apk add --update --no-cache \
-  bash \
-  bash-completion \
-  graphviz \
-  ttf-freefont
-
-# Run the image as a non-root user
-RUN \
-    addgroup -g 1000 -S schcrwlr \
- && adduser -u 1000 -S schcrwlr -G schcrwlr
-USER schcrwlr
-WORKDIR /home/schcrwlr
+    apt-get -qq update \
+ && apt-get -qq -y install \
+      bash \
+      bash-completion \
+      graphviz
 
 # Copy SchemaCrawler Web Application files for the current user
 COPY \
-  --chown=schcrwlr:schcrwlr \
   ./target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar \
   schemacrawler-webapp.jar
 
