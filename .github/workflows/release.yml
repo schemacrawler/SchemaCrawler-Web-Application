@@ -58,6 +58,8 @@ jobs:
         cat ~/.m2/settings.xml
 
 # BUILD FOR DISTRIBUTION
+# To build an image using Cloud Native Buildpacks for Spring Boot, provide
+# and additional -Ddocker.skip=false argument to the Maven build.
     - id: build
       name: Build and test for distribution
       run: |
@@ -65,8 +67,20 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          -Ddocker.skip=false \
           clean install
+
+# BUILD DOCKER IMAGE LOCALLY
+# Cloud Native Buildpacks for Spring Boot, whether from Paketo or Heroku consume
+# more than 512 MB of RAM (free-tier limit for Heroku), and have security
+# vulnerabilities flagged by Amazon ECR. For this reason, build the Docker image locally.
+    - id: build-docker-image
+      name: Build Docker image
+      run: |
+        # Build
+        docker build \
+          -t schemacrawler/schemacrawler-webapp:v16.11.7.5 \
+          -t schemacrawler/schemacrawler-webapp:latest \
+          .
 
 # PUBLISH DOCKER IMAGE
     - id: publish-docker-image
@@ -77,8 +91,15 @@ jobs:
       run: |
         # Publish Docker image
         docker version
-        docker tag docker.io/schemacrawler/schemacrawler-webapp docker.io/schemacrawler/schemacrawler-webapp:v16.11.7.5
-        docker tag docker.io/schemacrawler/schemacrawler-webapp docker.io/schemacrawler/schemacrawler-webapp:latest
+        docker tag \
+          schemacrawler/schemacrawler-webapp \
+          docker.io/schemacrawler/schemacrawler-webapp:${{ github.sha }}
+        docker tag \
+          schemacrawler/schemacrawler-webapp \
+          docker.io/schemacrawler/schemacrawler-webapp:v16.11.7.5
+        docker tag \
+          schemacrawler/schemacrawler-webapp \
+          docker.io/schemacrawler/schemacrawler-webapp:latest
         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         docker push docker.io/schemacrawler/schemacrawler-webapp
         docker logout
@@ -89,10 +110,11 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_APP_NAME: schemacrawler-webapp
-      if: false
       run: |
         # Release on Heroku
-        docker tag docker.io/schemacrawler/schemacrawler-webapp registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
+        docker tag \
+          schemacrawler/schemacrawler-webapp \
+          registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
         echo "$(heroku auth:token)" | docker login --username=_ --password-stdin registry.heroku.com
         docker push registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
         docker logout
@@ -118,9 +140,15 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         # Push to Amazon ECR
-        docker tag docker.io/schemacrawler/schemacrawler-webapp  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker tag docker.io/schemacrawler/schemacrawler-webapp $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        docker tag docker.io/schemacrawler/schemacrawler-webapp  $ECR_REGISTRY/$ECR_REPOSITORY:v16.11.7.5
+        docker tag \
+          schemacrawler/schemacrawler-webapp \
+          $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag \
+          schemacrawler/schemacrawler-webapp \
+          $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker tag \
+          schemacrawler/schemacrawler-webapp \
+          $ECR_REGISTRY/$ECR_REPOSITORY:v16.11.7.5
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker logout
 

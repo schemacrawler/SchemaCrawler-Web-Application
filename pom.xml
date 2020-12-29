@@ -126,7 +126,8 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+        </executions>
+      </plugin>	  
     </plugins>
   </build>
 </project>
