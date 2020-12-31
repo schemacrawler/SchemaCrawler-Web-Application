@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.storage;
 
-
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -38,64 +37,43 @@ import org.springframework.core.io.InputStreamSource;
  *
  * @author Sualeh Fatehi
  */
-public interface StorageService
-{
+public interface StorageService {
 
   /**
    * Initializes the service. Called via a Spring @PostConstruct.
    *
-   * @throws Exception
-   *   On an exception.
+   * @throws Exception On an exception.
    */
-  void init()
-    throws Exception;
+  void init() throws Exception;
 
   /**
-   * Resolves a filename key and extension into a local default file-system path
-   * to a file.
+   * Resolves a filename key and extension into a local default file-system path to a file.
    *
-   * @param key
-   *   Key.
-   * @param extension
-   *   Filename extension.
+   * @param key Key.
+   * @param extension Filename extension.
    * @return a local file-system path to a file, if one is found.
-   * @throws Exception
-   *   Exception resolving a path.
+   * @throws Exception Exception resolving a path.
    */
-  Optional<Path> retrieveLocal(String key, FileExtensionType extension)
-    throws Exception;
+  Optional<Path> retrieveLocal(String key, FileExtensionType extension) throws Exception;
 
   /**
    * Stores a stream given a key and extension.
    *
-   * @param stream
-   *   Input stream
-   * @param key
-   *   Key.
-   * @param extension
-   *   Filename extension.
-   * @throws Exception
-   *   Exception storing a file.
+   * @param stream Input stream
+   * @param key Key.
+   * @param extension Filename extension.
+   * @throws Exception Exception storing a file.
    */
-  void store(InputStreamSource stream, String key, FileExtensionType extension)
-    throws Exception;
+  void store(InputStreamSource stream, String key, FileExtensionType extension) throws Exception;
 
   /**
-   * Stores a stream given a filename key and extension locally in a temporary
-   * file.
+   * Stores a stream given a filename key and extension locally in a temporary file.
    *
-   * @param stream
-   *   Input stream
-   * @param key
-   *   Key.
-   * @param extension
-   *   Filename extension.
-   * @throws Exception
-   *   Exception storing a file.
+   * @param stream Input stream
+   * @param key Key.
+   * @param extension Filename extension.
+   * @throws Exception Exception storing a file.
    */
-  Path storeLocal(InputStreamSource stream,
-                  String key,
-                  FileExtensionType extension)
-    throws Exception;
-
+  Path storeLocal(InputStreamSource stream, String key, FileExtensionType extension)
+      throws Exception;
 }

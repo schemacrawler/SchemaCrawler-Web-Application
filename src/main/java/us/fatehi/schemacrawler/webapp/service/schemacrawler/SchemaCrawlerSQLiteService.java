@@ -27,10 +27,10 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.schemacrawler;
 
-
 import java.nio.file.Path;
 
 import org.springframework.stereotype.Service;
+
 import schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility;
 
 /**
@@ -39,20 +39,12 @@ import schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility;
  * @author Sualeh Fatehi
  */
 @Service("scSqliteService")
-public class SchemaCrawlerSQLiteService
-  implements SchemaCrawlerService
-{
+public class SchemaCrawlerSQLiteService implements SchemaCrawlerService {
 
-  /**
-   * Works with SQLite database files. {@inheritDoc}
-   */
+  /** Works with SQLite database files. {@inheritDoc} */
   @Override
-  public Path createSchemaCrawlerDiagram(final Path dbFile,
-                                         final String extension)
-    throws Exception
-  {
-    return SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram(dbFile,
-                                                                 extension);
+  public Path createSchemaCrawlerDiagram(final Path dbFile, final String extension)
+      throws Exception {
+    return SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram(dbFile, extension);
   }
-
 }

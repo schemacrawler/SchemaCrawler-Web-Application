@@ -27,85 +27,82 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.model;
 
-
 import static java.util.Objects.requireNonNull;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.Reader;
 import java.io.Serializable;
 import java.time.Instant;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class SchemaCrawlerDiagramRequest
-  implements Serializable
-{
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public class SchemaCrawlerDiagramRequest implements Serializable {
 
   private static final long serialVersionUID = 2065519510282344200L;
 
-  private static final Gson gson = new GsonBuilder()
-    .setPrettyPrinting()
-    .create();
+  private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   /**
    * Factory method to deserialize a JSON request.
    *
-   * @param jsonRequest
-   *   JSON serialized request.
+   * @param jsonReader JSON serialized request reader.
    * @return Deserialzied Java request.
    */
-  public static SchemaCrawlerDiagramRequest fromJson(final String jsonRequest)
-  {
-    if (StringUtils.isBlank(jsonRequest))
-    {
+  public static SchemaCrawlerDiagramRequest fromJson(final Reader jsonReader) {
+    requireNonNull(jsonReader, "No reader provided");
+    return gson.fromJson(jsonReader, SchemaCrawlerDiagramRequest.class);
+  }
+
+  /**
+   * Factory method to deserialize a JSON request.
+   *
+   * @param jsonRequest JSON serialized request.
+   * @return Deserialzied Java request.
+   */
+  public static SchemaCrawlerDiagramRequest fromJson(final String jsonRequest) {
+    if (StringUtils.isBlank(jsonRequest)) {
       return null;
     }
     return gson.fromJson(jsonRequest, SchemaCrawlerDiagramRequest.class);
   }
 
-  /**
-   * Factory method to deserialize a JSON request.
-   *
-   * @param jsonReader
-   *   JSON serialized request reader.
-   * @return Deserialzied Java request.
-   */
-  public static SchemaCrawlerDiagramRequest fromJson(final Reader jsonReader)
-  {
-    requireNonNull(jsonReader, "No reader provided");
-    return gson.fromJson(jsonReader, SchemaCrawlerDiagramRequest.class);
-  }
-
   private final String key;
   private final Instant timestamp;
+
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
   private String name;
+
   @NotNull
-  @Pattern(regexp = "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z",
-           message = "Please enter a valid email address")
+  @Pattern(
+      regexp =
+          "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z",
+      message = "Please enter a valid email address")
   private String email;
+
   @NotNull
   @Size(min = 1, message = "Please select a file to upload")
   private String file;
 
-  /**
-   * Public constructor. Generates a random key, and sets the creation
-   * timestamp.
-   */
-  public SchemaCrawlerDiagramRequest()
-  {
+  /** Public constructor. Generates a random key, and sets the creation timestamp. */
+  public SchemaCrawlerDiagramRequest() {
     timestamp = Instant.now();
-    key = RandomStringUtils
-      .randomAlphanumeric(12)
-      .toLowerCase();
+    key = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean equals(final Object obj) {
+    return EqualsBuilder.reflectionEquals(this, obj);
   }
 
   /**
@@ -113,14 +110,8 @@ public class SchemaCrawlerDiagramRequest
    *
    * @return Email address of the requester.
    */
-  public String getEmail()
-  {
+  public String getEmail() {
     return email;
-  }
-
-  public void setEmail(final String email)
-  {
-    this.email = email;
   }
 
   /**
@@ -128,20 +119,8 @@ public class SchemaCrawlerDiagramRequest
    *
    * @return Uploaded file name.
    */
-  public String getFile()
-  {
+  public String getFile() {
     return file;
-  }
-
-  /**
-   * Sets the uploaded file name.
-   *
-   * @param file
-   *   Uploaded file name.
-   */
-  public void setFile(final String file)
-  {
-    this.file = file;
   }
 
   /**
@@ -149,8 +128,7 @@ public class SchemaCrawlerDiagramRequest
    *
    * @return Unique key for the request.
    */
-  public String getKey()
-  {
+  public String getKey() {
     return key;
   }
 
@@ -159,20 +137,8 @@ public class SchemaCrawlerDiagramRequest
    *
    * @return Name of the requester.
    */
-  public String getName()
-  {
+  public String getName() {
     return name;
-  }
-
-  /**
-   * Sets the name of the requester.
-   *
-   * @param name
-   *   Name of the requester.
-   */
-  public void setName(final String name)
-  {
-    this.name = name;
   }
 
   /**
@@ -180,36 +146,36 @@ public class SchemaCrawlerDiagramRequest
    *
    * @return Request creation timestamp.
    */
-  public Instant getTimestamp()
-  {
+  public Instant getTimestamp() {
     return timestamp;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
-  public int hashCode()
-  {
+  public int hashCode() {
     return HashCodeBuilder.reflectionHashCode(this, false);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean equals(final Object obj)
-  {
-    return EqualsBuilder.reflectionEquals(this, obj);
+  public void setEmail(final String email) {
+    this.email = email;
   }
 
   /**
-   * {@inheritDoc}
+   * Sets the uploaded file name.
+   *
+   * @param file Uploaded file name.
    */
-  @Override
-  public String toString()
-  {
-    return toJson();
+  public void setFile(final String file) {
+    this.file = file;
+  }
+
+  /**
+   * Sets the name of the requester.
+   *
+   * @param name Name of the requester.
+   */
+  public void setName(final String name) {
+    this.name = name;
   }
 
   /**
@@ -217,9 +183,13 @@ public class SchemaCrawlerDiagramRequest
    *
    * @return JSON string
    */
-  public String toJson()
-  {
+  public String toJson() {
     return gson.toJson(this);
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public String toString() {
+    return toJson();
+  }
 }

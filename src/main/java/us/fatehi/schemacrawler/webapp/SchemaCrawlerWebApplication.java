@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp;
 
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,32 +34,24 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-public class SchemaCrawlerWebApplication
-  implements WebMvcConfigurer, CommandLineRunner
-{
+public class SchemaCrawlerWebApplication implements WebMvcConfigurer, CommandLineRunner {
 
   /**
    * Spring Boot entry point.
    *
-   * @param args
-   *   Spring Boot arguments.
+   * @param args Spring Boot arguments.
    */
-  public static void main(final String[] args)
-  {
+  public static void main(final String[] args) {
     SpringApplication.run(SchemaCrawlerWebApplication.class, args);
   }
 
   @Override
-  public void addFormatters(final FormatterRegistry registry)
-  {
+  public void addFormatters(final FormatterRegistry registry) {
     registry.addConverter(new MultipartFileConverter());
   }
 
   @Override
-  public void run(final String... args)
-    throws Exception
-  {
+  public void run(final String... args) throws Exception {
     // Do something, if needed
   }
-
 }

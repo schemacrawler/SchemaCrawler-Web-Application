@@ -40,10 +40,7 @@ LABEL "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>"
 # Install Graphviz
 RUN \
     apt-get -qq update \
- && apt-get -qq -y install \
-      bash \
-      bash-completion \
-      graphviz
+ && apt-get -qq -y install graphviz
 
 # Copy SchemaCrawler Web Application files for the current user
 COPY \

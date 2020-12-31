@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.processing;
 
-
 import java.nio.file.Path;
 
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
@@ -37,17 +36,13 @@ import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
  *
  * @author Sualeh Fatehi
  */
-public interface ProcessingService
-{
+public interface ProcessingService {
 
   /**
    * Generate SchemaCrawler diagram, and store it in storage
    *
-   * @throws Exception
-   *   On an exception
+   * @throws Exception On an exception
    */
-  void generateSchemaCrawlerDiagram(final SchemaCrawlerDiagramRequest diagramRequest,
-                                    final Path localPath)
-    throws Exception;
-
+  void generateSchemaCrawlerDiagram(
+      final SchemaCrawlerDiagramRequest diagramRequest, final Path localPath) throws Exception;
 }

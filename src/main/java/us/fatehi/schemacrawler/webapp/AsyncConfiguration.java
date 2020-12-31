@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp;
 
-
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.logging.Logger;
@@ -42,43 +41,26 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration
 @EnableAsync
-public class AsyncConfiguration
-  extends AsyncConfigurerSupport
-{
+public class AsyncConfiguration extends AsyncConfigurerSupport {
 
-  private final static Logger logger =
-    Logger.getLogger(AsyncConfiguration.class.getName());
+  private static final Logger logger = Logger.getLogger(AsyncConfiguration.class.getName());
 
   @Override
-  public Executor getAsyncExecutor()
-  {
+  public Executor getAsyncExecutor() {
     return new SimpleAsyncTaskExecutor();
   }
 
   @Override
   @Nullable
-
-  public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler()
-  {
+  public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
     return (throwable, method, parameters) -> {
       final StringBuilder buffer = new StringBuilder();
-      buffer
-        .append("Thread, " + Thread
-          .currentThread()
-          .getName())
-        .append(System.lineSeparator());
-      buffer
-        .append("Method, " + method)
-        .append(System.lineSeparator());
-      buffer
-        .append("Parameters, " + Arrays.asList(parameters))
-        .append(System.lineSeparator());
-      buffer
-        .append(ExceptionUtils.getStackTrace(throwable))
-        .append(System.lineSeparator());
+      buffer.append("Thread, " + Thread.currentThread().getName()).append(System.lineSeparator());
+      buffer.append("Method, " + method).append(System.lineSeparator());
+      buffer.append("Parameters, " + Arrays.asList(parameters)).append(System.lineSeparator());
+      buffer.append(ExceptionUtils.getStackTrace(throwable)).append(System.lineSeparator());
 
       logger.warning(buffer.toString());
     };
   }
-
 }

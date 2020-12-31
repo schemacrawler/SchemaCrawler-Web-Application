@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.storage;
 
-
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.exists;
@@ -35,11 +34,12 @@ import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
 
-import javax.annotation.PostConstruct;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,133 +50,103 @@ import org.springframework.stereotype.Service;
 
 @Service("fileSystemStorageService")
 @Profile("development")
-public class FileSystemStorageService
-  implements StorageService
-{
+public class FileSystemStorageService implements StorageService {
 
   private final FileSystemStorageConfig config;
 
   @Autowired
-  public FileSystemStorageService(@NonNull final FileSystemStorageConfig config)
-  {
+  public FileSystemStorageService(@NonNull final FileSystemStorageConfig config) {
     this.config = config;
   }
 
   @Override
   @PostConstruct
-  public void init()
-    throws Exception
-  {
+  public void init() throws Exception {
     final Path storageRoot = config.fileSystemStorageRootPath();
 
     // Create storage root if it does not exist
-    if (!exists(storageRoot))
-    {
+    if (!exists(storageRoot)) {
       createDirectories(storageRoot);
-    }
-    else if (!isDirectory(storageRoot))
-    {
-      throw new Exception(
-        "'schemacrawler.webapp.storage-root' is not a directory");
+    } else if (!isDirectory(storageRoot)) {
+      throw new Exception("'schemacrawler.webapp.storage-root' is not a directory");
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
-  public Optional<Path> retrieveLocal(final String key,
-                                      final FileExtensionType extension)
-    throws Exception
-  {
+  public Optional<Path> retrieveLocal(final String key, final FileExtensionType extension)
+      throws Exception {
     validateKey(key);
-    if (extension == null)
-    {
+    if (extension == null) {
       return Optional.empty();
     }
-    final Path serverLocalPath = config
-      .fileSystemStorageRootPath()
-      .resolve(key + "." + extension.getExtension());
+    final Path serverLocalPath =
+        config.fileSystemStorageRootPath().resolve(key + "." + extension.getExtension());
     if (!exists(serverLocalPath)
         || !isRegularFile(serverLocalPath)
-        || !isReadable(serverLocalPath))
-    {
+        || !isReadable(serverLocalPath)) {
       return Optional.empty();
     }
     return Optional.of(serverLocalPath);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
-  public void store(@NonNull final InputStreamSource streamSource,
-                    @NonNull final String key,
-                    @NonNull final FileExtensionType extension)
-    throws Exception
-  {
-    final Path filePath = config
-      .fileSystemStorageRootPath()
-      .resolve(key + "." + extension.getExtension());
+  public void store(
+      @NonNull final InputStreamSource streamSource,
+      @NonNull final String key,
+      @NonNull final FileExtensionType extension)
+      throws Exception {
+    final Path filePath =
+        config.fileSystemStorageRootPath().resolve(key + "." + extension.getExtension());
 
     saveFile(streamSource, key, extension, filePath);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
-  public Path storeLocal(@NonNull final InputStreamSource streamSource,
-                         @NonNull final String key,
-                         @NonNull final FileExtensionType extension)
-    throws Exception
-  {
-    final Path filePath = Paths.get(System.getProperty("java.io.tmpdir"),
-                                    String.format("%s.%s",
-                                                  key,
-                                                  extension.getExtension()));
+  public Path storeLocal(
+      @NonNull final InputStreamSource streamSource,
+      @NonNull final String key,
+      @NonNull final FileExtensionType extension)
+      throws Exception {
+    final Path filePath =
+        Paths.get(
+            System.getProperty("java.io.tmpdir"),
+            String.format("%s.%s", key, extension.getExtension()));
 
     saveFile(streamSource, key, extension, filePath);
 
     return filePath;
   }
 
-  private void saveFile(final InputStreamSource streamSource,
-                        final String key,
-                        final FileExtensionType extension,
-                        final Path filePath)
-    throws Exception
-  {
+  private void saveFile(
+      final InputStreamSource streamSource,
+      final String key,
+      final FileExtensionType extension,
+      final Path filePath)
+      throws Exception {
     validateKey(key);
 
     // Save stream to a file
     copy(streamSource.getInputStream(), filePath);
 
     // Check that the file is not empty
-    if (Files.size(filePath) == 0)
-    {
+    if (Files.size(filePath) == 0) {
       Files.delete(filePath);
-      throw new Exception(String.format("No data for file %s.%s",
-                                        key,
-                                        extension));
+      throw new Exception(String.format("No data for file %s.%s", key, extension));
     }
   }
 
   /**
    * Prevent malicious injection attacks.
    *
-   * @param key
-   *   Key
-   * @throws Exception
-   *   On a badly constructed key.
+   * @param key Key
+   * @throws Exception On a badly constructed key.
    */
-  private void validateKey(final String key)
-    throws Exception
-  {
-    if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key))
-    {
+  private void validateKey(final String key) throws Exception {
+    if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key)) {
       throw new Exception(String.format("Invalid filename key \"%s\"", key));
     }
   }
-
 }

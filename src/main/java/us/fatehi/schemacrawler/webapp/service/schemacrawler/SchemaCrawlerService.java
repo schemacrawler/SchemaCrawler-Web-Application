@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.schemacrawler;
 
-
 import java.nio.file.Path;
 
 /**
@@ -35,24 +34,17 @@ import java.nio.file.Path;
  *
  * @author Sualeh Fatehi
  */
-public interface SchemaCrawlerService
-{
+public interface SchemaCrawlerService {
 
   /**
-   * Reads in a database file, and generates a database integration, in the file
-   * format specified by the extension. All files are on the local default
-   * file-system.
+   * Reads in a database file, and generates a database integration, in the file format specified by
+   * the extension. All files are on the local default file-system.
    *
-   * @param dbFile
-   *   Path to a database file.
-   * @param extension
-   *   Filename extension for a integration image. Should be a file type
-   *   supported by GraphViz.
+   * @param dbFile Path to a database file.
+   * @param extension Filename extension for a integration image. Should be a file type supported by
+   *     GraphViz.
    * @return Path to a integration file.
-   * @throws Exception
-   *   Any exceptions thrown in the process of generating a integration.
+   * @throws Exception Any exceptions thrown in the process of generating a integration.
    */
-  Path createSchemaCrawlerDiagram(Path dbFile, String extension)
-    throws Exception;
-
+  Path createSchemaCrawlerDiagram(Path dbFile, String extension) throws Exception;
 }

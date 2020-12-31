@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.controller;
 
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,16 +37,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @ControllerAdvice
-public class ErrorController
-{
+public class ErrorController {
 
-  private static final Logger logger =
-    LoggerFactory.getLogger(ErrorController.class);
+  private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
   @ExceptionHandler(Throwable.class)
-  public String handleException(final Throwable throwable,
-                                final RedirectAttributes redirectAttributes)
-  {
+  public String handleException(
+      final Throwable throwable, final RedirectAttributes redirectAttributes) {
     logger.error(throwable.getMessage(), throwable);
 
     final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
@@ -55,5 +51,4 @@ public class ErrorController
 
     return "redirect:error";
   }
-
 }

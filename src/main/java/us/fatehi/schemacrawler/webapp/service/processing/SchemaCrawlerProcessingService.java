@@ -27,77 +27,65 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.processing;
 
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
-import javax.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.util.logging.Logger;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Service
-public class SchemaCrawlerProcessingService
-  implements ProcessingService
-{
+public class SchemaCrawlerProcessingService implements ProcessingService {
 
-  private final static Logger logger =
-    Logger.getLogger(SchemaCrawlerProcessingService.class.getName());
+  private static final Logger logger =
+      Logger.getLogger(SchemaCrawlerProcessingService.class.getName());
 
   private final StorageService storageService;
   private final SchemaCrawlerService scService;
 
   @Autowired
   public SchemaCrawlerProcessingService(
-    @NotNull final StorageService storageService,
-    @NotNull final SchemaCrawlerService scService)
-  {
+      @NotNull final StorageService storageService, @NotNull final SchemaCrawlerService scService) {
     this.storageService = storageService;
     this.scService = scService;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Async
   @Override
   public void generateSchemaCrawlerDiagram(
-    @NotNull final SchemaCrawlerDiagramRequest diagramRequest,
-    @NotNull final Path localPath)
-    throws Exception
-  {
+      @NotNull final SchemaCrawlerDiagramRequest diagramRequest, @NotNull final Path localPath)
+      throws Exception {
 
-    logger.info(String.format("Processing in thread %s%n%s",
-                              Thread
-                                .currentThread()
-                                .getName(),
-                              diagramRequest));
+    logger.info(
+        String.format(
+            "Processing in thread %s%n%s", Thread.currentThread().getName(), diagramRequest));
 
     final String key = diagramRequest.getKey();
 
     // Store the uploaded database file
     storageService.store(new PathResource(localPath), key, SQLITE_DB);
     // Store the JSON request
-    storageService.store(new InputStreamResource(toInputStream(diagramRequest.toJson(),
-                                                               UTF_8)),
-                         key,
-                         JSON);
+    storageService.store(
+        new InputStreamResource(toInputStream(diagramRequest.toJson(), UTF_8)), key, JSON);
 
     // Generate a database integration, and store the generated image
     final Path schemaCrawlerDiagram =
-      scService.createSchemaCrawlerDiagram(localPath, PNG.getExtension());
+        scService.createSchemaCrawlerDiagram(localPath, PNG.getExtension());
     storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
   }
-
 }

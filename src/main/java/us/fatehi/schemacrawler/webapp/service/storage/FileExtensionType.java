@@ -27,10 +27,7 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.storage;
 
-
-public enum FileExtensionType
-{
-
+public enum FileExtensionType {
   SQLITE_DB("db", "application/x-sqlite3"),
   PNG("png", "image/png"),
   JSON("json", "application/json");
@@ -38,26 +35,21 @@ public enum FileExtensionType
   private final String extension;
   private final String mimeType;
 
-  FileExtensionType(final String extension, final String mimeType)
-  {
+  FileExtensionType(final String extension, final String mimeType) {
     this.extension = extension;
     this.mimeType = mimeType;
   }
 
-  public String getExtension()
-  {
+  public String getExtension() {
     return extension;
   }
 
-  public String getMimeType()
-  {
+  public String getMimeType() {
     return mimeType;
   }
 
   @Override
-  public String toString()
-  {
+  public String toString() {
     return getExtension();
   }
-
 }
