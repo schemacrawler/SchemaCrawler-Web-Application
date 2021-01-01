@@ -74,7 +74,7 @@ public class SchemaCrawlerDiagramController {
   }
 
   @ResponseBody
-  @GetMapping(value = "/schemacrawler/images/{key}", produces = MediaType.IMAGE_PNG_VALUE)
+  @GetMapping(value = "/schemacrawler/results/{key}/diagram", produces = MediaType.IMAGE_PNG_VALUE)
   public Resource diagramImage(
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
           final String key)
@@ -119,7 +119,7 @@ public class SchemaCrawlerDiagramController {
     return "redirect:/schemacrawler";
   }
 
-  @GetMapping(value = "/schemacrawler/{key}")
+  @GetMapping(value = "/schemacrawler/results/{key}")
   public String retrieveResults(
       final Model model,
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
@@ -131,6 +131,9 @@ public class SchemaCrawlerDiagramController {
             .orElseThrow(() -> new Exception("Cannot find request for " + key));
     final SchemaCrawlerDiagramRequest diagramRequest =
         SchemaCrawlerDiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
+    if (diagramRequest.hasException()) {
+      throw diagramRequest.getException();
+    }
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerDiagram";

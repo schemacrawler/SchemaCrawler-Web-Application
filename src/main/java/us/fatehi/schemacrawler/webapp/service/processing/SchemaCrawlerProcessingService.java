@@ -77,15 +77,22 @@ public class SchemaCrawlerProcessingService implements ProcessingService {
 
     final String key = diagramRequest.getKey();
 
-    // Store the uploaded database file
-    storageService.store(new PathResource(localPath), key, SQLITE_DB);
-    // Store the JSON request
-    storageService.store(
-        new InputStreamResource(toInputStream(diagramRequest.toJson(), UTF_8)), key, JSON);
+    try {
+      // Store the uploaded database file
+      storageService.store(new PathResource(localPath), key, SQLITE_DB);
 
-    // Generate a database integration, and store the generated image
-    final Path schemaCrawlerDiagram =
-        scService.createSchemaCrawlerDiagram(localPath, PNG.getExtension());
-    storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
+      // Generate a database integration, and store the generated image
+      final Path schemaCrawlerDiagram =
+          scService.createSchemaCrawlerDiagram(localPath, PNG.getExtension());
+      storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
+
+    } catch (final Exception e) {
+      diagramRequest.setException(e);
+      throw e;
+    } finally {
+      // Store the JSON request
+      storageService.store(
+          new InputStreamResource(toInputStream(diagramRequest.toJson(), UTF_8)), key, JSON);
+    }
   }
 }

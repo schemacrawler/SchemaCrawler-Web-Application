@@ -49,6 +49,6 @@ public class ErrorController {
     final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
     redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 
-    return "redirect:error";
+    return "redirect:/error";
   }
 }

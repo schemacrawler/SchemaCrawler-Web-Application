@@ -134,7 +134,7 @@ public class FileSystemStorageService implements StorageService {
     // Check that the file is not empty
     if (Files.size(filePath) == 0) {
       Files.delete(filePath);
-      throw new Exception(String.format("No data for file %s.%s", key, extension));
+      throw new Exception(String.format("Uploaded file has no data (%s)", key));
     }
   }
 
