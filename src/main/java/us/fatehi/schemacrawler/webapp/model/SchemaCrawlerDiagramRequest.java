@@ -77,6 +77,7 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
 
   private final String key;
   private final Instant timestamp;
+  private Exception exception;
 
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
@@ -115,6 +116,15 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
   }
 
   /**
+   * Exception processing request.
+   *
+   * @return Exception processing request
+   */
+  public Exception getException() {
+    return exception;
+  }
+
+  /**
    * Returns the uploaded file name.
    *
    * @return Uploaded file name.
@@ -150,6 +160,10 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
     return timestamp;
   }
 
+  public boolean hasException() {
+    return exception != null;
+  }
+
   /** {@inheritDoc} */
   @Override
   public int hashCode() {
@@ -158,6 +172,15 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
 
   public void setEmail(final String email) {
     this.email = email;
+  }
+
+  /**
+   * Processing exception.
+   *
+   * @param Processing exception
+   */
+  public void setException(final Exception exception) {
+    this.exception = exception;
   }
 
   /**
