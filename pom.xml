@@ -6,7 +6,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>16.11.7.7</version>
+  <version>16.11.7.8</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
