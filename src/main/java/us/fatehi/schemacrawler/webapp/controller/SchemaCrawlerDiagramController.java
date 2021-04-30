@@ -55,6 +55,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
@@ -77,7 +78,7 @@ public class SchemaCrawlerDiagramController {
   @GetMapping(value = "/schemacrawler/results/{key}/diagram", produces = MediaType.IMAGE_PNG_VALUE)
   public Resource diagramImage(
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
-          final String key)
+          final DiagramKey key)
       throws Exception {
     return storageService
         .retrieveLocal(key, PNG)
@@ -103,7 +104,7 @@ public class SchemaCrawlerDiagramController {
       return "SchemaCrawlerDiagramForm";
     }
 
-    final String key = diagramRequest.getKey();
+    final DiagramKey key = diagramRequest.getKey();
 
     // Store the uploaded database file
     final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
@@ -123,7 +124,7 @@ public class SchemaCrawlerDiagramController {
   public String retrieveResults(
       final Model model,
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
-          final String key)
+          final DiagramKey key)
       throws Exception {
     final Path jsonFile =
         storageService

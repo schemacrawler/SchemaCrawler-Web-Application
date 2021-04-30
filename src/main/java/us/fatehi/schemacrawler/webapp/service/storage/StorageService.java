@@ -32,6 +32,8 @@ import java.util.Optional;
 
 import org.springframework.core.io.InputStreamSource;
 
+import us.fatehi.schemacrawler.webapp.model.DiagramKey;
+
 /**
  * Service to store files.
  *
@@ -54,7 +56,7 @@ public interface StorageService {
    * @return a local file-system path to a file, if one is found.
    * @throws Exception Exception resolving a path.
    */
-  Optional<Path> retrieveLocal(String key, FileExtensionType extension) throws Exception;
+  Optional<Path> retrieveLocal(DiagramKey key, FileExtensionType extension) throws Exception;
 
   /**
    * Stores a stream given a key and extension.
@@ -64,7 +66,8 @@ public interface StorageService {
    * @param extension Filename extension.
    * @throws Exception Exception storing a file.
    */
-  void store(InputStreamSource stream, String key, FileExtensionType extension) throws Exception;
+  void store(InputStreamSource stream, DiagramKey key, FileExtensionType extension)
+      throws Exception;
 
   /**
    * Stores a stream given a filename key and extension locally in a temporary file.
@@ -74,6 +77,6 @@ public interface StorageService {
    * @param extension Filename extension.
    * @throws Exception Exception storing a file.
    */
-  Path storeLocal(InputStreamSource stream, String key, FileExtensionType extension)
+  Path storeLocal(InputStreamSource stream, DiagramKey key, FileExtensionType extension)
       throws Exception;
 }

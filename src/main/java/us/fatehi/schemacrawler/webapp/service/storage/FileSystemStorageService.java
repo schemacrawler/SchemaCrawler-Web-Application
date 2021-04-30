@@ -41,12 +41,13 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+
+import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 
 @Service("fileSystemStorageService")
 @Profile("development")
@@ -74,9 +75,8 @@ public class FileSystemStorageService implements StorageService {
 
   /** {@inheritDoc} */
   @Override
-  public Optional<Path> retrieveLocal(final String key, final FileExtensionType extension)
+  public Optional<Path> retrieveLocal(final DiagramKey key, final FileExtensionType extension)
       throws Exception {
-    validateKey(key);
     if (extension == null) {
       return Optional.empty();
     }
@@ -94,7 +94,7 @@ public class FileSystemStorageService implements StorageService {
   @Override
   public void store(
       @NonNull final InputStreamSource streamSource,
-      @NonNull final String key,
+      @NonNull final DiagramKey key,
       @NonNull final FileExtensionType extension)
       throws Exception {
     final Path filePath =
@@ -107,7 +107,7 @@ public class FileSystemStorageService implements StorageService {
   @Override
   public Path storeLocal(
       @NonNull final InputStreamSource streamSource,
-      @NonNull final String key,
+      @NonNull final DiagramKey key,
       @NonNull final FileExtensionType extension)
       throws Exception {
     final Path filePath =
@@ -122,11 +122,10 @@ public class FileSystemStorageService implements StorageService {
 
   private void saveFile(
       final InputStreamSource streamSource,
-      final String key,
+      final DiagramKey key,
       final FileExtensionType extension,
       final Path filePath)
       throws Exception {
-    validateKey(key);
 
     // Save stream to a file
     copy(streamSource.getInputStream(), filePath);
@@ -135,18 +134,6 @@ public class FileSystemStorageService implements StorageService {
     if (Files.size(filePath) == 0) {
       Files.delete(filePath);
       throw new Exception(String.format("Uploaded file has no data (%s)", key));
-    }
-  }
-
-  /**
-   * Prevent malicious injection attacks.
-   *
-   * @param key Key
-   * @throws Exception On a badly constructed key.
-   */
-  private void validateKey(final String key) throws Exception {
-    if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key)) {
-      throw new Exception(String.format("Invalid filename key \"%s\"", key));
     }
   }
 }
