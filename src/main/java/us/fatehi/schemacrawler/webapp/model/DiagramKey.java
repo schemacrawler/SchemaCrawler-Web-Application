@@ -27,12 +27,15 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
-public class DiagramKey {
+public class DiagramKey implements Serializable {
+
+  private static final long serialVersionUID = 3453873731406876293L;
 
   private final String key;
 
@@ -60,6 +63,10 @@ public class DiagramKey {
       return false;
     }
     return true;
+  }
+
+  public String getKey() {
+    return key;
   }
 
   @Override

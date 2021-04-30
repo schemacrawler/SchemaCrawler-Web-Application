@@ -65,8 +65,8 @@ public class DiagramResultController {
     this.storageService = storageService;
   }
 
-  @ResponseBody
   @GetMapping(value = "/schemacrawler/results/{key}/diagram", produces = MediaType.IMAGE_PNG_VALUE)
+  @ResponseBody
   public Resource diagramImage(
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
           final DiagramKey key)
@@ -77,18 +77,48 @@ public class DiagramResultController {
         .orElseThrow(() -> new Exception("Cannot find image, " + key));
   }
 
-  @GetMapping(value = "/schemacrawler/results/{key}")
-  public String retrieveResults(
-      final Model model,
+  /**
+   * Retrieve results as a JSON object.
+   *
+   * @param key Diagram key for the results.
+   * @return Diagram request data, including the key
+   * @throws Exception On an exception
+   */
+  @GetMapping(value = "/schemacrawler/results/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public SchemaCrawlerDiagramRequest retrieveResults(
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
           final DiagramKey key)
       throws Exception {
+
     final Path jsonFile =
         storageService
             .retrieveLocal(key, JSON)
             .orElseThrow(() -> new Exception("Cannot find request for " + key));
     final SchemaCrawlerDiagramRequest diagramRequest =
         SchemaCrawlerDiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
+    if (diagramRequest.hasException()) {
+      throw diagramRequest.getException();
+    }
+
+    return diagramRequest;
+  }
+
+  /**
+   * Retrieve results as HTML using a rendered Thymeleaf template.
+   *
+   * @param key Diagram key for the results.
+   * @return Diagram request data, including the key
+   * @throws Exception On an exception
+   */
+  @GetMapping(value = "/schemacrawler/results/{key}", produces = MediaType.TEXT_HTML_VALUE)
+  public String retrieveResults(
+      final Model model,
+      @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
+          final DiagramKey key)
+      throws Exception {
+
+    final SchemaCrawlerDiagramRequest diagramRequest = retrieveResults(key);
     if (diagramRequest.hasException()) {
       throw diagramRequest.getException();
     }
