@@ -119,9 +119,6 @@ public class DiagramResultController {
       throws Exception {
 
     final SchemaCrawlerDiagramRequest diagramRequest = retrieveResults(key);
-    if (diagramRequest.hasException()) {
-      throw diagramRequest.getException();
-    }
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerDiagram";
