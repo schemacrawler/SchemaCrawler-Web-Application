@@ -111,7 +111,7 @@ public class DiagramResultController {
    * @return Diagram request data, including the key
    * @throws Exception On an exception
    */
-  @GetMapping(value = "/schemacrawler/results/{key}", produces = MediaType.TEXT_HTML_VALUE)
+  @GetMapping(value = "/schemacrawler/results/{key}")
   public String retrieveResults(
       final Model model,
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
