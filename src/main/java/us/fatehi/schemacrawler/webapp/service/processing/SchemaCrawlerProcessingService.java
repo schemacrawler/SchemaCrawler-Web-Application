@@ -44,6 +44,7 @@ import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
@@ -75,7 +76,7 @@ public class SchemaCrawlerProcessingService implements ProcessingService {
         String.format(
             "Processing in thread %s%n%s", Thread.currentThread().getName(), diagramRequest));
 
-    final String key = diagramRequest.getKey();
+    final DiagramKey key = diagramRequest.getKey();
 
     try {
       // Store the uploaded database file

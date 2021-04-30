@@ -37,7 +37,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -75,7 +74,7 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
     return gson.fromJson(jsonRequest, SchemaCrawlerDiagramRequest.class);
   }
 
-  private final String key;
+  private final DiagramKey key;
   private final Instant timestamp;
   private Exception exception;
 
@@ -97,7 +96,7 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
   /** Public constructor. Generates a random key, and sets the creation timestamp. */
   public SchemaCrawlerDiagramRequest() {
     timestamp = Instant.now();
-    key = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+    key = new DiagramKey();
   }
 
   /** {@inheritDoc} */
@@ -138,7 +137,7 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
    *
    * @return Unique key for the request.
    */
-  public String getKey() {
+  public DiagramKey getKey() {
     return key;
   }
 

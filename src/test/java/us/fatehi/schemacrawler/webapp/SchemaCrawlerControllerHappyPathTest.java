@@ -60,6 +60,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
@@ -90,7 +91,7 @@ public class SchemaCrawlerControllerHappyPathTest {
 
     final SchemaCrawlerDiagramRequest diagramRequest =
         (SchemaCrawlerDiagramRequest) result1.getModelAndView().getModel().get("diagramRequest");
-    final String key = diagramRequest.getKey();
+    final DiagramKey key = diagramRequest.getKey();
 
     // Wait for diagram to be created
     assertTimeoutPreemptively(

@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamSource;
@@ -53,6 +52,8 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+
+import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 
 @Service("amazonS3StorageService")
 @Profile("production")
@@ -82,9 +83,8 @@ public class AmazonS3StorageService implements StorageService {
 
   /** {@inheritDoc} */
   @Override
-  public Optional<Path> retrieveLocal(final String key, final FileExtensionType extension)
+  public Optional<Path> retrieveLocal(final DiagramKey key, final FileExtensionType extension)
       throws Exception {
-    validateKey(key);
 
     if (extension == null) {
       return Optional.empty();
@@ -110,10 +110,9 @@ public class AmazonS3StorageService implements StorageService {
   @Override
   public void store(
       @NonNull final InputStreamSource streamSource,
-      @NonNull final String key,
+      @NonNull final DiagramKey key,
       @NonNull final FileExtensionType extension)
       throws Exception {
-    validateKey(key);
 
     try {
       // Save stream to a S3
@@ -135,10 +134,9 @@ public class AmazonS3StorageService implements StorageService {
   @Override
   public Path storeLocal(
       @NonNull final InputStreamSource streamSource,
-      @NonNull final String key,
+      @NonNull final DiagramKey key,
       @NonNull final FileExtensionType extension)
       throws Exception {
-    validateKey(key);
 
     // Save stream to a file
     final Path filePath = Files.createTempFile("sc-webapp.", "." + extension.getExtension());
@@ -151,17 +149,5 @@ public class AmazonS3StorageService implements StorageService {
     }
 
     return filePath;
-  }
-
-  /**
-   * Prevent malicious injection attacks.
-   *
-   * @param key Key
-   * @throws Exception On a badly constructed key.
-   */
-  private void validateKey(final String key) throws Exception {
-    if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key)) {
-      throw new Exception(String.format("Invalid filename key, %s", key));
-    }
   }
 }
