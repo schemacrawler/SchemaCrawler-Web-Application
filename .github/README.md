@@ -43,7 +43,7 @@ to point to a temporary directory on your system.
 
 Do one of the steps below to start the web application locally on your system:
 - Start the application from Maven, run `mvn spring-boot:run`
-- Start application from the jar file, run `java -jar target/schemacrawler-webapp-16.14.5.1.jar`
+- Start application from the jar file, run `java -jar target/schemacrawler-webapp-16.14.6.1.jar`
 - Start the application from the local image in a Docker container, run  `docker run --rm -d -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
 
 
