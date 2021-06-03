@@ -34,8 +34,10 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile("development")
 public class FileSystemStorageConfig {
 
   @Value("${SC_WEBAPP_STORAGE:./target/sc-webapp-storage}")

@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -42,6 +43,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 
 @Configuration
+@Profile("production")
 public class AmazonS3StorageConfig {
 
   @Value("${AWS_ACCESS_KEY_ID}")
