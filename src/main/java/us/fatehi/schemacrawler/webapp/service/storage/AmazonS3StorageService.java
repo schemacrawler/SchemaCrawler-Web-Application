@@ -52,6 +52,7 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.servicequotas.model.IllegalArgumentException;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 
@@ -74,6 +75,11 @@ public class AmazonS3StorageService implements StorageService {
             .withCredentials(awsCredentialsProvider)
             .withRegion(awsRegion.getName())
             .build();
+
+    if (!amazonS3.doesBucketExistV2(awsS3Bucket)) {
+      throw new IllegalArgumentException(
+          String.format("AWS S3 bucket '%s' does not exist", awsS3Bucket));
+    }
     this.awsS3Bucket = awsS3Bucket;
   }
 

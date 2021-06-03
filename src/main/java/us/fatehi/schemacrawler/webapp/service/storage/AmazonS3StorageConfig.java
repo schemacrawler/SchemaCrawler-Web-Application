@@ -44,11 +44,11 @@ import com.amazonaws.regions.Regions;
 @Configuration
 public class AmazonS3StorageConfig {
 
-  @Value("${AWS_ACCESS_KEY_ID:bad-access-key}")
+  @Value("${AWS_ACCESS_KEY_ID}")
   @NotNull
   private String awsKeyId;
 
-  @Value("${AWS_SECRET:bad-secret}")
+  @Value("${AWS_SECRET}")
   @NotNull
   private String awsKeySecret;
 
@@ -56,7 +56,7 @@ public class AmazonS3StorageConfig {
   @NotNull
   private String awsRegion;
 
-  @Value("${AWS_S3_BUCKET:sc-web-app-1}")
+  @Value("${AWS_S3_BUCKET}")
   @NotNull
   private String awsS3Bucket;
 
@@ -81,6 +81,9 @@ public class AmazonS3StorageConfig {
 
   @Bean(name = "awsS3Bucket")
   public String awsS3Bucket() {
+    if (StringUtils.isAnyBlank(awsS3Bucket)) {
+      throw new RuntimeException("No AWS S3 bucket provided");
+    }
     return awsS3Bucket;
   }
 }
