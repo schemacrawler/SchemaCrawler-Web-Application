@@ -29,7 +29,12 @@ package us.fatehi.schemacrawler.webapp.service.storage;
 
 import static java.nio.file.Files.copy;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.apache.commons.io.IOUtils.copy;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -49,7 +54,6 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.servicequotas.model.IllegalArgumentException;
@@ -102,8 +106,9 @@ public class AmazonS3StorageService implements StorageService {
       filePath = Files.createTempFile("sc-webapp", "." + extension.getExtension());
       final GetObjectRequest request =
           new GetObjectRequest(awsS3Bucket, key + "." + extension.getExtension());
-      final S3Object s3Object = amazonS3.getObject(request);
-      copy(s3Object.getObjectContent(), filePath, REPLACE_EXISTING);
+      try (final S3Object s3Object = amazonS3.getObject(request); ) {
+        copy(s3Object.getObjectContent(), filePath, REPLACE_EXISTING);
+      }
     } catch (final Exception e) {
       logger.log(Level.WARNING, String.format("Could not retrieve, %s.%s", key, extension), e);
       return Optional.empty();
@@ -121,16 +126,20 @@ public class AmazonS3StorageService implements StorageService {
       throws Exception {
 
     try {
-      // Save stream to a S3
-      final ObjectMetadata metadata = new ObjectMetadata();
-      metadata.setContentType(extension.getMimeType());
-      final PutObjectRequest request =
-          new PutObjectRequest(
-              awsS3Bucket,
-              key + "." + extension.getExtension(),
-              streamSource.getInputStream(),
-              metadata);
+
+      // Save stream to a temporary file, so the AWS S3 API can get length of data and MD5 checksum,
+      // and avoid ResetException
+      final String filename = key + "." + extension.getExtension();
+      final File tempFile = Files.createTempFile(null, filename).toAbsolutePath().toFile();
+      try (final InputStream inputStream = streamSource.getInputStream();
+          final OutputStream outputStream = new FileOutputStream(tempFile); ) {
+        copy(inputStream, outputStream);
+      }
+
+      // Upload temporary file to a S3
+      final PutObjectRequest request = new PutObjectRequest(awsS3Bucket, filename, tempFile);
       amazonS3.putObject(request);
+
     } catch (final Exception e) {
       logger.log(Level.WARNING, String.format("Could not store, %s.%s", key, extension), e);
     }
