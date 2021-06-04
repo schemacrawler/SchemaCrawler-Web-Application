@@ -42,9 +42,14 @@ to point to a temporary directory on your system.
 ### Start the Server
 
 Do one of the steps below to start the web application locally on your system:
-- Start the application from Maven, run `mvn -Dspring-boot.run.fork=false spring-boot:run`
-- Start application from the jar file, run `java -jar target/schemacrawler-webapp-16.14.6.2.jar`
-- Start the application from the local image in a Docker container, run  `docker run --rm -d -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
+- Start the application from Maven, run `mvn -Dspring-boot.run.fork=false -Dspring.profiles.active=development spring-boot:run`
+- Start application from the jar file, run 
+  `java -DAWS_ACCESS_KEY_ID=xxxxx -DAWS_SECRET=xxxxx -DAWS_S3_BUCKET=xxxxx -jar target/schemacrawler-webapp-16.14.6.2.jar`
+  or, in development mode,
+  `java -Dspring.profiles.active=development -jar target/schemacrawler-webapp-16.14.6.2.jar`
+- Start the application from the local image in a Docker container, run  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
+  or, in development mode,
+  `docker run --rm --env SPRING_PROFILES_ACTIVE=development -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
 
 
 ### Use the Application
