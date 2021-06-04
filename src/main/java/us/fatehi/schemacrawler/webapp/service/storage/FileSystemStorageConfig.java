@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("development")
+@Profile("local")
 public class FileSystemStorageConfig {
 
   @Value("${SC_WEBAPP_STORAGE:./target/sc-webapp-storage}")

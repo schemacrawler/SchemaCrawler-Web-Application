@@ -50,7 +50,7 @@ import org.springframework.stereotype.Service;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 
 @Service("fileSystemStorageService")
-@Profile("development")
+@Profile("local")
 public class FileSystemStorageService implements StorageService {
 
   private final FileSystemStorageConfig config;

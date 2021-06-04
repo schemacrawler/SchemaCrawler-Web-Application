@@ -68,7 +68,7 @@ import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("development")
+@ActiveProfiles("local")
 public class SchemaCrawlerControllerHappyPathTest {
 
   @Autowired private MockMvc mvc;
