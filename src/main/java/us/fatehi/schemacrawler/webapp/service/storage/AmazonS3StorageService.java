@@ -52,14 +52,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.HeadBucketResponse;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 
 @Service("amazonS3StorageService")
@@ -105,10 +101,12 @@ public class AmazonS3StorageService implements StorageService {
       final Path tempFilePath = Files.createTempFile("sc-webapp", "." + extension.getExtension());
 
       // Download file from S3 to a local temporary file
-      final GetObjectRequest request =
-          GetObjectRequest.builder().bucket(awsS3Bucket).key(filename).build();
-      try (final ResponseInputStream<GetObjectResponse> inputStream = amazonS3.getObject(request)) {
-        copy(inputStream, tempFilePath, REPLACE_EXISTING);
+      amazonS3.getObject(b -> b.bucket(awsS3Bucket).key(filename), tempFilePath);
+
+      // Check that the file is not empty
+      if (size(tempFilePath) == 0) {
+        delete(tempFilePath);
+        throw new Exception(String.format("No data for file %s.%s", key, extension));
       }
 
       return Optional.of(tempFilePath);
@@ -139,9 +137,7 @@ public class AmazonS3StorageService implements StorageService {
       }
 
       // Upload local temporary file to S3
-      final PutObjectRequest request =
-          PutObjectRequest.builder().bucket(awsS3Bucket).key(filename).build();
-      amazonS3.putObject(request, tempFilePath);
+      amazonS3.putObject(b -> b.bucket(awsS3Bucket).key(filename), tempFilePath);
 
     } catch (final Exception e) {
       logger.log(Level.WARNING, String.format("Could not store, %s.%s", key, extension), e);
