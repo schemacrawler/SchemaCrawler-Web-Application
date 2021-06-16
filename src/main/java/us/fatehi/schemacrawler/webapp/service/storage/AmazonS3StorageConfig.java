@@ -35,12 +35,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
 
 @Configuration
 @Profile("production")
@@ -64,12 +63,12 @@ public class AmazonS3StorageConfig {
 
   @Bean(name = "awsCredentials")
   @NotNull
-  public AWSCredentialsProvider awsCredentials() {
+  public AwsCredentialsProvider awsCredentials() {
     if (StringUtils.isAnyBlank(awsKeyId, awsKeySecret)) {
       throw new RuntimeException("No AWS credentials provided");
     }
-    final AWSCredentials awsCredentials = new BasicAWSCredentials(awsKeyId, awsKeySecret);
-    return new AWSStaticCredentialsProvider(awsCredentials);
+    final AwsCredentials awsCredentials = AwsBasicCredentials.create(awsKeyId, awsKeySecret);
+    return StaticCredentialsProvider.create(awsCredentials);
   }
 
   @Bean(name = "awsRegion")
@@ -78,7 +77,7 @@ public class AmazonS3StorageConfig {
     if (StringUtils.isBlank(awsRegion)) {
       throw new RuntimeException("No AWS region provided");
     }
-    return Region.getRegion(Regions.fromName(awsRegion));
+    return Region.of(awsRegion);
   }
 
   @Bean(name = "awsS3Bucket")
