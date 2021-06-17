@@ -25,7 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp;
+package us.fatehi.schemacrawler.webapp.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static us.fatehi.schemacrawler.webapp.S3ServiceControllerTestConfig.TEST_SC_WEB_APP_BUCKET;
+import static us.fatehi.schemacrawler.webapp.test.S3ServiceControllerTestConfig.TEST_SC_WEB_APP_BUCKET;
 
 import java.util.List;
 

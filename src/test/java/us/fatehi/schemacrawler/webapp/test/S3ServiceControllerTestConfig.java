@@ -25,7 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp;
+package us.fatehi.schemacrawler.webapp.test;
 
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 

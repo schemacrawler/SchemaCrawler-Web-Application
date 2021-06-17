@@ -25,7 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.service.storage;
+package us.fatehi.schemacrawler.webapp.test.service.storage;
 
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
@@ -48,6 +48,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
+import us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType;
+import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Service("fileSystemStorageService")
 @Profile("local")
