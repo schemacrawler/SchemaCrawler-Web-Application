@@ -44,9 +44,14 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.HeadBucketResponse;
 
 @Testcontainers(disabledWithoutDocker = true)
 public class BasicLocalStackS3Test {
+
+  private static final String TEST_CONTENT = "baz";
+  private static final String TEST_OBJECT_NAME = "bar";
+  private static final String TEST_BUCKET_NAME = "foo";
 
   private final DockerImageName localstackImage =
       DockerImageName.parse("localstack/localstack:0.12.12");
@@ -67,15 +72,21 @@ public class BasicLocalStackS3Test {
             .region(Region.of(localstack.getRegion()))
             .build();
 
-    s3.createBucket(b -> b.bucket("foo"));
-    s3.waiter().waitUntilBucketExists(b -> b.bucket("foo"));
-    s3.putObject(b -> b.bucket("foo").key("bar"), RequestBody.fromBytes("baz".getBytes()));
-    s3.waiter().waitUntilObjectExists(b -> b.bucket("foo").key("bar"));
+    s3.createBucket(b -> b.bucket(TEST_BUCKET_NAME));
+    s3.waiter().waitUntilBucketExists(b -> b.bucket(TEST_BUCKET_NAME));
+    s3.putObject(
+        b -> b.bucket(TEST_BUCKET_NAME).key(TEST_OBJECT_NAME),
+        RequestBody.fromBytes(TEST_CONTENT.getBytes()));
+    s3.waiter().waitUntilObjectExists(b -> b.bucket(TEST_BUCKET_NAME).key(TEST_OBJECT_NAME));
+
+    final HeadBucketResponse headBucketResponse = s3.headBucket(b -> b.bucket(TEST_BUCKET_NAME));
+
+    assertThat(headBucketResponse.sdkHttpResponse().isSuccessful(), is(true));
 
     final ResponseBytes<GetObjectResponse> objectAsBytes =
-        s3.getObjectAsBytes(b -> b.bucket("foo").key("bar"));
+        s3.getObjectAsBytes(b -> b.bucket(TEST_BUCKET_NAME).key(TEST_OBJECT_NAME));
     final String data = new String(objectAsBytes.asByteArray());
 
-    assertThat(data, is("baz"));
+    assertThat(data, is(TEST_CONTENT));
   }
 }

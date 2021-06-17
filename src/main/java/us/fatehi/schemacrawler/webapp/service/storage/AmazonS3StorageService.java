@@ -37,9 +37,10 @@ import static org.apache.commons.io.IOUtils.copy;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,11 +52,7 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
-import software.amazon.awssdk.services.s3.model.HeadBucketResponse;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 
 @Service("amazonS3StorageService")
@@ -64,28 +61,25 @@ public class AmazonS3StorageService implements StorageService {
 
   private static final Logger logger = Logger.getLogger(AmazonS3StorageService.class.getName());
 
-  private final String awsS3Bucket;
-  private final S3Client amazonS3;
+  private final String s3Bucket;
+  private final S3Client s3Client;
 
   @Autowired
-  public AmazonS3StorageService(
-      @NonNull final Region awsRegion,
-      @NonNull final String awsS3Bucket,
-      @NonNull final AwsCredentialsProvider awsCredentialsProvider) {
-
-    this.amazonS3 =
-        S3Client.builder().region(awsRegion).credentialsProvider(awsCredentialsProvider).build();
-
-    if (!bucketExists(awsS3Bucket)) {
-      throw new IllegalArgumentException(
-          String.format("AWS S3 bucket '%s' does not exist", awsS3Bucket));
-    }
-    this.awsS3Bucket = awsS3Bucket;
+  public AmazonS3StorageService(@NonNull final S3Client s3Client, @NonNull final String s3Bucket) {
+    this.s3Client = s3Client;
+    this.s3Bucket = s3Bucket;
   }
 
   @Override
   @PostConstruct
-  public void init() {}
+  public void init() {
+    final boolean bucketExists =
+        s3Client.headBucket(b -> b.bucket(s3Bucket)).sdkHttpResponse().isSuccessful();
+    if (!bucketExists) {
+      throw new IllegalArgumentException(
+          String.format("Amazon S3 bucket '%s' does not exist", s3Bucket));
+    }
+  }
 
   /** {@inheritDoc} */
   @Override
@@ -98,10 +92,15 @@ public class AmazonS3StorageService implements StorageService {
 
     try {
       final String filename = key + "." + extension.getExtension();
-      final Path tempFilePath = Files.createTempFile("sc-webapp", "." + extension.getExtension());
+      final Path tempFilePath =
+          Paths.get(
+              System.getProperty("java.io.tmpdir"),
+              String.format(
+                  "sc-webapp-%s-%s.%s", key, UUID.randomUUID(), extension.getExtension()));
 
       // Download file from S3 to a local temporary file
-      amazonS3.getObject(b -> b.bucket(awsS3Bucket).key(filename), tempFilePath);
+      // IMPORTANT: Temporary file should not exist
+      s3Client.getObject(b -> b.bucket(s3Bucket).key(filename), tempFilePath);
 
       // Check that the file is not empty
       if (size(tempFilePath) == 0) {
@@ -127,8 +126,8 @@ public class AmazonS3StorageService implements StorageService {
 
     try {
 
-      // Save stream to a temporary file, so the AWS S3 API can get length of data and MD5 checksum,
-      // and avoid ResetException
+      // Save stream to a temporary file, so the Amazon S3 API can get length of data and MD5
+      // checksum, and avoid ResetException
       final String filename = key + "." + extension.getExtension();
       final Path tempFilePath = createTempFile(null, filename).toAbsolutePath();
       try (final InputStream inputStream = streamSource.getInputStream();
@@ -137,7 +136,7 @@ public class AmazonS3StorageService implements StorageService {
       }
 
       // Upload local temporary file to S3
-      amazonS3.putObject(b -> b.bucket(awsS3Bucket).key(filename), tempFilePath);
+      s3Client.putObject(b -> b.bucket(s3Bucket).key(filename), tempFilePath);
 
     } catch (final Exception e) {
       logger.log(Level.WARNING, String.format("Could not store, %s.%s", key, extension), e);
@@ -163,11 +162,5 @@ public class AmazonS3StorageService implements StorageService {
     }
 
     return tempFilePath;
-  }
-
-  private boolean bucketExists(final String bucketName) {
-    final HeadBucketRequest request = HeadBucketRequest.builder().bucket(bucketName).build();
-    final HeadBucketResponse headBucketResponse = amazonS3.headBucket(request);
-    return headBucketResponse.sdkHttpResponse().isSuccessful();
   }
 }

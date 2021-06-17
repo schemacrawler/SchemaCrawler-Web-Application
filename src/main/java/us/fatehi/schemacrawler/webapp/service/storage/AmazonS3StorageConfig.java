@@ -40,6 +40,7 @@ import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
 @Profile("production")
@@ -47,11 +48,11 @@ public class AmazonS3StorageConfig {
 
   @Value("${AWS_ACCESS_KEY_ID}")
   @NotNull
-  private String awsKeyId;
+  private String accessKeyId;
 
   @Value("${AWS_SECRET}")
   @NotNull
-  private String awsKeySecret;
+  private String secretAccessKey;
 
   @Value("${AWS_REGION:us-east-1}")
   @NotNull
@@ -59,32 +60,35 @@ public class AmazonS3StorageConfig {
 
   @Value("${AWS_S3_BUCKET}")
   @NotNull
-  private String awsS3Bucket;
+  private String s3Bucket;
 
-  @Bean(name = "awsCredentials")
-  @NotNull
-  public AwsCredentialsProvider awsCredentials() {
-    if (StringUtils.isAnyBlank(awsKeyId, awsKeySecret)) {
+  @Bean(name = "s3Bucket")
+  public String s3Bucket() {
+    if (StringUtils.isAnyBlank(s3Bucket)) {
+      throw new RuntimeException("No Amazon S3 bucket provided");
+    }
+    return s3Bucket;
+  }
+
+  @Bean(name = "s3Client")
+  public S3Client s3Client() {
+    final S3Client s3Client =
+        S3Client.builder().credentialsProvider(awsCredentials()).region(awsRegion()).build();
+    return s3Client;
+  }
+
+  private AwsCredentialsProvider awsCredentials() {
+    if (StringUtils.isAnyBlank(accessKeyId, secretAccessKey)) {
       throw new RuntimeException("No AWS credentials provided");
     }
-    final AwsCredentials awsCredentials = AwsBasicCredentials.create(awsKeyId, awsKeySecret);
+    final AwsCredentials awsCredentials = AwsBasicCredentials.create(accessKeyId, secretAccessKey);
     return StaticCredentialsProvider.create(awsCredentials);
   }
 
-  @Bean(name = "awsRegion")
-  @NotNull
-  public Region awsRegion() {
+  private Region awsRegion() {
     if (StringUtils.isBlank(awsRegion)) {
       throw new RuntimeException("No AWS region provided");
     }
     return Region.of(awsRegion);
-  }
-
-  @Bean(name = "awsS3Bucket")
-  public String awsS3Bucket() {
-    if (StringUtils.isAnyBlank(awsS3Bucket)) {
-      throw new RuntimeException("No AWS S3 bucket provided");
-    }
-    return awsS3Bucket;
   }
 }
