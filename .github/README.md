@@ -19,7 +19,7 @@ SchemaCrawler Web Application makes SchemaCrawler accessible on the web. You can
 
 ## Technologies
 
-This is a Spring Boot 2.4.1 web application with a Bootstrap user interface, with source code control in GitHub, which is automatically built on every commit by GitHub Actions using a Maven build, tests are run, and coverage measured with JaCoCo and Codecov.io, and then immediately deployed to Heroku using a Docker image, which generates an crows-foot ERD of a SQLite database.
+This is a Spring Boot web application with a Bootstrap user interface, with source code control in GitHub, which is automatically built on every commit by GitHub Actions using a Maven build, tests are run, and coverage measured with JaCoCo and Codecov.io, and then immediately deployed to Heroku using a Docker image, which generates an crows-foot ERD of a SQLite database.
 
 
 ## Build and Run
@@ -27,8 +27,7 @@ This is a Spring Boot 2.4.1 web application with a Bootstrap user interface, wit
 ### Build
 
 - Install [Graphviz](http://www.graphviz.org), which is a prerequisite for SchemaCrawler
-- Modify `schemacrawler.webapp.storage-root` in `src/main/resources/application.properties` 
-to point to a temporary directory on your system. 
+- Install Docker
 - Build application from Maven, run `mvn clean package`
 
 
@@ -44,9 +43,9 @@ to point to a temporary directory on your system.
 Do one of the steps below to start the web application locally on your system:
 - Start the application from Maven, run `mvn -Dspring-boot.run.fork=false -Dspring.profiles.active=local spring-boot:run`
 - Start application from the jar file, run 
-  `java -DAWS_ACCESS_KEY_ID=xxxxx -DAWS_SECRET=xxxxx -DAWS_S3_BUCKET=xxxxx -jar target/schemacrawler-webapp-16.15.1.2.jar`
+  `java -DAWS_ACCESS_KEY_ID=xxxxx -DAWS_SECRET=xxxxx -DAWS_S3_BUCKET=xxxxx -jar target/schemacrawler-webapp-16.15.1.3.jar`
   or, in local mode,
-  `java -Dspring.profiles.active=local -jar target/schemacrawler-webapp-16.15.1.2.jar`
+  `java -Dspring.profiles.active=local -jar target/schemacrawler-webapp-16.15.1.3.jar`
 - Start the application from the local image in a Docker container, run  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
   or, in local mode,
   `docker run --rm --env SPRING_PROFILES_ACTIVE=local -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
