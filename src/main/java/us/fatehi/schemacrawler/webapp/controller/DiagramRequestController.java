@@ -50,13 +50,13 @@ import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
-public class SchemaCrawlerDiagramController {
+public class DiagramRequestController {
 
   private final StorageService storageService;
   private final ProcessingService processingService;
 
   @Autowired
-  public SchemaCrawlerDiagramController(
+  public DiagramRequestController(
       @NotNull final StorageService storageService,
       @NotNull final ProcessingService processingService) {
     this.storageService = storageService;
