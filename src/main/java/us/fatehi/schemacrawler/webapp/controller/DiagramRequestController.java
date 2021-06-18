@@ -35,6 +35,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
@@ -69,6 +71,19 @@ public class DiagramRequestController {
     return "SchemaCrawlerDiagramForm";
   }
 
+  @PostMapping(value = "/schemacrawler", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public SchemaCrawlerDiagramRequest diagramRequestFormApi(
+      @ModelAttribute("diagramRequest") @NotNull @Valid
+          final SchemaCrawlerDiagramRequest diagramRequest,
+      @RequestParam("file") final MultipartFile file)
+      throws Exception {
+
+    generateSchemaCrawlerDiagram(diagramRequest, file);
+
+    return diagramRequest;
+  }
+
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = "/schemacrawler")
   public String diagramRequestFormSubmit(
@@ -81,13 +96,7 @@ public class DiagramRequestController {
       return "SchemaCrawlerDiagramForm";
     }
 
-    final DiagramKey key = diagramRequest.getKey();
-
-    // Store the uploaded database file
-    final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
-
-    // Make asynchronous call to generate diagram
-    processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
+    generateSchemaCrawlerDiagram(diagramRequest, file);
 
     return "SchemaCrawlerDiagramResult";
   }
@@ -95,5 +104,16 @@ public class DiagramRequestController {
   @GetMapping(value = "/")
   public String index() {
     return "redirect:/schemacrawler";
+  }
+
+  private void generateSchemaCrawlerDiagram(
+      final SchemaCrawlerDiagramRequest diagramRequest, final MultipartFile file) throws Exception {
+    final DiagramKey key = diagramRequest.getKey();
+
+    // Store the uploaded database file
+    final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
+
+    // Make asynchronous call to generate diagram
+    processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
   }
 }
