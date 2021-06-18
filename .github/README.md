@@ -53,6 +53,28 @@ Do one of the steps below to start the web application locally on your system:
 
 ### Use the Application
 
+#### From a Browser
+
 Then, after you ensure that the web server is running, either from the command-line,
 or the Docker container, open a browser to
 [http://localhost:8080](http://localhost:8080)
+
+#### As an API
+
+You can use the SchemaCrawler web application as an API. 
+
+Submit a request and your SQLite database file with a command like this:
+```sh
+curl \
+  -F "name=Sualeh Fatehi" \
+  -F "email=sualeh@hotmail.com" \
+  -F "file=@test.db" \
+  -H "Accept: application/json" \
+  http://schemacrawler-webapp.herokuapp.com/schemacrawler
+```
+You will get a 12 character key in return, which uniquely identifies your request.
+
+If your identifier is "l0nk0wu4t2a3", can retrieve the generated image after a few minutes using a request similar to:
+```sh
+curl http://schemacrawler-webapp.herokuapp.com/schemacrawler/results/l0nk0wu4t2a3/diagram > pic.png
+```

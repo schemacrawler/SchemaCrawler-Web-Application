@@ -76,8 +76,7 @@ public class AmazonS3StorageService implements StorageService {
     final boolean bucketExists =
         s3Client.headBucket(b -> b.bucket(s3Bucket)).sdkHttpResponse().isSuccessful();
     if (!bucketExists) {
-      throw new IllegalArgumentException(
-          String.format("Amazon S3 bucket '%s' does not exist", s3Bucket));
+      throw new RuntimeException(String.format("Amazon S3 bucket '%s' does not exist", s3Bucket));
     }
   }
 
