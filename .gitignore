@@ -26,3 +26,5 @@ nbdist/
 .nb-gradle/
 /uploaded-files/
 keys.txt
+*.db
+*.png
