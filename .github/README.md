@@ -43,9 +43,9 @@ This is a Spring Boot web application with a Bootstrap user interface, with sour
 Do one of the steps below to start the web application locally on your system:
 - Start the application from Maven, run `mvn -Dspring-boot.run.fork=false -Dspring.profiles.active=local spring-boot:run`
 - Start application from the jar file, run 
-  `java -DAWS_ACCESS_KEY_ID=xxxxx -DAWS_SECRET=xxxxx -DAWS_S3_BUCKET=xxxxx -jar target/schemacrawler-webapp-16.15.1.4.jar`
+  `java -DAWS_ACCESS_KEY_ID=xxxxx -DAWS_SECRET=xxxxx -DAWS_S3_BUCKET=xxxxx -jar target/schemacrawler-webapp-16.15.2.4.jar`
   or, in local mode,
-  `java -Dspring.profiles.active=local -jar target/schemacrawler-webapp-16.15.1.4.jar`
+  `java -Dspring.profiles.active=local -jar target/schemacrawler-webapp-16.15.2.4.jar`
 - Start the application from the local image in a Docker container, run  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
   or, in local mode,
   `docker run --rm --env SPRING_PROFILES_ACTIVE=local -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
