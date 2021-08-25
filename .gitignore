@@ -14,7 +14,7 @@ target/
 ### IntelliJ IDEA ###
 .idea
 *.iws
-*.iml
+**/*.iml
 *.ipr
 
 ### NetBeans ###
@@ -28,3 +28,4 @@ nbdist/
 keys.txt
 *.db
 *.png
+**/launch.json
