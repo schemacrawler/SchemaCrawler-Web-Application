@@ -72,7 +72,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 public class S3ServiceControllerTest {
 
   private static final DockerImageName localstackImage =
-      DockerImageName.parse("localstack/localstack:0.12.12");
+      DockerImageName.parse("localstack/localstack").withTag("0.12.18");
 
   public static final LocalStackContainer localstack =
       new LocalStackContainer(localstackImage).withServices(S3);
