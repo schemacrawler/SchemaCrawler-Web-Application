@@ -45,7 +45,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
-import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
+import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
@@ -69,7 +69,7 @@ public class SchemaCrawlerProcessingService implements ProcessingService {
   @Async
   @Override
   public void generateSchemaCrawlerDiagram(
-      @NotNull final SchemaCrawlerDiagramRequest diagramRequest, @NotNull final Path localPath)
+      @NotNull final DiagramRequest diagramRequest, @NotNull final Path localPath)
       throws Exception {
 
     logger.info(

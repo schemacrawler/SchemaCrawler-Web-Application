@@ -44,7 +44,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class SchemaCrawlerDiagramRequest implements Serializable {
+public class DiagramRequest implements Serializable {
 
   private static final long serialVersionUID = 2065519510282344200L;
 
@@ -56,9 +56,9 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
    * @param jsonReader JSON serialized request reader.
    * @return Deserialzied Java request.
    */
-  public static SchemaCrawlerDiagramRequest fromJson(final Reader jsonReader) {
+  public static DiagramRequest fromJson(final Reader jsonReader) {
     requireNonNull(jsonReader, "No reader provided");
-    return gson.fromJson(jsonReader, SchemaCrawlerDiagramRequest.class);
+    return gson.fromJson(jsonReader, DiagramRequest.class);
   }
 
   /**
@@ -67,11 +67,11 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
    * @param jsonRequest JSON serialized request.
    * @return Deserialzied Java request.
    */
-  public static SchemaCrawlerDiagramRequest fromJson(final String jsonRequest) {
+  public static DiagramRequest fromJson(final String jsonRequest) {
     if (StringUtils.isBlank(jsonRequest)) {
       return null;
     }
-    return gson.fromJson(jsonRequest, SchemaCrawlerDiagramRequest.class);
+    return gson.fromJson(jsonRequest, DiagramRequest.class);
   }
 
   private final DiagramKey key;
@@ -94,7 +94,7 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
   private String file;
 
   /** Public constructor. Generates a random key, and sets the creation timestamp. */
-  public SchemaCrawlerDiagramRequest() {
+  public DiagramRequest() {
     timestamp = Instant.now();
     key = new DiagramKey();
   }

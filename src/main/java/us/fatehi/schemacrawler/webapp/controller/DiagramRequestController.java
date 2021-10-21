@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
-import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
+import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
@@ -67,15 +67,15 @@ public class DiagramRequestController {
 
   @GetMapping("/schemacrawler")
   public String diagramRequestForm(@NotNull final Model model) {
-    model.addAttribute("diagramRequest", new SchemaCrawlerDiagramRequest());
+    model.addAttribute("diagramRequest", new DiagramRequest());
     return "SchemaCrawlerDiagramForm";
   }
 
   @PostMapping(value = "/schemacrawler", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public SchemaCrawlerDiagramRequest diagramRequestFormApi(
+  public DiagramRequest diagramRequestFormApi(
       @ModelAttribute("diagramRequest") @NotNull @Valid
-          final SchemaCrawlerDiagramRequest diagramRequest,
+          final DiagramRequest diagramRequest,
       @RequestParam("file") final MultipartFile file)
       throws Exception {
 
@@ -88,7 +88,7 @@ public class DiagramRequestController {
   @PostMapping(value = "/schemacrawler")
   public String diagramRequestFormSubmit(
       @ModelAttribute("diagramRequest") @NotNull @Valid
-          final SchemaCrawlerDiagramRequest diagramRequest,
+          final DiagramRequest diagramRequest,
       final BindingResult bindingResult,
       @RequestParam("file") final MultipartFile file)
       throws Exception {
@@ -107,7 +107,7 @@ public class DiagramRequestController {
   }
 
   private void generateSchemaCrawlerDiagram(
-      final SchemaCrawlerDiagramRequest diagramRequest, final MultipartFile file) throws Exception {
+      final DiagramRequest diagramRequest, final MultipartFile file) throws Exception {
     final DiagramKey key = diagramRequest.getKey();
 
     // Store the uploaded database file

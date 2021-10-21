@@ -62,7 +62,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
-import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
+import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @ExtendWith(SpringExtension.class)
@@ -91,8 +91,8 @@ public class SchemaCrawlerControllerHappyPathTest {
             .andExpect(status().is2xxSuccessful())
             .andReturn();
 
-    final SchemaCrawlerDiagramRequest diagramRequest =
-        (SchemaCrawlerDiagramRequest) result1.getModelAndView().getModel().get("diagramRequest");
+    final DiagramRequest diagramRequest =
+        (DiagramRequest) result1.getModelAndView().getModel().get("diagramRequest");
     final DiagramKey key = diagramRequest.getKey();
 
     // Wait for diagram to be created
@@ -109,8 +109,8 @@ public class SchemaCrawlerControllerHappyPathTest {
     final Optional<Path> jsonPathOptional = storageService.retrieveLocal(key, JSON);
     assertThat(jsonPathOptional.isPresent(), is(equalTo(true)));
 
-    final SchemaCrawlerDiagramRequest schemaCrawlerDiagramRequestFromJson =
-        SchemaCrawlerDiagramRequest.fromJson(newBufferedReader(jsonPathOptional.get(), UTF_8));
+    final DiagramRequest schemaCrawlerDiagramRequestFromJson =
+        DiagramRequest.fromJson(newBufferedReader(jsonPathOptional.get(), UTF_8));
     assertThat(diagramRequest, is(equalTo(schemaCrawlerDiagramRequestFromJson)));
 
     final String diagramUrlPath = "/schemacrawler/results/" + key + "/diagram";

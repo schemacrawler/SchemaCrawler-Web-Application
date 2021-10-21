@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
-import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
+import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
@@ -88,7 +88,7 @@ public class DiagramResultController {
    */
   @GetMapping(value = RESULTS + "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public SchemaCrawlerDiagramRequest retrieveResults(
+  public DiagramRequest retrieveResults(
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
           final DiagramKey key)
       throws Exception {
@@ -97,8 +97,8 @@ public class DiagramResultController {
         storageService
             .retrieveLocal(key, JSON)
             .orElseThrow(() -> new Exception("Cannot find request for " + key));
-    final SchemaCrawlerDiagramRequest diagramRequest =
-        SchemaCrawlerDiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
+    final DiagramRequest diagramRequest =
+        DiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
     if (diagramRequest.hasException()) {
       throw diagramRequest.getException();
     }
@@ -120,7 +120,7 @@ public class DiagramResultController {
           final DiagramKey key)
       throws Exception {
 
-    final SchemaCrawlerDiagramRequest diagramRequest = retrieveResults(key);
+    final DiagramRequest diagramRequest = retrieveResults(key);
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerDiagram";
