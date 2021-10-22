@@ -54,7 +54,7 @@ public class DiagramRequest implements Serializable {
    * Factory method to deserialize a JSON request.
    *
    * @param jsonReader JSON serialized request reader.
-   * @return Deserialzied Java request.
+   * @return Deserialized Java request.
    */
   public static DiagramRequest fromJson(final Reader jsonReader) {
     requireNonNull(jsonReader, "No reader provided");
@@ -65,7 +65,7 @@ public class DiagramRequest implements Serializable {
    * Factory method to deserialize a JSON request.
    *
    * @param jsonRequest JSON serialized request.
-   * @return Deserialzied Java request.
+   * @return Deserialized Java request.
    */
   public static DiagramRequest fromJson(final String jsonRequest) {
     if (StringUtils.isBlank(jsonRequest)) {
