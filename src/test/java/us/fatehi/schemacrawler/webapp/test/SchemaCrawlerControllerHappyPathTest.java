@@ -109,9 +109,9 @@ public class SchemaCrawlerControllerHappyPathTest {
     final Optional<Path> jsonPathOptional = storageService.retrieveLocal(key, JSON);
     assertThat(jsonPathOptional.isPresent(), is(equalTo(true)));
 
-    final DiagramRequest schemaCrawlerDiagramRequestFromJson =
+    final DiagramRequest diagramRequestFromJson =
         DiagramRequest.fromJson(newBufferedReader(jsonPathOptional.get(), UTF_8));
-    assertThat(diagramRequest, is(equalTo(schemaCrawlerDiagramRequestFromJson)));
+    assertThat(diagramRequest, is(equalTo(diagramRequestFromJson)));
 
     final String diagramUrlPath = "/schemacrawler/results/" + key + "/diagram";
 
