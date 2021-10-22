@@ -93,6 +93,8 @@ public class DiagramRequest implements Serializable {
   @Size(min = 1, message = "Please select a file to upload")
   private String file;
 
+  private String title;
+
   /** Public constructor. Generates a random key, and sets the creation timestamp. */
   public DiagramRequest() {
     timestamp = Instant.now();
@@ -159,6 +161,10 @@ public class DiagramRequest implements Serializable {
     return timestamp;
   }
 
+  public String getTitle() {
+    return title;
+  }
+
   public boolean hasException() {
     return exception != null;
   }
@@ -198,6 +204,10 @@ public class DiagramRequest implements Serializable {
    */
   public void setName(final String name) {
     this.name = name;
+  }
+
+  public void setTitle(final String title) {
+    this.title = title;
   }
 
   /**
