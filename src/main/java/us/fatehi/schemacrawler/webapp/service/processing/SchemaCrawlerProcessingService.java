@@ -82,9 +82,10 @@ public class SchemaCrawlerProcessingService implements ProcessingService {
       // Store the uploaded database file
       storageService.store(new PathResource(localPath), key, SQLITE_DB);
 
+      final String title = diagramRequest.getTitle();
       // Generate a database integration, and store the generated image
       final Path schemaCrawlerDiagram =
-          scService.createSchemaCrawlerDiagram(localPath, PNG.getExtension());
+          scService.createSchemaCrawlerDiagram(localPath, title, PNG.getExtension());
       storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
 
     } catch (final Exception e) {

@@ -42,9 +42,9 @@ public interface SchemaCrawlerService {
    *
    * @param dbFile Path to a database file.
    * @param extension Filename extension for a integration image. Should be a file type supported by
-   *     GraphViz.
+   *     Graphviz.
    * @return Path to a integration file.
    * @throws Exception Any exceptions thrown in the process of generating a integration.
    */
-  Path createSchemaCrawlerDiagram(Path dbFile, String extension) throws Exception;
+  Path createSchemaCrawlerDiagram(Path dbFile, String title, String extension) throws Exception;
 }

@@ -32,6 +32,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.then;
@@ -109,7 +110,8 @@ public class SchemaCrawlerControllerTest {
 
     when(storageService.retrieveLocal(any(), eq(SQLITE_DB)))
         .thenReturn(Optional.ofNullable(Paths.get("/")));
-    when(scService.createSchemaCrawlerDiagram(any(), eq("png"))).thenReturn(Paths.get("/"));
+    when(scService.createSchemaCrawlerDiagram(any(), anyString(), eq("png")))
+        .thenReturn(Paths.get("/"));
 
     mvc.perform(
             multipart("/schemacrawler")
@@ -130,7 +132,8 @@ public class SchemaCrawlerControllerTest {
     when(storageService.retrieveLocal(any(), eq(SQLITE_DB)))
         .thenReturn(Optional.ofNullable(null)); // Do not "find" the
     // SQLite database
-    when(scService.createSchemaCrawlerDiagram(any(), eq("png"))).thenReturn(Paths.get("/"));
+    when(scService.createSchemaCrawlerDiagram(any(), anyString(), eq("png")))
+        .thenReturn(Paths.get("/"));
 
     mvc.perform(
             multipart("/schemacrawler")
