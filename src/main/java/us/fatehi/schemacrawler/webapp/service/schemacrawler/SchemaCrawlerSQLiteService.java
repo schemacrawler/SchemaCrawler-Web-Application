@@ -43,8 +43,8 @@ public class SchemaCrawlerSQLiteService implements SchemaCrawlerService {
 
   /** Works with SQLite database files. {@inheritDoc} */
   @Override
-  public Path createSchemaCrawlerDiagram(final Path dbFile, final String extension)
-      throws Exception {
-    return SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram(dbFile, extension);
+  public Path createSchemaCrawlerDiagram(
+      final Path dbFile, final String title, final String extension) throws Exception {
+    return SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram(dbFile, title, extension);
   }
 }

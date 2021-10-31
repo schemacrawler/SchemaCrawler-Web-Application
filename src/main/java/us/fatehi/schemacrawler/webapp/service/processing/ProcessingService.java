@@ -29,7 +29,7 @@ package us.fatehi.schemacrawler.webapp.service.processing;
 
 import java.nio.file.Path;
 
-import us.fatehi.schemacrawler.webapp.model.SchemaCrawlerDiagramRequest;
+import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 
 /**
  * Service for processing.
@@ -44,5 +44,5 @@ public interface ProcessingService {
    * @throws Exception On an exception
    */
   void generateSchemaCrawlerDiagram(
-      final SchemaCrawlerDiagramRequest diagramRequest, final Path localPath) throws Exception;
+      final DiagramRequest diagramRequest, final Path localPath) throws Exception;
 }

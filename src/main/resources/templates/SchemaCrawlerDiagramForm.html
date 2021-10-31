@@ -5,57 +5,70 @@
     <header th:replace="fragments/header :: header"></header>
     <main>
       <div id="page-content" class="container-fluid">
-      
+
         <h1>SchemaCrawler Diagram</h1>
-         
-		<form action="#" th:action="@{/schemacrawler}"
-			th:object="${diagramRequest}" method="post"
-			enctype="multipart/form-data">
 
-			<div class="form-group row">
-				<div class="col-lg-4">
-					<label for="name">Name:</label>
-				</div>
-				<div class="col-lg-8">
-					<input type="text" class="form-control" id="name"
-						th:field="*{name}" />
-                    <small id="nameHelp" class="form-text text-muted">Enter your first and last name.</small>						
-					<div class="alert alert-warning text-muted small"
-						th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-				</div>
-			</div>
-			<div class="form-group row">
-				<div class="col-lg-4">
-					<label for="email">Email:</label>
-				</div>
-				<div class="col-lg-8">
-					<input type="email" class="form-control" id="email"
-						th:field="*{email}" />
-					<small id="emailHelp" class="form-text text-muted">Enter your email address.</small>  	
-					<div class="alert alert-warning text-muted small"
-						th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-				</div>
-			</div>
+        <form action="#" th:action="@{/schemacrawler}"
+            th:object="${diagramRequest}" method="post"
+            enctype="multipart/form-data">
 
-			<div class="form-group row">
-				<div class="col-lg-4">
-					<label for="file">Database File:</label>
-				</div>
-				<div class="col-lg-8">
-					<input type="file" class="form-control" id="file" name="file" />
-					<small id="fileHelp" class="form-text text-muted">Select a SQLite database file to upload.</small>  
-					<div class="alert alert-warning text-muted small"
-						th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
-				</div>
-			</div>
-			<div class="form-group row">
-				<div class="col-lg-12 pull-right">
-					<button type="submit" class="btn btn-primary">Submit</button>
-					<button type="reset" class="btn btn-secondary">Reset</button>
-				</div>
-			</div>
-		</form>
-	</div>
+            <div class="form-group row">
+                <div class="col-lg-4">
+                    <label for="name">Name:</label>
+                </div>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" id="name"
+                        th:field="*{name}" />
+                    <small id="nameHelp" class="form-text text-muted">Enter your first and last name.</small>
+                    <div class="alert alert-warning text-muted small"
+                        th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-4">
+                    <label for="email">Email:</label>
+                </div>
+                <div class="col-lg-8">
+                    <input type="email" class="form-control" id="email"
+                        th:field="*{email}" />
+                    <small id="emailHelp" class="form-text text-muted">Enter your email address.</small>
+                    <div class="alert alert-warning text-muted small"
+                        th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+            </div>
+
+      <div class="form-group row">
+        <div class="col-lg-4">
+          <label for="file">Diagram Title:</label>
+        </div>
+        <div class="col-lg-8">
+          <input type="text" class="form-control" id="title"
+            th:field="*{title}" />
+                    <small id="titleHelp" class="form-text text-muted">Enter the diagram title.</small>
+          <div class="alert alert-warning text-muted small"
+            th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        </div>
+      </div>
+            <div class="form-group row">
+                <div class="col-lg-4">
+                    <label for="file">Database File:</label>
+                </div>
+                <div class="col-lg-8">
+                    <input type="file" class="form-control" id="file" name="file" />
+                    <small id="fileHelp" class="form-text text-muted">Select a SQLite database file to upload.</small>
+                    <div class="alert alert-warning text-muted small"
+                        th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-lg-12 pull-right">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
   </main>
   <footer th:replace="fragments/footer :: footer"></footer>
 </body>

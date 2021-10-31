@@ -44,7 +44,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class SchemaCrawlerDiagramRequest implements Serializable {
+public class DiagramRequest implements Serializable {
 
   private static final long serialVersionUID = 2065519510282344200L;
 
@@ -54,24 +54,24 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
    * Factory method to deserialize a JSON request.
    *
    * @param jsonReader JSON serialized request reader.
-   * @return Deserialzied Java request.
+   * @return Deserialized Java request.
    */
-  public static SchemaCrawlerDiagramRequest fromJson(final Reader jsonReader) {
+  public static DiagramRequest fromJson(final Reader jsonReader) {
     requireNonNull(jsonReader, "No reader provided");
-    return gson.fromJson(jsonReader, SchemaCrawlerDiagramRequest.class);
+    return gson.fromJson(jsonReader, DiagramRequest.class);
   }
 
   /**
    * Factory method to deserialize a JSON request.
    *
    * @param jsonRequest JSON serialized request.
-   * @return Deserialzied Java request.
+   * @return Deserialized Java request.
    */
-  public static SchemaCrawlerDiagramRequest fromJson(final String jsonRequest) {
+  public static DiagramRequest fromJson(final String jsonRequest) {
     if (StringUtils.isBlank(jsonRequest)) {
       return null;
     }
-    return gson.fromJson(jsonRequest, SchemaCrawlerDiagramRequest.class);
+    return gson.fromJson(jsonRequest, DiagramRequest.class);
   }
 
   private final DiagramKey key;
@@ -93,8 +93,10 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
   @Size(min = 1, message = "Please select a file to upload")
   private String file;
 
+  private String title;
+
   /** Public constructor. Generates a random key, and sets the creation timestamp. */
-  public SchemaCrawlerDiagramRequest() {
+  public DiagramRequest() {
     timestamp = Instant.now();
     key = new DiagramKey();
   }
@@ -159,6 +161,10 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
     return timestamp;
   }
 
+  public String getTitle() {
+    return title;
+  }
+
   public boolean hasException() {
     return exception != null;
   }
@@ -198,6 +204,10 @@ public class SchemaCrawlerDiagramRequest implements Serializable {
    */
   public void setName(final String name) {
     this.name = name;
+  }
+
+  public void setTitle(final String title) {
+    this.title = title;
   }
 
   /**
