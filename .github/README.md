@@ -1,5 +1,5 @@
 [![Quick Build](https://github.com/schemacrawler/SchemaCrawler-Web-Application/workflows/Quick%20Build/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions?query=workflow%3A%22Quick+Build%22)
-[![codecov](https://app.codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application/branch/master/graph/badge.svg?token=9cG2hav7Av)](https://app.codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application)
+[![codecov](https://codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application/branch/master/graph/badge.svg)](https://app.codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application)
 
 <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/master/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" align="right" />
 
