@@ -34,9 +34,9 @@ import static java.nio.file.Files.size;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.io.IOUtils.copy;
 
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -52,6 +52,7 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import software.amazon.awssdk.services.s3.S3Client;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 
@@ -76,7 +77,8 @@ public class AmazonS3StorageService implements StorageService {
     final boolean bucketExists =
         s3Client.headBucket(b -> b.bucket(s3Bucket)).sdkHttpResponse().isSuccessful();
     if (!bucketExists) {
-      throw new RuntimeException(String.format("Amazon S3 bucket '%s' does not exist", s3Bucket));
+      throw new InternalRuntimeException(
+          String.format("Amazon S3 bucket '%s' does not exist", s3Bucket));
     }
   }
 
@@ -130,7 +132,7 @@ public class AmazonS3StorageService implements StorageService {
       final String filename = key + "." + extension.getExtension();
       final Path tempFilePath = createTempFile(null, filename).toAbsolutePath();
       try (final InputStream inputStream = streamSource.getInputStream();
-          final OutputStream outputStream = new FileOutputStream(tempFilePath.toFile()); ) {
+          final OutputStream outputStream = Files.newOutputStream(tempFilePath); ) {
         copy(inputStream, outputStream);
       }
 

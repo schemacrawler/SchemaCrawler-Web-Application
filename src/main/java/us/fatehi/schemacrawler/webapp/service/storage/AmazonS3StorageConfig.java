@@ -35,6 +35,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
@@ -65,7 +66,7 @@ public class AmazonS3StorageConfig {
   @Bean(name = "s3Bucket")
   public String s3Bucket() {
     if (StringUtils.isAnyBlank(s3Bucket)) {
-      throw new RuntimeException("No Amazon S3 bucket provided");
+      throw new InternalRuntimeException("No Amazon S3 bucket provided");
     }
     return s3Bucket;
   }
@@ -79,7 +80,7 @@ public class AmazonS3StorageConfig {
 
   private AwsCredentialsProvider awsCredentials() {
     if (StringUtils.isAnyBlank(accessKeyId, secretAccessKey)) {
-      throw new RuntimeException("No AWS credentials provided");
+      throw new InternalRuntimeException("No AWS credentials provided");
     }
     final AwsCredentials awsCredentials = AwsBasicCredentials.create(accessKeyId, secretAccessKey);
     return StaticCredentialsProvider.create(awsCredentials);
@@ -87,7 +88,7 @@ public class AmazonS3StorageConfig {
 
   private Region awsRegion() {
     if (StringUtils.isBlank(awsRegion)) {
-      throw new RuntimeException("No AWS region provided");
+      throw new InternalRuntimeException("No AWS region provided");
     }
     return Region.of(awsRegion);
   }

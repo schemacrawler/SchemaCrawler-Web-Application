@@ -33,6 +33,8 @@ import java.util.Objects;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
+
 public class DiagramKey implements Serializable {
 
   private static final long serialVersionUID = 3453873731406876293L;
@@ -90,7 +92,7 @@ public class DiagramKey implements Serializable {
    */
   private String validateKey(final String key) throws RuntimeException {
     if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key)) {
-      throw new RuntimeException(String.format("Invalid filename key \"%s\"", key));
+      throw new InternalRuntimeException(String.format("Invalid filename key \"%s\"", key));
     }
     return key.toLowerCase();
   }
