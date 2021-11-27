@@ -127,25 +127,6 @@ public class SchemaCrawlerControllerTest {
   }
 
   @Test
-  public void formWithUploadWithErrors() throws Exception {
-
-    when(storageService.retrieveLocal(any(), eq(SQLITE_DB)))
-        .thenReturn(Optional.ofNullable(null)); // Do not "find" the SQLite database
-    when(scService.createSchemaCrawlerDiagram(any(), anyString(), eq("png")))
-        .thenReturn(Paths.get("/"));
-
-    mvc.perform(
-            multipart("/schemacrawler")
-                .file(multipartFile)
-                .param("name", "Sualeh")
-                .param("email", "sualeh@hotmail.com"))
-        .andExpect(view().name("SchemaCrawlerDiagramResult"))
-        .andExpect(status().is2xxSuccessful());
-
-    then(storageService).should().storeLocal(argThat(matcher), any(), eq(SQLITE_DB));
-  }
-
-  @Test
   public void index() throws Exception {
     mvc.perform(get("/schemacrawler"))
         .andExpect(content().string(containsString("SchemaCrawler Diagram")));

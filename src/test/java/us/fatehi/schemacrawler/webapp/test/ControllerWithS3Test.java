@@ -35,17 +35,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static us.fatehi.schemacrawler.webapp.test.S3ServiceControllerTestConfig.TEST_SC_WEB_APP_BUCKET;
+import static us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig.TEST_SC_WEB_APP_BUCKET;
+import static us.fatehi.schemacrawler.webapp.test.utility.TestUtility.mockMultipartFile;
 
 import java.util.List;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -56,6 +55,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.S3Object;
+import us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
@@ -69,7 +69,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 @ActiveProfiles("production")
 @SpringJUnitConfig(S3ServiceControllerTestConfig.class)
 @Testcontainers(disabledWithoutDocker = true)
-public class S3ServiceControllerTest {
+public class ControllerWithS3Test {
 
   private static final DockerImageName localstackImage =
       DockerImageName.parse("localstack/localstack").withTag("0.12.18");
@@ -93,13 +93,9 @@ public class S3ServiceControllerTest {
   @Test
   public void formWithUpload() throws Exception {
 
-    final MockMultipartFile multipartFile =
-        new MockMultipartFile(
-            "file", "test.db", "application/octet-stream", RandomUtils.nextBytes(5));
-
     mvc.perform(
             multipart("/schemacrawler")
-                .file(multipartFile)
+                .file(mockMultipartFile())
                 .param("name", "Sualeh")
                 .param("email", "sualeh@hotmail.com"))
         .andExpect(view().name("SchemaCrawlerDiagramResult"))
@@ -110,6 +106,6 @@ public class S3ServiceControllerTest {
         s3Client.listObjects(b -> b.bucket(TEST_SC_WEB_APP_BUCKET)).contents();
     assertThat(contents.size(), is(greaterThan(0)));
     assertThat(contents.get(0).key(), matchesPattern("[a-z0-9]{12}.db"));
-    assertThat(contents.get(0).size(), is(5L));
+    assertThat(contents.get(0).size(), is(9216L));
   }
 }

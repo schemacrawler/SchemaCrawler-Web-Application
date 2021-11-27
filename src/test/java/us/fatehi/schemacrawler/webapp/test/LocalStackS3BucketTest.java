@@ -47,14 +47,14 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketResponse;
 
 @Testcontainers(disabledWithoutDocker = true)
-public class BasicLocalStackS3Test {
+public class LocalStackS3BucketTest {
 
   private static final String TEST_CONTENT = "baz";
   private static final String TEST_OBJECT_NAME = "bar";
   private static final String TEST_BUCKET_NAME = "foo";
 
   private final DockerImageName localstackImage =
-      DockerImageName.parse("localstack/localstack:0.12.12");
+      DockerImageName.parse("localstack/localstack").withTag("0.13.0.8");
 
   @Container
   private final LocalStackContainer localstack =
