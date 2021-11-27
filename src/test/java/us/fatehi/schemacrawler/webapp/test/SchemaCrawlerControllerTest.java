@@ -44,22 +44,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
+import static us.fatehi.schemacrawler.webapp.test.utility.TestUtility.mockMultipartFile;
 
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,7 +64,6 @@ import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("local")
@@ -92,14 +88,10 @@ public class SchemaCrawlerControllerTest {
         return true;
       };
 
-  private final MockMultipartFile multipartFile =
-      new MockMultipartFile(
-          "file", "test.db", "application/octet-stream", RandomUtils.nextBytes(5));
-
   @Test
   public void formWithNoParameters() throws Exception {
 
-    mvc.perform(multipart("/schemacrawler").file(multipartFile))
+    mvc.perform(multipart("/schemacrawler").file(mockMultipartFile()))
         .andExpect(model().errorCount(2))
         .andExpect(model().attributeHasFieldErrors("diagramRequest", "name", "email"))
         .andExpect(status().is2xxSuccessful());
@@ -115,7 +107,7 @@ public class SchemaCrawlerControllerTest {
 
     mvc.perform(
             multipart("/schemacrawler")
-                .file(multipartFile)
+                .file(mockMultipartFile())
                 .param("name", "Sualeh")
                 .param("email", "sualeh@hotmail.com"))
         .andExpect(view().name("SchemaCrawlerDiagramResult"))
