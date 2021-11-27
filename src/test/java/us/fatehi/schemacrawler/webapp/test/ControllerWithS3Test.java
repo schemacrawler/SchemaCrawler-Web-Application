@@ -30,7 +30,6 @@ package us.fatehi.schemacrawler.webapp.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -38,21 +37,27 @@ import static org.testcontainers.containers.localstack.LocalStackContainer.Servi
 import static us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig.TEST_SC_WEB_APP_BUCKET;
 import static us.fatehi.schemacrawler.webapp.test.utility.TestUtility.mockMultipartFile;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.S3Object;
+import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig;
 
 @SpringBootTest(
@@ -69,7 +74,7 @@ import us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig
 public class ControllerWithS3Test {
 
   private static final DockerImageName localstackImage =
-      DockerImageName.parse("localstack/localstack").withTag("0.12.18");
+      DockerImageName.parse("localstack/localstack").withTag("0.13.0.8");
 
   public static final LocalStackContainer localstack =
       new LocalStackContainer(localstackImage).withServices(S3);
@@ -85,24 +90,37 @@ public class ControllerWithS3Test {
     s3Client.waiter().waitUntilBucketExists(b -> b.bucket(TEST_SC_WEB_APP_BUCKET));
   }
 
+  @Autowired private ThreadPoolTaskExecutor pool;
   @Autowired private MockMvc mvc;
 
   @Test
   public void formWithUpload() throws Exception {
 
-    mvc.perform(
-            multipart("/schemacrawler")
-                .file(mockMultipartFile())
-                .param("name", "Sualeh")
-                .param("email", "sualeh@hotmail.com"))
-        .andExpect(view().name("SchemaCrawlerDiagramResult"))
-        .andExpect(status().is2xxSuccessful());
+    final MvcResult mvcResult =
+        mvc.perform(
+                multipart("/schemacrawler")
+                    .file(mockMultipartFile())
+                    .param("name", "Sualeh")
+                    .param("email", "sualeh@hotmail.com"))
+            .andExpect(view().name("SchemaCrawlerDiagramResult"))
+            .andExpect(status().is2xxSuccessful())
+            .andReturn();
 
+    final DiagramRequest diagramRequest =
+        (DiagramRequest) mvcResult.getModelAndView().getModel().get("diagramRequest");
+    final boolean awaitTermination =
+        pool.getThreadPoolExecutor().awaitTermination(3, TimeUnit.SECONDS);
+
+    // Verify contents of S3 bucket
     final S3Client s3Client = new S3ServiceControllerTestConfig().s3Client();
     final List<S3Object> contents =
-        s3Client.listObjects(b -> b.bucket(TEST_SC_WEB_APP_BUCKET)).contents();
+        new ArrayList<>(s3Client.listObjects(b -> b.bucket(TEST_SC_WEB_APP_BUCKET)).contents());
+    Collections.sort(
+        contents, (s3object1, s3object2) -> s3object1.key().compareTo(s3object2.key()));
+
     assertThat(contents.size(), is(greaterThan(0)));
-    assertThat(contents.get(0).key(), matchesPattern("[a-z0-9]{12}.db"));
+
+    assertThat(contents.get(0).key(), is(diagramRequest.getKey() + ".db"));
     assertThat(contents.get(0).size(), is(9216L));
   }
 }

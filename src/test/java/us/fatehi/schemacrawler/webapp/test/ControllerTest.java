@@ -27,16 +27,10 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -46,47 +40,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 import static us.fatehi.schemacrawler.webapp.test.utility.TestUtility.mockMultipartFile;
 
-import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.test.web.servlet.MvcResult;
 
-import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
-import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
+import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("local")
-public class SchemaCrawlerControllerTest {
+public class ControllerTest {
 
   @Autowired private MockMvc mvc;
-  @MockBean private StorageService storageService;
-  @MockBean private SchemaCrawlerService scService;
-  @SpyBean private ProcessingService processingService;
-
-  private final ArgumentMatcher<MultipartFile> matcher =
-      (final MultipartFile argFile) -> {
-        assertThat(
-            "Content type should match",
-            argFile.getContentType(),
-            is(equalTo("application/octet-stream")));
-        assertThat(
-            "Original filename should match",
-            argFile.getOriginalFilename(),
-            is(equalTo("test.db")));
-        assertThat("File should match", argFile.getName(), is(equalTo("file")));
-        return true;
-      };
+  @Autowired private ThreadPoolTaskExecutor pool;
+  @Autowired private StorageService storageService;
 
   @Test
   public void formWithNoParameters() throws Exception {
@@ -100,22 +80,48 @@ public class SchemaCrawlerControllerTest {
   @Test
   public void formWithUpload() throws Exception {
 
-    when(storageService.retrieveLocal(any(), eq(SQLITE_DB)))
-        .thenReturn(Optional.ofNullable(Paths.get("/")));
-    when(scService.createSchemaCrawlerDiagram(any(), anyString(), eq("png")))
-        .thenReturn(Paths.get("/"));
+    final MvcResult mvcResult =
+        mvc.perform(
+                multipart("/schemacrawler")
+                    .file(mockMultipartFile())
+                    .param("name", "Sualeh")
+                    .param("email", "sualeh@hotmail.com"))
+            .andExpect(view().name("SchemaCrawlerDiagramResult"))
+            .andExpect(status().is2xxSuccessful())
+            .andReturn();
 
-    mvc.perform(
-            multipart("/schemacrawler")
-                .file(mockMultipartFile())
-                .param("name", "Sualeh")
-                .param("email", "sualeh@hotmail.com"))
-        .andExpect(view().name("SchemaCrawlerDiagramResult"))
-        .andExpect(status().is2xxSuccessful());
+    final DiagramRequest diagramRequest =
+        (DiagramRequest) mvcResult.getModelAndView().getModel().get("diagramRequest");
+    final boolean awaitTermination =
+        pool.getThreadPoolExecutor().awaitTermination(3, TimeUnit.SECONDS);
 
-    then(storageService).should().storeLocal(argThat(matcher), any(), eq(SQLITE_DB));
+    final Optional<Path> localDatabaseFile =
+        storageService.retrieveLocal(diagramRequest.getKey(), SQLITE_DB);
+    assertThat(localDatabaseFile.isPresent(), is(true));
+    assertThat(Files.size(localDatabaseFile.get()), is(9216L));
+  }
 
-    // NOTE: The image file is not created - assert that by testing the service itself
+  @Test
+  public void formWithUploadNotADatabase() throws Exception {
+
+    final MockMultipartFile multipartFile =
+        new MockMultipartFile(
+            "file", "test.db", "application/octet-stream", RandomUtils.nextBytes(5));
+
+    final MvcResult mvcResult =
+        mvc.perform(
+                multipart("/schemacrawler")
+                    .file(multipartFile)
+                    .param("name", "Sualeh")
+                    .param("email", "sualeh@hotmail.com"))
+            .andExpect(view().name("redirect:/error"))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+
+    final Exception resolvedException = mvcResult.getResolvedException();
+    assertThat(
+        resolvedException.getMessage(),
+        startsWith("Expected a SQLite database file, but got a file of type"));
   }
 
   @Test
