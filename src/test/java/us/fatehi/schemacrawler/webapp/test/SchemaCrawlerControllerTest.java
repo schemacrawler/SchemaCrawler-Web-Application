@@ -130,8 +130,7 @@ public class SchemaCrawlerControllerTest {
   public void formWithUploadWithErrors() throws Exception {
 
     when(storageService.retrieveLocal(any(), eq(SQLITE_DB)))
-        .thenReturn(Optional.ofNullable(null)); // Do not "find" the
-    // SQLite database
+        .thenReturn(Optional.ofNullable(null)); // Do not "find" the SQLite database
     when(scService.createSchemaCrawlerDiagram(any(), anyString(), eq("png")))
         .thenReturn(Paths.get("/"));
 

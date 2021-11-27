@@ -28,12 +28,18 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.controller;
 
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
+import static us.fatehi.utility.Utility.isBlank;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.apache.tika.Tika;
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -46,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
@@ -74,8 +81,7 @@ public class DiagramRequestController {
   @PostMapping(value = "/schemacrawler", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public DiagramRequest diagramRequestFormApi(
-      @ModelAttribute("diagramRequest") @NotNull @Valid
-          final DiagramRequest diagramRequest,
+      @ModelAttribute("diagramRequest") @NotNull @Valid final DiagramRequest diagramRequest,
       @RequestParam("file") final MultipartFile file)
       throws Exception {
 
@@ -87,8 +93,7 @@ public class DiagramRequestController {
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = "/schemacrawler")
   public String diagramRequestFormSubmit(
-      @ModelAttribute("diagramRequest") @NotNull @Valid
-          final DiagramRequest diagramRequest,
+      @ModelAttribute("diagramRequest") @NotNull @Valid final DiagramRequest diagramRequest,
       final BindingResult bindingResult,
       @RequestParam("file") final MultipartFile file)
       throws Exception {
@@ -106,12 +111,37 @@ public class DiagramRequestController {
     return "redirect:/schemacrawler";
   }
 
+  private void checkMimeType(final DiagramRequest diagramRequest, final Path localPath)
+      throws ExecutionRuntimeException {
+    try {
+      final String detectedMimeType = new Tika().detect(localPath);
+      if (!detectedMimeType.equals("application/x-sqlite3")) {
+        final MimeType mimeType = MimeTypes.getDefaultMimeTypes().forName(detectedMimeType);
+
+        final StringBuffer exceptionMessage = new StringBuffer();
+        exceptionMessage.append("Expected a SQLite database file, but got a ");
+        if (!isBlank(mimeType.getDescription())) {
+          exceptionMessage.append(mimeType.getDescription()).append(" file");
+        } else if (isBlank(mimeType.getDescription()) && !isBlank(detectedMimeType)) {
+          exceptionMessage.append("file of type ").append(detectedMimeType);
+        } else {
+          exceptionMessage.append("file of an unknown type");
+        }
+        throw new ExecutionRuntimeException(exceptionMessage.toString());
+      }
+    } catch (final MimeTypeException | IOException | NullPointerException e) {
+      // Ignore exception
+    }
+  }
+
   private void generateSchemaCrawlerDiagram(
       final DiagramRequest diagramRequest, final MultipartFile file) throws Exception {
     final DiagramKey key = diagramRequest.getKey();
 
     // Store the uploaded database file
     final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
+
+    checkMimeType(diagramRequest, localPath);
 
     // Make asynchronous call to generate diagram
     processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
