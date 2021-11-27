@@ -46,21 +46,21 @@ import org.springframework.stereotype.Service;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
-import us.fatehi.schemacrawler.webapp.service.schemacrawler.SchemaCrawlerService;
+import us.fatehi.schemacrawler.webapp.service.schemacrawler.DiagramService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Service
 public class ProcessingService {
 
-  private static final Logger logger =
-      Logger.getLogger(ProcessingService.class.getName());
+  private static final Logger logger = Logger.getLogger(ProcessingService.class.getName());
 
   private final StorageService storageService;
-  private final SchemaCrawlerService scService;
+  private final DiagramService scService;
 
   @Autowired
   public ProcessingService(
-      @NotNull final StorageService storageService, @NotNull final SchemaCrawlerService scService) {
+      @NotNull final StorageService storageService,
+      @NotNull final DiagramService scService) {
     this.storageService = storageService;
     this.scService = scService;
   }
