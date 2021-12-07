@@ -32,6 +32,7 @@ import static us.fatehi.utility.Utility.isBlank;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -41,6 +42,7 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,6 +50,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
@@ -74,6 +77,28 @@ public class DiagramRequestController {
   public String diagramRequestForm(@NotNull final Model model) {
     model.addAttribute("diagramRequest", new DiagramRequest());
     return "SchemaCrawlerDiagramForm";
+  }
+
+  @PostMapping(value = "/schemacrawler", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public DiagramRequest diagramRequestFormApi(
+      @ModelAttribute("diagramRequest") @NotNull @Valid final DiagramRequest diagramRequest,
+      final BindingResult bindingResult,
+      @RequestParam("file") final Optional<MultipartFile> file) {
+
+    if (bindingResult.hasErrors() || !file.isPresent()) {
+      diagramRequest.setLogMessage(String.valueOf(bindingResult.getModel()));
+    } else {
+      try {
+        generateSchemaCrawlerDiagram(diagramRequest, file.get());
+      } catch (final Exception e) {
+        diagramRequest.setException(e);
+      }
+    }
+
+    diagramRequest.stripException();
+
+    return diagramRequest;
   }
 
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf

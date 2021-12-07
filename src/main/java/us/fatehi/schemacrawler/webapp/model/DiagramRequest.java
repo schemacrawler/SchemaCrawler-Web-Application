@@ -76,7 +76,7 @@ public class DiagramRequest implements Serializable {
 
   private final DiagramKey key;
   private final Instant timestamp;
-  private Exception exception;
+  private Serializable log;
 
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
@@ -122,7 +122,11 @@ public class DiagramRequest implements Serializable {
    * @return Exception processing request
    */
   public Exception getException() {
-    return exception;
+    if (log instanceof Exception) {
+      return (Exception) log;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -141,6 +145,21 @@ public class DiagramRequest implements Serializable {
    */
   public DiagramKey getKey() {
     return key;
+  }
+
+  /**
+   * Returns the log message, or exception message.
+   *
+   * @return Log message
+   */
+  public String getLogMessage() {
+    if (log == null) {
+      return "";
+    } else if (hasException()) {
+      return getException().getMessage();
+    } else {
+      return log.toString();
+    }
   }
 
   /**
@@ -166,7 +185,7 @@ public class DiagramRequest implements Serializable {
   }
 
   public boolean hasException() {
-    return exception != null;
+    return log != null && log instanceof Exception;
   }
 
   /** {@inheritDoc} */
@@ -185,7 +204,7 @@ public class DiagramRequest implements Serializable {
    * @param Processing exception
    */
   public void setException(final Exception exception) {
-    this.exception = exception;
+    this.log = exception;
   }
 
   /**
@@ -195,6 +214,15 @@ public class DiagramRequest implements Serializable {
    */
   public void setFile(final String file) {
     this.file = file;
+  }
+
+  /**
+   * Set log message.
+   *
+   * @param Log message
+   */
+  public void setLogMessage(final String logMessage) {
+    this.log = logMessage;
   }
 
   /**
@@ -208,6 +236,17 @@ public class DiagramRequest implements Serializable {
 
   public void setTitle(final String title) {
     this.title = title;
+  }
+
+  /**
+   * Remove exception, and replace with log message.
+   *
+   * @param Turn exception into message
+   */
+  public void stripException() {
+    if (hasException()) {
+      log = getException().getMessage();
+    }
   }
 
   /**
