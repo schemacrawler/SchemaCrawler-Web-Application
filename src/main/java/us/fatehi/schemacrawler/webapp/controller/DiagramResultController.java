@@ -32,6 +32,7 @@ import static java.nio.file.Files.newBufferedReader;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import javax.validation.constraints.NotNull;
@@ -80,33 +81,6 @@ public class DiagramResultController {
   }
 
   /**
-   * Retrieve results as a JSON object.
-   *
-   * @param key Diagram key for the results.
-   * @return Diagram request data, including the key
-   * @throws Exception On an exception
-   */
-  @GetMapping(value = RESULTS + "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseBody
-  public DiagramRequest retrieveResults(
-      @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
-          final DiagramKey key)
-      throws Exception {
-
-    final Path jsonFile =
-        storageService
-            .retrieveLocal(key, JSON)
-            .orElseThrow(() -> new Exception("Cannot find request for " + key));
-    final DiagramRequest diagramRequest =
-        DiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
-    if (diagramRequest.hasException()) {
-      throw diagramRequest.getException();
-    }
-
-    return diagramRequest;
-  }
-
-  /**
    * Retrieve results as HTML using a rendered Thymeleaf template.
    *
    * @param key Diagram key for the results.
@@ -124,5 +98,18 @@ public class DiagramResultController {
     model.addAttribute("diagramRequest", diagramRequest);
 
     return "SchemaCrawlerDiagram";
+  }
+
+  private DiagramRequest retrieveResults(final DiagramKey key) throws Exception, IOException {
+    final Path jsonFile =
+        storageService
+            .retrieveLocal(key, JSON)
+            .orElseThrow(() -> new Exception("Cannot find request for " + key));
+    final DiagramRequest diagramRequest =
+        DiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
+    if (diagramRequest.hasException()) {
+      throw diagramRequest.getException();
+    }
+    return diagramRequest;
   }
 }
