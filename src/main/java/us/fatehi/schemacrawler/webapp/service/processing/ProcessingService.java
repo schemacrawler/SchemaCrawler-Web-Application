@@ -59,8 +59,7 @@ public class ProcessingService {
 
   @Autowired
   public ProcessingService(
-      @NotNull final StorageService storageService,
-      @NotNull final DiagramService scService) {
+      @NotNull final StorageService storageService, @NotNull final DiagramService scService) {
     this.storageService = storageService;
     this.scService = scService;
   }
@@ -87,7 +86,6 @@ public class ProcessingService {
       storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
 
     } catch (final Exception e) {
-      diagramRequest.setException(e);
       throw e;
     } finally {
       // Store the JSON request

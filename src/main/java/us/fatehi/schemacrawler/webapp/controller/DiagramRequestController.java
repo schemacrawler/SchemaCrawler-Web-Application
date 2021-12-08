@@ -27,12 +27,18 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.controller;
 
+import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.LOG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 import static us.fatehi.utility.Utility.isBlank;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -43,6 +49,7 @@ import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,6 +61,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
+import software.amazon.awssdk.utils.StringInputStream;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
@@ -81,24 +89,33 @@ public class DiagramRequestController {
 
   @PostMapping(value = "/schemacrawler", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public DiagramRequest diagramRequestFormApi(
+  public ResponseEntity<DiagramRequest> diagramRequestFormApi(
       @ModelAttribute("diagramRequest") @NotNull @Valid final DiagramRequest diagramRequest,
       final BindingResult bindingResult,
       @RequestParam("file") final Optional<MultipartFile> file) {
 
-    if (bindingResult.hasErrors() || !file.isPresent()) {
-      diagramRequest.setLogMessage(String.valueOf(bindingResult.getModel()));
+    if (!file.isPresent()) {
+      diagramRequest.setLogMessage("No SQLite file upload provided");
+    } else if (bindingResult.hasErrors() || !file.isPresent()) {
+      final List<String> errors =
+          bindingResult.getFieldErrors().stream()
+              .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+              .collect(Collectors.toList());
+      Collections.sort(errors);
+      diagramRequest.setLogMessage(errors.toString());
     } else {
       try {
         generateSchemaCrawlerDiagram(diagramRequest, file.get());
       } catch (final Exception e) {
-        diagramRequest.setException(e);
+        diagramRequest.setLogMessage(e.getMessage());
       }
     }
 
-    diagramRequest.stripException();
-
-    return diagramRequest;
+    if (diagramRequest.hasLogMessage()) {
+      return ResponseEntity.badRequest().body(diagramRequest);
+    } else {
+      return ResponseEntity.ok(diagramRequest);
+    }
   }
 
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
@@ -147,14 +164,32 @@ public class DiagramRequestController {
 
   private void generateSchemaCrawlerDiagram(
       final DiagramRequest diagramRequest, final MultipartFile file) throws Exception {
+
     final DiagramKey key = diagramRequest.getKey();
+    try {
 
-    // Store the uploaded database file
-    final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
+      // Store the uploaded database file
+      final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
 
-    checkMimeType(diagramRequest, localPath);
+      checkMimeType(diagramRequest, localPath);
 
-    // Make asynchronous call to generate diagram
-    processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
+      // Make asynchronous call to generate diagram
+      processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
+    } catch (final Exception e) {
+      saveExceptionLogFile(key, e);
+      diagramRequest.setLogMessage(e.getMessage());
+      throw e;
+    }
+  }
+
+  private void saveExceptionLogFile(final DiagramKey key, final Exception e) {
+    try { // Write out stack trace to a log file, and save it
+      final StringWriter stackTraceWriter = new StringWriter();
+      e.printStackTrace(new PrintWriter(stackTraceWriter));
+      final String stackTrace = stackTraceWriter.toString();
+      storageService.store(() -> new StringInputStream(stackTrace), key, LOG);
+    } catch (final Exception ex) {
+      // Ignore
+    }
   }
 }

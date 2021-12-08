@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.model;
 
 import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
 
 import java.io.Reader;
 import java.io.Serializable;
@@ -76,7 +77,7 @@ public class DiagramRequest implements Serializable {
 
   private final DiagramKey key;
   private final Instant timestamp;
-  private Serializable log;
+  private String logMessage;
 
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
@@ -117,19 +118,6 @@ public class DiagramRequest implements Serializable {
   }
 
   /**
-   * Exception processing request.
-   *
-   * @return Exception processing request
-   */
-  public Exception getException() {
-    if (log instanceof Exception) {
-      return (Exception) log;
-    } else {
-      return null;
-    }
-  }
-
-  /**
    * Returns the uploaded file name.
    *
    * @return Uploaded file name.
@@ -153,13 +141,7 @@ public class DiagramRequest implements Serializable {
    * @return Log message
    */
   public String getLogMessage() {
-    if (log == null) {
-      return "";
-    } else if (hasException()) {
-      return getException().getMessage();
-    } else {
-      return log.toString();
-    }
+    return logMessage;
   }
 
   /**
@@ -184,27 +166,18 @@ public class DiagramRequest implements Serializable {
     return title;
   }
 
-  public boolean hasException() {
-    return log != null && log instanceof Exception;
-  }
-
   /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return HashCodeBuilder.reflectionHashCode(this, false);
   }
 
-  public void setEmail(final String email) {
-    this.email = email;
+  public boolean hasLogMessage() {
+    return !isBlank(logMessage);
   }
 
-  /**
-   * Processing exception.
-   *
-   * @param Processing exception
-   */
-  public void setException(final Exception exception) {
-    this.log = exception;
+  public void setEmail(final String email) {
+    this.email = email;
   }
 
   /**
@@ -222,7 +195,7 @@ public class DiagramRequest implements Serializable {
    * @param Log message
    */
   public void setLogMessage(final String logMessage) {
-    this.log = logMessage;
+    this.logMessage = logMessage;
   }
 
   /**
@@ -236,17 +209,6 @@ public class DiagramRequest implements Serializable {
 
   public void setTitle(final String title) {
     this.title = title;
-  }
-
-  /**
-   * Remove exception, and replace with log message.
-   *
-   * @param Turn exception into message
-   */
-  public void stripException() {
-    if (hasException()) {
-      log = getException().getMessage();
-    }
   }
 
   /**
