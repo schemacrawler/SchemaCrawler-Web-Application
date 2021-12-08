@@ -42,12 +42,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class ErrorController {
 
-  private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ErrorController.class);
 
   @ExceptionHandler(Throwable.class)
   public String handleException(
       final Throwable throwable, final RedirectAttributes redirectAttributes) {
-    logger.error(throwable.getMessage(), throwable);
+    LOGGER.error(throwable.getMessage(), throwable);
 
     final String errorMessage = ExceptionUtils.getRootCauseMessage(throwable);
     redirectAttributes.addFlashAttribute("errorMessage", errorMessage);

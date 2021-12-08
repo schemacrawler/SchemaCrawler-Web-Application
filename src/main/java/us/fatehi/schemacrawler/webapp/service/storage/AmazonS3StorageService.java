@@ -41,11 +41,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamSource;
@@ -60,7 +60,7 @@ import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 @Profile("production")
 public class AmazonS3StorageService implements StorageService {
 
-  private static final Logger logger = Logger.getLogger(AmazonS3StorageService.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(AmazonS3StorageService.class);
 
   private final String s3Bucket;
   private final S3Client s3Client;
@@ -106,15 +106,14 @@ public class AmazonS3StorageService implements StorageService {
       // Check that the file is not empty
       if (size(tempFilePath) == 0) {
         delete(tempFilePath);
-        logger.log(Level.WARNING, String.format("No data for file <%s.%s>", key, extension));
+        LOGGER.warn(String.format("No data for file <%s.%s>", key, extension));
         return Optional.empty();
       }
 
       return Optional.of(tempFilePath);
 
     } catch (final Exception e) {
-      logger.log(
-          Level.WARNING, String.format("Could not retrieve file <%s.%s>", key, extension), e);
+      LOGGER.warn(String.format("Could not retrieve file <%s.%s>", key, extension), e);
       return Optional.empty();
     }
   }
@@ -142,7 +141,7 @@ public class AmazonS3StorageService implements StorageService {
       s3Client.putObject(b -> b.bucket(s3Bucket).key(filename), tempFilePath);
 
     } catch (final Exception e) {
-      logger.log(Level.WARNING, String.format("Could not store, %s.%s", key, extension), e);
+      LOGGER.warn(String.format("Could not store, %s.%s", key, extension), e);
     }
   }
 

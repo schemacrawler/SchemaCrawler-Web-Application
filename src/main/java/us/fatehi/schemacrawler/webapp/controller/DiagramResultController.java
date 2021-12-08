@@ -38,6 +38,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
@@ -57,6 +59,8 @@ import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
 public class DiagramResultController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(DiagramResultController.class);
 
   private static final String RESULTS = "/schemacrawler/results";
 
@@ -123,6 +127,7 @@ public class DiagramResultController {
     try {
       diagramRequest = retrieveResults(key);
     } catch (final Exception e) {
+      LOGGER.warn(e.getMessage(), e);
       return ResponseEntity.notFound().build();
     }
 

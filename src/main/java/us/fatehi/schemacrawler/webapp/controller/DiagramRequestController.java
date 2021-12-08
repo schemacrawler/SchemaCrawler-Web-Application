@@ -50,6 +50,8 @@ import org.apache.tika.Tika;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +73,8 @@ import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
 public class DiagramRequestController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(DiagramRequestController.class);
 
   private final StorageService storageService;
   private final ProcessingService processingService;
@@ -109,6 +113,7 @@ public class DiagramRequestController {
       try {
         generateSchemaCrawlerDiagram(diagramRequest, file.get());
       } catch (final Exception e) {
+        LOGGER.warn(e.getMessage(), e);
         diagramRequest.setLogMessage(e.getMessage());
       }
     }
@@ -160,7 +165,7 @@ public class DiagramRequestController {
         throw new ExecutionRuntimeException(exceptionMessage.toString());
       }
     } catch (final MimeTypeException | IOException | NullPointerException e) {
-      // Ignore exception
+      LOGGER.trace(e.getMessage(), e);
     }
   }
 
@@ -178,6 +183,7 @@ public class DiagramRequestController {
       // Make asynchronous call to generate diagram
       processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
     } catch (final Exception e) {
+      LOGGER.warn(e.getMessage(), e);
       saveExceptionLogFile(key, e);
       diagramRequest.setLogMessage(e.getMessage());
       throw e;
@@ -194,7 +200,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception ex) {
-      // Ignore
+      LOGGER.warn(e.getMessage(), e);
     }
   }
 }
