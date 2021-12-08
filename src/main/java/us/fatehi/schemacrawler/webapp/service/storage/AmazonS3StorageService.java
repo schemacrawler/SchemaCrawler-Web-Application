@@ -106,13 +106,15 @@ public class AmazonS3StorageService implements StorageService {
       // Check that the file is not empty
       if (size(tempFilePath) == 0) {
         delete(tempFilePath);
-        throw new Exception(String.format("No data for file %s.%s", key, extension));
+        logger.log(Level.WARNING, String.format("No data for file <%s.%s>", key, extension));
+        return Optional.empty();
       }
 
       return Optional.of(tempFilePath);
 
     } catch (final Exception e) {
-      logger.log(Level.WARNING, String.format("Could not retrieve, %s.%s", key, extension), e);
+      logger.log(
+          Level.WARNING, String.format("Could not retrieve file <%s.%s>", key, extension), e);
       return Optional.empty();
     }
   }

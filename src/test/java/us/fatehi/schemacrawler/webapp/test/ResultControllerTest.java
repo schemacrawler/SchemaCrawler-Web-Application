@@ -72,7 +72,7 @@ public class ResultControllerTest {
 
     final Throwable exception = ExceptionUtils.getRootCause(result.getResolvedException());
     assertThat(exception, is(instanceOf(InternalRuntimeException.class)));
-    assertThat(exception.getMessage(), is("Invalid key \"badkey\""));
+    assertThat(exception.getMessage(), is("Invalid key <badkey>"));
   }
 
   @Test

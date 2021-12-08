@@ -92,7 +92,7 @@ public class DiagramKey implements Serializable {
    */
   private String validateKey(final String key) throws RuntimeException {
     if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key)) {
-      throw new InternalRuntimeException(String.format("Invalid key \"%s\"", key));
+      throw new InternalRuntimeException(String.format("Invalid key <%s>", key));
     }
     return key.toLowerCase();
   }
