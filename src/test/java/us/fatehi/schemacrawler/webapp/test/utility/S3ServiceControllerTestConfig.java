@@ -37,14 +37,14 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import us.fatehi.schemacrawler.webapp.test.ControllerWithS3Test;
+import us.fatehi.schemacrawler.webapp.test.RequestControllerWithS3Test;
 
 @TestConfiguration
 public class S3ServiceControllerTestConfig {
 
   public static final String TEST_SC_WEB_APP_BUCKET = "test-sc-web-app-bucket";
 
-  private final LocalStackContainer localstack = ControllerWithS3Test.localstack;
+  private final LocalStackContainer localstack = RequestControllerWithS3Test.localstack;
 
   @Bean(name = "s3Bucket")
   public String awsS3Bucket() {

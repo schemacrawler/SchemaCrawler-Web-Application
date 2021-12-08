@@ -27,6 +27,9 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.controller;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.io.IOUtils.toInputStream;
+import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.LOG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 import static us.fatehi.utility.Utility.isBlank;
@@ -61,7 +64,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
-import software.amazon.awssdk.utils.StringInputStream;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
@@ -168,7 +170,7 @@ public class DiagramRequestController {
     final DiagramKey key = diagramRequest.getKey();
     try {
 
-      // Store the uploaded database file
+      // Store the uploaded database file locally, so it can be processed
       final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
 
       checkMimeType(diagramRequest, localPath);
@@ -179,6 +181,9 @@ public class DiagramRequestController {
       saveExceptionLogFile(key, e);
       diagramRequest.setLogMessage(e.getMessage());
       throw e;
+    } finally {
+      // Store the JSON request
+      storageService.store(() -> toInputStream(diagramRequest.toJson(), UTF_8), key, JSON);
     }
   }
 
@@ -187,7 +192,7 @@ public class DiagramRequestController {
       final StringWriter stackTraceWriter = new StringWriter();
       e.printStackTrace(new PrintWriter(stackTraceWriter));
       final String stackTrace = stackTraceWriter.toString();
-      storageService.store(() -> new StringInputStream(stackTrace), key, LOG);
+      storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception ex) {
       // Ignore
     }

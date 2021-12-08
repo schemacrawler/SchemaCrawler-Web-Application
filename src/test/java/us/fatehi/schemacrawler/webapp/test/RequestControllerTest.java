@@ -62,7 +62,7 @@ import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("local")
-public class ControllerTest {
+public class RequestControllerTest {
 
   @Autowired private MockMvc mvc;
   @Autowired private ThreadPoolTaskExecutor pool;

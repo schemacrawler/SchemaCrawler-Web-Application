@@ -71,7 +71,7 @@ import us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig
 @ActiveProfiles("production")
 @SpringJUnitConfig(S3ServiceControllerTestConfig.class)
 @Testcontainers(disabledWithoutDocker = true)
-public class ControllerWithS3Test {
+public class RequestControllerWithS3Test {
 
   private static final DockerImageName localstackImage =
       DockerImageName.parse("localstack/localstack").withTag("0.13.0.8");

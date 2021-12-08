@@ -27,9 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.processing;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.commons.io.IOUtils.toInputStream;
-import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
@@ -39,7 +36,6 @@ import java.util.logging.Logger;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -75,22 +71,13 @@ public class ProcessingService {
 
     final DiagramKey key = diagramRequest.getKey();
 
-    try {
-      // Store the uploaded database file
-      storageService.store(new PathResource(localPath), key, SQLITE_DB);
+    // Store the uploaded database file
+    storageService.store(new PathResource(localPath), key, SQLITE_DB);
 
-      final String title = diagramRequest.getTitle();
-      // Generate a database integration, and store the generated image
-      final Path schemaCrawlerDiagram =
-          scService.createSchemaCrawlerDiagram(localPath, title, PNG.getExtension());
-      storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
-
-    } catch (final Exception e) {
-      throw e;
-    } finally {
-      // Store the JSON request
-      storageService.store(
-          new InputStreamResource(toInputStream(diagramRequest.toJson(), UTF_8)), key, JSON);
-    }
+    final String title = diagramRequest.getTitle();
+    // Generate a database integration, and store the generated image
+    final Path schemaCrawlerDiagram =
+        scService.createSchemaCrawlerDiagram(localPath, title, PNG.getExtension());
+    storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
   }
 }
