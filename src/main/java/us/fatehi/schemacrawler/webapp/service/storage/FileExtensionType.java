@@ -31,7 +31,8 @@ public enum FileExtensionType {
   SQLITE_DB("db", "application/x-sqlite3"),
   PNG("png", "image/png"),
   JSON("json", "application/json"),
-  LOG("log", "text/plain");
+  LOG("log", "text/plain"),
+  DATA("data", "application/octet-stream");
 
   private final String extension;
   private final String mimeType;

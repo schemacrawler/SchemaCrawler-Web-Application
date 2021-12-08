@@ -29,6 +29,7 @@ package us.fatehi.schemacrawler.webapp.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.IOUtils.toInputStream;
+import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.DATA;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.LOG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
@@ -186,6 +187,8 @@ public class DiagramRequestController {
       LOGGER.warn(e.getMessage(), e);
       saveExceptionLogFile(key, e);
       diagramRequest.setLogMessage(e.getMessage());
+      // Save a copy of the uploaded file, which may not be a SQLite database
+      storageService.store(file, key, DATA);
       throw e;
     } finally {
       // Store the JSON request
