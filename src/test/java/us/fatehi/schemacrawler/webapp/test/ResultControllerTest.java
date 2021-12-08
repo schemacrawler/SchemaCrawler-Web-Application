@@ -47,6 +47,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
@@ -96,6 +97,23 @@ public class ResultControllerTest {
 
     final Exception exception = result.getResolvedException();
     assertThat(exception.getMessage(), is("Bad error"));
+  }
+
+  @Test
+  public void getMissingKey() throws Exception {
+
+    final String key = "missingkey01";
+    final String resultsUrlPath = "/schemacrawler/results/" + key;
+
+    final MvcResult result =
+        mvc.perform(get(resultsUrlPath))
+            .andExpect(view().name("redirect:/error"))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+
+    final Throwable exception = ExceptionUtils.getRootCause(result.getResolvedException());
+    assertThat(exception, is(instanceOf(ExecutionRuntimeException.class)));
+    assertThat(exception.getMessage(), is("Cannot find request for missingkey01"));
   }
 
   @Test

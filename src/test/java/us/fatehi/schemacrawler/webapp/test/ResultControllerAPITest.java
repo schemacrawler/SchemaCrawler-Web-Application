@@ -114,6 +114,23 @@ public class ResultControllerAPITest {
   }
 
   @Test
+  public void getMissingKey() throws Exception {
+
+    final String key = "missingkey01";
+    final String resultsUrlPath = "/schemacrawler/results/" + key;
+
+    final MvcResult result =
+        mvc.perform(
+                get(resultsUrlPath)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().is4xxClientError())
+            .andReturn();
+
+    assertThat(result, is(notNullValue()));
+  }
+
+  @Test
   public void getResults() throws Exception {
 
     final DiagramRequest diagramRequest = new DiagramRequest();

@@ -119,7 +119,12 @@ public class DiagramResultController {
           final DiagramKey key)
       throws Exception {
 
-    final DiagramRequest diagramRequest = retrieveResults(key);
+    final DiagramRequest diagramRequest;
+    try {
+      diagramRequest = retrieveResults(key);
+    } catch (final Exception e) {
+      return ResponseEntity.notFound().build();
+    }
 
     if (diagramRequest.hasLogMessage()) {
       return ResponseEntity.badRequest().body(diagramRequest);
