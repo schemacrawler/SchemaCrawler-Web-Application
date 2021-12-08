@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,6 +98,10 @@ public class DiagramResultController {
     final DiagramRequest diagramRequest = retrieveResults(key);
     model.addAttribute("diagramRequest", diagramRequest);
 
+    if (diagramRequest.hasLogMessage()) {
+      throw new ExecutionRuntimeException(diagramRequest.getLogMessage());
+    }
+
     return "SchemaCrawlerDiagram";
   }
 
@@ -109,14 +114,18 @@ public class DiagramResultController {
    */
   @GetMapping(value = RESULTS + "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public DiagramRequest retrieveResultsApi(
+  public ResponseEntity<DiagramRequest> retrieveResultsApi(
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
           final DiagramKey key)
       throws Exception {
 
     final DiagramRequest diagramRequest = retrieveResults(key);
 
-    return diagramRequest;
+    if (diagramRequest.hasLogMessage()) {
+      return ResponseEntity.badRequest().body(diagramRequest);
+    } else {
+      return ResponseEntity.ok(diagramRequest);
+    }
   }
 
   private DiagramRequest retrieveResults(final DiagramKey key) throws Exception {
@@ -126,9 +135,6 @@ public class DiagramResultController {
             .orElseThrow(() -> new Exception("Cannot find request for " + key));
     final DiagramRequest diagramRequest =
         DiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
-    if (diagramRequest.hasLogMessage()) {
-      throw new ExecutionRuntimeException(diagramRequest.getLogMessage());
-    }
     return diagramRequest;
   }
 }
