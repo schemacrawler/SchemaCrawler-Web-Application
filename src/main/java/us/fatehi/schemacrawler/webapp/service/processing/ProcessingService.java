@@ -27,6 +27,7 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.processing;
 
+import static schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
@@ -42,7 +43,6 @@ import org.springframework.stereotype.Service;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
-import us.fatehi.schemacrawler.webapp.service.schemacrawler.DiagramService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Service
@@ -51,13 +51,10 @@ public class ProcessingService {
   private static final Logger logger = Logger.getLogger(ProcessingService.class.getName());
 
   private final StorageService storageService;
-  private final DiagramService scService;
 
   @Autowired
-  public ProcessingService(
-      @NotNull final StorageService storageService, @NotNull final DiagramService scService) {
+  public ProcessingService(@NotNull final StorageService storageService) {
     this.storageService = storageService;
-    this.scService = scService;
   }
 
   @Async
@@ -77,7 +74,7 @@ public class ProcessingService {
     final String title = diagramRequest.getTitle();
     // Generate a database integration, and store the generated image
     final Path schemaCrawlerDiagram =
-        scService.createSchemaCrawlerDiagram(localPath, title, PNG.getExtension());
+        createSchemaCrawlerDiagram(localPath, title, PNG.getExtension());
     storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
   }
 }
