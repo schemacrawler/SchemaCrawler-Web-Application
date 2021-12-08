@@ -30,9 +30,12 @@ package us.fatehi.schemacrawler.webapp.controller;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -50,5 +53,11 @@ public class ErrorController {
     redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 
     return "redirect:/error";
+  }
+
+  @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+  public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
+      final MethodArgumentTypeMismatchException ex, final WebRequest request) {
+    return ResponseEntity.badRequest().build();
   }
 }

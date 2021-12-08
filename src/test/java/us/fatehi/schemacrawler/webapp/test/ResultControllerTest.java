@@ -32,11 +32,13 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -45,6 +47,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
@@ -56,6 +59,20 @@ public class ResultControllerTest {
 
   @Autowired private StorageService storageService;
   @Autowired private MockMvc mvc;
+
+  @Test
+  public void getBadKey() throws Exception {
+
+    final String key = "badkey";
+    final String resultsUrlPath = "/schemacrawler/results/" + key;
+
+    final MvcResult result =
+        mvc.perform(get(resultsUrlPath)).andExpect(status().is4xxClientError()).andReturn();
+
+    final Throwable exception = ExceptionUtils.getRootCause(result.getResolvedException());
+    assertThat(exception, is(instanceOf(InternalRuntimeException.class)));
+    assertThat(exception.getMessage(), is("Invalid key \"badkey\""));
+  }
 
   @Test
   public void getErrorResults() throws Exception {

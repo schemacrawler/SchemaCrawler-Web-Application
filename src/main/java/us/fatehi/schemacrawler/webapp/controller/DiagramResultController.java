@@ -132,7 +132,7 @@ public class DiagramResultController {
     final Path jsonFile =
         storageService
             .retrieveLocal(key, JSON)
-            .orElseThrow(() -> new Exception("Cannot find request for " + key));
+            .orElseThrow(() -> new ExecutionRuntimeException("Cannot find request for " + key));
     final DiagramRequest diagramRequest =
         DiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
     return diagramRequest;
