@@ -90,8 +90,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("logMessage").asText(),
-        is("[email: must not be null, name: must not be null]"));
+        jsonNode.get("error").asText(), is("[email: must not be null, name: must not be null]"));
   }
 
   @Test
@@ -114,7 +113,7 @@ public class RequestControllerAPITest {
     final ObjectMapper objectMapper = new ObjectMapper();
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
-    assertThat(jsonNode.get("logMessage").asText(), is("null"));
+    assertThat(jsonNode.get("error").asText(), is("null"));
 
     final String keyNode = jsonNode.get("key").toString();
     final DiagramKey key = objectMapper.readValue(keyNode, DiagramKey.class);
@@ -153,7 +152,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("logMessage").asText(),
+        jsonNode.get("error").asText(),
         startsWith("Expected a SQLite database file, but got a file of type "));
   }
 

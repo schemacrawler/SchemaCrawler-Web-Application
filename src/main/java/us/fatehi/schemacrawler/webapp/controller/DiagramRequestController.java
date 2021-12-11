@@ -102,20 +102,20 @@ public class DiagramRequestController {
       @RequestParam("file") final Optional<MultipartFile> file) {
 
     if (!file.isPresent()) {
-      diagramRequest.setLogMessage("No SQLite file upload provided");
+      diagramRequest.setError("No SQLite file upload provided");
     } else if (bindingResult.hasErrors() || !file.isPresent()) {
       final List<String> errors =
           bindingResult.getFieldErrors().stream()
               .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
               .collect(Collectors.toList());
       Collections.sort(errors);
-      diagramRequest.setLogMessage(errors.toString());
+      diagramRequest.setError(errors.toString());
     } else {
       try {
         generateSchemaCrawlerDiagram(diagramRequest, file.get());
       } catch (final Exception e) {
         LOGGER.warn(e.getMessage(), e);
-        diagramRequest.setLogMessage(e.getMessage());
+        diagramRequest.setError(e.getMessage());
       }
     }
 
@@ -186,7 +186,7 @@ public class DiagramRequestController {
     } catch (final Exception e) {
       LOGGER.warn(e.getMessage(), e);
       saveExceptionLogFile(key, e);
-      diagramRequest.setLogMessage(e.getMessage());
+      diagramRequest.setError(e.getMessage());
       // Save a copy of the uploaded file, which may not be a SQLite database
       storageService.store(file, key, DATA);
       throw e;

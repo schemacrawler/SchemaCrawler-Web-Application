@@ -35,9 +35,15 @@ import java.io.StringReader;
 
 import org.junit.jupiter.api.Test;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 
 public class DiagramRequestUtilityTest {
+
+  @Test
+  public void equals() {
+    EqualsVerifier.simple().forClass(DiagramRequest.class).verify();
+  }
 
   @Test
   public void roundtrip() throws Exception {

@@ -58,7 +58,7 @@ public class DiagramRequest implements Serializable {
 
   private final DiagramKey key;
   private final Instant timestamp;
-  private String logMessage;
+  private String error;
 
   @NotNull
   @Size(min = 2, message = "Please enter your full name")
@@ -99,6 +99,15 @@ public class DiagramRequest implements Serializable {
   }
 
   /**
+   * Returns the exception message.
+   *
+   * @return Error message
+   */
+  public String getError() {
+    return error;
+  }
+
+  /**
    * Returns the uploaded file name.
    *
    * @return Uploaded file name.
@@ -114,15 +123,6 @@ public class DiagramRequest implements Serializable {
    */
   public DiagramKey getKey() {
     return key;
-  }
-
-  /**
-   * Returns the log message, or exception message.
-   *
-   * @return Log message
-   */
-  public String getLogMessage() {
-    return logMessage;
   }
 
   /**
@@ -154,11 +154,20 @@ public class DiagramRequest implements Serializable {
   }
 
   public boolean hasLogMessage() {
-    return !isBlank(logMessage);
+    return !isBlank(error);
   }
 
   public void setEmail(final String email) {
     this.email = email;
+  }
+
+  /**
+   * Set error message.
+   *
+   * @param Error message
+   */
+  public void setError(final String error) {
+    this.error = error;
   }
 
   /**
@@ -168,15 +177,6 @@ public class DiagramRequest implements Serializable {
    */
   public void setFile(final String file) {
     this.file = file;
-  }
-
-  /**
-   * Set log message.
-   *
-   * @param Log message
-   */
-  public void setLogMessage(final String logMessage) {
-    this.logMessage = logMessage;
   }
 
   /**

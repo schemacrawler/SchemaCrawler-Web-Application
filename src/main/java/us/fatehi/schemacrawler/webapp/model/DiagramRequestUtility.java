@@ -82,7 +82,15 @@ class DiagramRequestUtility {
 
     @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonPropertyOrder({"key", "name", "email", "file", "title", "log-message", "timestamp"})
+    @JsonPropertyOrder({
+      "key",
+      "timestamp",
+      "name",
+      "email",
+      "file",
+      "title",
+      "error",
+    })
     abstract class JacksonAnnotationMixIn {
       @JsonUnwrapped public DiagramKey key;
     }

@@ -81,7 +81,7 @@ public class ResultControllerTest {
     final DiagramRequest diagramRequest = new DiagramRequest();
     diagramRequest.setName("Sualeh Fatehi");
     diagramRequest.setEmail("sualeh@hotmail.com");
-    diagramRequest.setLogMessage("Bad error");
+    diagramRequest.setError("Bad error");
 
     final DiagramKey key = diagramRequest.getKey();
 

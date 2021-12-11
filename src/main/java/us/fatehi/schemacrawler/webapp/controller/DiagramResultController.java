@@ -103,7 +103,7 @@ public class DiagramResultController {
     model.addAttribute("diagramRequest", diagramRequest);
 
     if (diagramRequest.hasLogMessage()) {
-      throw new ExecutionRuntimeException(diagramRequest.getLogMessage());
+      throw new ExecutionRuntimeException(diagramRequest.getError());
     }
 
     return "SchemaCrawlerDiagram";
