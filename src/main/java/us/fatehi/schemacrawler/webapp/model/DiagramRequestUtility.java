@@ -27,6 +27,7 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.model;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 import static com.fasterxml.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS;
 import static com.fasterxml.jackson.databind.SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID;
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -79,7 +81,9 @@ class DiagramRequestUtility {
 
     @JsonPropertyOrder(alphabetic = true)
     @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-    abstract class JacksonAnnotationMixIn {}
+    abstract class JacksonAnnotationMixIn {
+      @JsonUnwrapped public DiagramKey key;
+    }
 
     final ObjectMapper mapper = new ObjectMapper();
     mapper.enable(
@@ -87,6 +91,7 @@ class DiagramRequestUtility {
         INDENT_OUTPUT,
         USE_EQUALITY_FOR_OBJECT_ID,
         WRITE_ENUMS_USING_TO_STRING);
+    mapper.setSerializationInclusion(NON_NULL);
     mapper.addMixIn(DiagramRequest.class, JacksonAnnotationMixIn.class);
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     mapper.registerModule(new JavaTimeModule());
