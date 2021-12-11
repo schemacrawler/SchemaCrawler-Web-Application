@@ -37,6 +37,7 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.io.Reader;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -79,8 +80,9 @@ class DiagramRequestUtility {
   @SuppressWarnings("serial")
   private static ObjectMapper newConfiguredObjectMapper() {
 
-    @JsonPropertyOrder(alphabetic = true)
     @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonPropertyOrder({"key", "name", "email", "file", "title", "log-message", "timestamp"})
     abstract class JacksonAnnotationMixIn {
       @JsonUnwrapped public DiagramKey key;
     }
