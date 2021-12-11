@@ -103,13 +103,18 @@ public class DiagramRequestController {
 
     if (!file.isPresent()) {
       diagramRequest.setError("No SQLite file upload provided");
-    } else if (bindingResult.hasErrors() || !file.isPresent()) {
+      // Save validation errors
+      saveDiagramRequest(diagramRequest);
+    } else if (bindingResult.hasErrors()) {
       final List<String> errors =
           bindingResult.getFieldErrors().stream()
               .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
               .collect(Collectors.toList());
       Collections.sort(errors);
       diagramRequest.setError(errors.toString());
+      // Save validation errors
+      saveBindingResultLogFile(diagramRequest.getKey(), bindingResult);
+      saveDiagramRequest(diagramRequest);
     } else {
       try {
         generateSchemaCrawlerDiagram(diagramRequest, file.get());
@@ -133,7 +138,11 @@ public class DiagramRequestController {
       final BindingResult bindingResult,
       @RequestParam("file") final MultipartFile file)
       throws Exception {
+
     if (bindingResult.hasErrors()) {
+      // Save validation errors
+      saveBindingResultLogFile(diagramRequest.getKey(), bindingResult);
+      saveDiagramRequest(diagramRequest);
       return "SchemaCrawlerDiagramForm";
     }
 
@@ -191,18 +200,43 @@ public class DiagramRequestController {
       storageService.store(file, key, DATA);
       throw e;
     } finally {
-      // Store the JSON request
-      storageService.store(() -> toInputStream(diagramRequest.toJson(), UTF_8), key, JSON);
+      // Diagram request may contain an error message due to exceptions thrown
+      saveDiagramRequest(diagramRequest);
     }
   }
 
-  private void saveExceptionLogFile(final DiagramKey key, final Exception e) {
-    try { // Write out stack trace to a log file, and save it
+  private void saveBindingResultLogFile(final DiagramKey key, final BindingResult bindingResult) {
+    try {
+      // Write out stack trace to a log file, and save it
       final StringWriter stackTraceWriter = new StringWriter();
-      e.printStackTrace(new PrintWriter(stackTraceWriter));
+      stackTraceWriter.write(bindingResult.toString());
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
-    } catch (final Exception ex) {
+    } catch (final Exception e) {
+      LOGGER.warn(e.getMessage(), e);
+    }
+  }
+
+  private void saveDiagramRequest(final DiagramRequest diagramRequest) {
+    if (diagramRequest == null) {
+      return;
+    }
+    final DiagramKey key = diagramRequest.getKey();
+    try {
+      storageService.store(() -> toInputStream(diagramRequest.toJson(), UTF_8), key, JSON);
+    } catch (final Exception e) {
+      LOGGER.error("Could not save diagram request", e);
+    }
+  }
+
+  private void saveExceptionLogFile(final DiagramKey key, final Exception exception) {
+    try {
+      // Write out stack trace to a log file, and save it
+      final StringWriter stackTraceWriter = new StringWriter();
+      exception.printStackTrace(new PrintWriter(stackTraceWriter));
+      final String stackTrace = stackTraceWriter.toString();
+      storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
+    } catch (final Exception e) {
       LOGGER.warn(e.getMessage(), e);
     }
   }
