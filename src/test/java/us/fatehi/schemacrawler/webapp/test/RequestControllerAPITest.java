@@ -32,6 +32,7 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -113,7 +114,8 @@ public class RequestControllerAPITest {
     final ObjectMapper objectMapper = new ObjectMapper();
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
-    assertThat(jsonNode.get("error").asText(), is("null"));
+    assertThat(jsonNode.get("error"), is(nullValue()));
+    assertThat(jsonNode.get("title"), is(nullValue()));
 
     final String keyNode = jsonNode.get("key").toString();
     final DiagramKey key = objectMapper.readValue(keyNode, DiagramKey.class);
