@@ -38,18 +38,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class DiagramRequest implements Serializable {
 
   private static final long serialVersionUID = 2065519510282344200L;
-
-  private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   /**
    * Factory method to deserialize a JSON request.
@@ -59,20 +53,7 @@ public class DiagramRequest implements Serializable {
    */
   public static DiagramRequest fromJson(final Reader jsonReader) {
     requireNonNull(jsonReader, "No reader provided");
-    return gson.fromJson(jsonReader, DiagramRequest.class);
-  }
-
-  /**
-   * Factory method to deserialize a JSON request.
-   *
-   * @param jsonRequest JSON serialized request.
-   * @return Deserialized Java request.
-   */
-  public static DiagramRequest fromJson(final String jsonRequest) {
-    if (StringUtils.isBlank(jsonRequest)) {
-      return null;
-    }
-    return gson.fromJson(jsonRequest, DiagramRequest.class);
+    return DiagramRequestUtility.readDiagramRequest(jsonReader);
   }
 
   private final DiagramKey key;
@@ -217,7 +198,7 @@ public class DiagramRequest implements Serializable {
    * @return JSON string
    */
   public String toJson() {
-    return gson.toJson(this);
+    return DiagramRequestUtility.diagramRequestToJson(this);
   }
 
   /** {@inheritDoc} */
