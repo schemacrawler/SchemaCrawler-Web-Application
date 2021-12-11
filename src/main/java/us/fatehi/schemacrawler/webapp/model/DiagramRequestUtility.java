@@ -37,6 +37,10 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -49,36 +53,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 
-class DiagramRequestUtility {
+@Configuration
+public class DiagramRequestUtility {
 
-  // TODO: NOTE: Covert to a pool if needed
-  private static final ObjectMapper objectMapper;
-
-  static {
-    objectMapper = newConfiguredObjectMapper();
-  }
-
-  static String diagramRequestToJson(final DiagramRequest diagramRequest) {
-    requireNonNull(diagramRequest, "No diagram request provided");
-    try {
-      return objectMapper.writeValueAsString(diagramRequest);
-    } catch (final JsonProcessingException e) {
-      throw new ExecutionRuntimeException("Cannot serialize diagram request", e);
-    }
-  }
-
-  static DiagramRequest readDiagramRequest(final Reader diagramRequestReader) {
-    requireNonNull(diagramRequestReader, "No diagram request reader provided");
-    try {
-      return objectMapper.readValue(diagramRequestReader, DiagramRequest.class);
-    } catch (final IOException e) {
-      throw new ExecutionRuntimeException(
-          String.format("Cannot deserialize diagram request%n%s", diagramRequestReader), e);
-    }
-  }
-
-  @SuppressWarnings("serial")
-  private static ObjectMapper newConfiguredObjectMapper() {
+  @Bean
+  @Primary
+  public ObjectMapper objectMapper() {
 
     @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -108,7 +88,22 @@ class DiagramRequestUtility {
     return mapper;
   }
 
-  private DiagramRequestUtility() {
-    // Prevent instantiation
+  String diagramRequestToJson(final DiagramRequest diagramRequest) {
+    requireNonNull(diagramRequest, "No diagram request provided");
+    try {
+      return objectMapper().writeValueAsString(diagramRequest);
+    } catch (final JsonProcessingException e) {
+      throw new ExecutionRuntimeException("Cannot serialize diagram request", e);
+    }
+  }
+
+  DiagramRequest readDiagramRequest(final Reader diagramRequestReader) {
+    requireNonNull(diagramRequestReader, "No diagram request reader provided");
+    try {
+      return objectMapper().readValue(diagramRequestReader, DiagramRequest.class);
+    } catch (final IOException e) {
+      throw new ExecutionRuntimeException(
+          String.format("Cannot deserialize diagram request%n%s", diagramRequestReader), e);
+    }
   }
 }

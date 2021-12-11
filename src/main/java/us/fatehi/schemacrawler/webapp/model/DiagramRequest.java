@@ -53,7 +53,7 @@ public class DiagramRequest implements Serializable {
    */
   public static DiagramRequest fromJson(final Reader jsonReader) {
     requireNonNull(jsonReader, "No reader provided");
-    return DiagramRequestUtility.readDiagramRequest(jsonReader);
+    return new DiagramRequestUtility().readDiagramRequest(jsonReader);
   }
 
   private final DiagramKey key;
@@ -198,7 +198,7 @@ public class DiagramRequest implements Serializable {
    * @return JSON string
    */
   public String toJson() {
-    return DiagramRequestUtility.diagramRequestToJson(this);
+    return new DiagramRequestUtility().diagramRequestToJson(this);
   }
 
   /** {@inheritDoc} */
