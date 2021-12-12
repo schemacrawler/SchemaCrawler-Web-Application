@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Profile;
 @Profile("local")
 public class FileSystemStorageConfig {
 
-  @Value("${SC_WEBAPP_STORAGE:./target/sc-webapp-storage}")
+  @Value("${SC_WEBAPP_STORAGE:./target/schemacrawler-web-app-1}")
   @NotNull
   private Path fileSystemStorageRootPath;
 
