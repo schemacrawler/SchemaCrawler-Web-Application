@@ -38,6 +38,7 @@ import static us.fatehi.utility.Utility.isBlank;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -101,6 +102,7 @@ public class DiagramRequestController {
       final BindingResult bindingResult,
       @RequestParam("file") final Optional<MultipartFile> file) {
 
+    URI location = null;
     if (!file.isPresent()) {
       diagramRequest.setError("No SQLite file upload provided");
       // Save validation errors
@@ -118,6 +120,7 @@ public class DiagramRequestController {
     } else {
       try {
         generateSchemaCrawlerDiagram(diagramRequest, file.get());
+        location = new URI("./" + diagramRequest.getKey());
       } catch (final Exception e) {
         LOGGER.warn(e.getMessage(), e);
         diagramRequest.setError(e.getMessage());
@@ -127,7 +130,7 @@ public class DiagramRequestController {
     if (diagramRequest.hasLogMessage()) {
       return ResponseEntity.badRequest().body(diagramRequest);
     } else {
-      return ResponseEntity.ok(diagramRequest);
+      return ResponseEntity.created(location).body(diagramRequest);
     }
   }
 

@@ -27,6 +27,7 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.test;
 
+import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -81,7 +82,7 @@ public class RequestControllerAPITest {
                     .file(mockMultipartFile())
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is4xxClientError())
+            .andExpect(status().isBadRequest())
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -105,7 +106,7 @@ public class RequestControllerAPITest {
                     .param("email", "sualeh@hotmail.com")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is2xxSuccessful())
+            .andExpect(status().isCreated())
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -119,6 +120,9 @@ public class RequestControllerAPITest {
 
     final String keyNode = jsonNode.get("key").toString();
     final DiagramKey key = objectMapper.readValue(keyNode, DiagramKey.class);
+
+    final String locationHeaderValue = result.getResponse().getHeaderValue("Location").toString();
+    assertThat(locationHeaderValue, endsWith(key.getKey()));
 
     final boolean awaitTermination =
         pool.getThreadPoolExecutor().awaitTermination(3, TimeUnit.SECONDS);
@@ -143,7 +147,7 @@ public class RequestControllerAPITest {
                     .param("email", "sualeh@hotmail.com")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is4xxClientError())
+            .andExpect(status().isBadRequest())
             .andReturn();
 
     assertThat(result, is(notNullValue()));
