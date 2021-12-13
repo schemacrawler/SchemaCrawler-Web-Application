@@ -75,7 +75,7 @@ public class ResultControllerAPITest {
                 get(resultsUrlPath)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is4xxClientError())
+            .andExpect(status().isBadRequest())
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -104,7 +104,7 @@ public class ResultControllerAPITest {
                 get(resultsUrlPath)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is4xxClientError())
+            .andExpect(status().isBadRequest())
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -124,7 +124,7 @@ public class ResultControllerAPITest {
                 get(resultsUrlPath)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is4xxClientError())
+            .andExpect(status().isNotFound())
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -149,7 +149,7 @@ public class ResultControllerAPITest {
                 get(resultsUrlPath)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is2xxSuccessful())
+            .andExpect(status().isOk())
             .andReturn();
 
     assertThat(result, is(notNullValue()));
