@@ -61,7 +61,7 @@ or the Docker container, open a browser to
 
 #### As an API
 
-You can use the SchemaCrawler web application as an API. 
+You can use the [SchemaCrawler web application as an API](https://app.swaggerhub.com/apis/sualeh/schemacrawler-web-application/16.16.3.7). 
 
 Submit a request and your SQLite database file (say "test.db" in your local directory) with a command like this:
 ```sh
@@ -70,11 +70,11 @@ curl \
   -F "email=sualeh@hotmail.com" \
   -F "file=@test.db" \
   -H "Accept: application/json" \
-  https://schemacrawler-webapp.herokuapp.com/schemacrawler
+  http://localhost:8080/schemacrawler
 ```
 You will get a 12 character key in return, which uniquely identifies your request.
 
 If your identifier is "l0nk0wu4t2a3", can retrieve the generated image after a few minutes using a request similar to:
 ```sh
-curl https://schemacrawler-webapp.herokuapp.com/schemacrawler/results/l0nk0wu4t2a3/diagram > diagram.png
+curl http://localhost:8080/schemacrawler/results/l0nk0wu4t2a3/diagram --output diagram.png
 ```
