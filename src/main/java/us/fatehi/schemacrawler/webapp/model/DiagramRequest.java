@@ -61,7 +61,7 @@ public class DiagramRequest implements Serializable {
   private String error;
 
   @NotNull
-  @Size(min = 2, message = "Please enter your full name")
+  @Size(min = 2, max = 255, message = "Please enter your full name")
   private String name;
 
   @NotNull
@@ -69,12 +69,14 @@ public class DiagramRequest implements Serializable {
       regexp =
           "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z",
       message = "Please enter a valid email address")
+  @Size(min = 5, max = 255, message = "Please enter a valid email address")
   private String email;
 
   @NotNull
-  @Size(min = 1, message = "Please select a file to upload")
+  @Size(min = 1, max = 255, message = "Please select a file to upload")
   private String file;
 
+  @Size(min = 0, max = 255, message = "Please enter a valid title")
   private String title;
 
   /** Public constructor. Generates a random key, and sets the creation timestamp. */

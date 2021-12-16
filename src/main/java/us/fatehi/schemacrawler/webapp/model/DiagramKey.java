@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +43,7 @@ public class DiagramKey implements Serializable {
   private static final long serialVersionUID = 3453873731406876293L;
 
   @Pattern(regexp = "[a-z0-9]{12}")
+  @Size(min = 12, max = 12, message = "Invalid key length")
   private final String key;
 
   public DiagramKey() {
