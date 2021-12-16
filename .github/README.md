@@ -61,7 +61,8 @@ or the Docker container, open a browser to
 
 #### As an API
 
-You can use the [SchemaCrawler web application as an API](https://app.swaggerhub.com/apis/sualeh/schemacrawler-web-application/16.16.3.8). 
+You can use the [SchemaCrawler Web Application as a REST API](https://rapidapi.com/sualeh/api/schemacrawler-web-application1/). The specifications are on [Swagger Hub](https://app.swaggerhub.com/apis/sualeh/schemacrawler-web-application/16.16.3.8). 
+
 
 Submit a request and your SQLite database file (say "test.db" in your local directory) with a command like this:
 ```sh
