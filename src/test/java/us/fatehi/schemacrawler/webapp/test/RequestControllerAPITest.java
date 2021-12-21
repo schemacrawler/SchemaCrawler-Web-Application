@@ -31,13 +31,11 @@ import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 import static us.fatehi.schemacrawler.webapp.test.utility.TestUtility.mockMultipartFile;
 
@@ -78,7 +76,7 @@ public class RequestControllerAPITest {
 
     final MvcResult result =
         mvc.perform(
-                multipart("/schemacrawler")
+                multipart(API_PREFIX)
                     .file(mockMultipartFile())
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
@@ -100,7 +98,7 @@ public class RequestControllerAPITest {
 
     final MvcResult result =
         mvc.perform(
-                multipart("/schemacrawler")
+                multipart(API_PREFIX)
                     .file(mockMultipartFile())
                     .param("name", "Sualeh")
                     .param("email", "sualeh@hotmail.com")
@@ -124,8 +122,7 @@ public class RequestControllerAPITest {
     final String locationHeaderValue = result.getResponse().getHeaderValue("Location").toString();
     assertThat(locationHeaderValue, endsWith(key.getKey()));
 
-    final boolean awaitTermination =
-        pool.getThreadPoolExecutor().awaitTermination(3, TimeUnit.SECONDS);
+    pool.getThreadPoolExecutor().awaitTermination(3, TimeUnit.SECONDS);
 
     final Optional<Path> localDatabaseFile = storageService.retrieveLocal(key, SQLITE_DB);
     assertThat(localDatabaseFile.isPresent(), is(true));
@@ -141,7 +138,7 @@ public class RequestControllerAPITest {
 
     final MvcResult result =
         mvc.perform(
-                multipart("/schemacrawler")
+                multipart(API_PREFIX)
                     .file(multipartFile)
                     .param("name", "Sualeh")
                     .param("email", "sualeh@hotmail.com")
@@ -160,14 +157,5 @@ public class RequestControllerAPITest {
     assertThat(
         jsonNode.get("error").asText(),
         startsWith("Expected a SQLite database file, but got a file of type "));
-  }
-
-  @Test
-  public void index() throws Exception {
-    mvc.perform(
-            get("/schemacrawler")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(containsString("SchemaCrawler Diagram")));
   }
 }

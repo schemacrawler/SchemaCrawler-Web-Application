@@ -29,6 +29,8 @@ package us.fatehi.schemacrawler.webapp.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.newBufferedReader;
+import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
+import static us.fatehi.schemacrawler.webapp.controller.URIConstants.UI_RESULTS_PREFIX;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 
@@ -62,8 +64,6 @@ public class DiagramResultController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DiagramResultController.class);
 
-  private static final String RESULTS = "/schemacrawler/results";
-
   private final StorageService storageService;
 
   @Autowired
@@ -73,16 +73,15 @@ public class DiagramResultController {
     this.storageService = storageService;
   }
 
-  @GetMapping(value = RESULTS + "/{key}/diagram", produces = MediaType.IMAGE_PNG_VALUE)
+  @GetMapping(
+      value = {API_PREFIX + "/{key}/diagram", UI_RESULTS_PREFIX + "/{key}/diagram"},
+      produces = MediaType.IMAGE_PNG_VALUE)
   @ResponseBody
   public Resource diagramImage(
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
           final DiagramKey key)
       throws Exception {
-    return storageService
-        .retrieveLocal(key, PNG)
-        .map(PathResource::new)
-        .orElseThrow(() -> new Exception("Cannot find image, " + key));
+    return retrieveDiagramLocal(key);
   }
 
   /**
@@ -92,7 +91,7 @@ public class DiagramResultController {
    * @return Diagram request data, including the key
    * @throws Exception On an exception
    */
-  @GetMapping(value = RESULTS + "/{key}")
+  @GetMapping(value = UI_RESULTS_PREFIX + "/{key}")
   public String retrieveResults(
       final Model model,
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
@@ -116,7 +115,7 @@ public class DiagramResultController {
    * @return Diagram request data, including the key
    * @throws Exception On an exception
    */
-  @GetMapping(value = RESULTS + "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = API_PREFIX + "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public ResponseEntity<DiagramRequest> retrieveResultsApi(
       @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
@@ -136,6 +135,13 @@ public class DiagramResultController {
     } else {
       return ResponseEntity.ok(diagramRequest);
     }
+  }
+
+  private Resource retrieveDiagramLocal(final DiagramKey key) throws Exception {
+    return storageService
+        .retrieveLocal(key, PNG)
+        .map(PathResource::new)
+        .orElseThrow(() -> new Exception("Cannot find image, " + key));
   }
 
   private DiagramRequest retrieveResults(final DiagramKey key) throws Exception {

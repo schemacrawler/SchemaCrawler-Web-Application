@@ -36,6 +36,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -68,7 +69,7 @@ public class ResultControllerAPITest {
   public void getBadKey() throws Exception {
 
     final String key = "badkey";
-    final String resultsUrlPath = "/schemacrawler/results/" + key;
+    final String resultsUrlPath = API_PREFIX + "/" + key;
 
     final MvcResult result =
         mvc.perform(
@@ -97,7 +98,7 @@ public class ResultControllerAPITest {
 
     storageService.store(() -> toInputStream(diagramRequest.toJson(), UTF_8), key, JSON);
 
-    final String resultsUrlPath = "/schemacrawler/results/" + key;
+    final String resultsUrlPath = API_PREFIX + "/" + key;
 
     final MvcResult result =
         mvc.perform(
@@ -117,7 +118,7 @@ public class ResultControllerAPITest {
   public void getMissingKey() throws Exception {
 
     final String key = "missingkey01";
-    final String resultsUrlPath = "/schemacrawler/results/" + key;
+    final String resultsUrlPath = API_PREFIX + "/" + key;
 
     final MvcResult result =
         mvc.perform(
@@ -141,8 +142,7 @@ public class ResultControllerAPITest {
 
     storageService.store(() -> toInputStream(diagramRequest.toJson(), UTF_8), key, JSON);
 
-    final String resultsUrlPath = "/schemacrawler/results/" + key;
-    final String diagramUrlPath = resultsUrlPath + "/diagram";
+    final String resultsUrlPath = API_PREFIX + "/" + key;
 
     final MvcResult result =
         mvc.perform(
