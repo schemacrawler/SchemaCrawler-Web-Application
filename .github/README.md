@@ -43,9 +43,9 @@ This is a Spring Boot web application with a Bootstrap user interface, with sour
 Do one of the steps below to start the web application locally on your system:
 - Start the application from Maven, run `mvn -Dspring-boot.run.fork=false -Dspring.profiles.active=local spring-boot:run`
 - Start application from the jar file, run 
-  `java -DAWS_ACCESS_KEY_ID=xxxxx -DAWS_SECRET=xxxxx -DAWS_S3_BUCKET=xxxxx -jar target/schemacrawler-webapp-16.16.3.8.jar`
+  `java -DAWS_ACCESS_KEY_ID=xxxxx -DAWS_SECRET=xxxxx -DAWS_S3_BUCKET=xxxxx -jar target/schemacrawler-webapp-16.16.4.1.jar`
   or, in local mode,
-  `java -Dspring.profiles.active=local -jar target/schemacrawler-webapp-16.16.3.8.jar`
+  `java -Dspring.profiles.active=local -jar target/schemacrawler-webapp-16.16.4.1.jar`
 - Start the application from the local image in a Docker container, run  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
   or, in local mode,
   `docker run --rm --env SPRING_PROFILES_ACTIVE=local -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
@@ -61,7 +61,7 @@ or the Docker container, open a browser to
 
 #### As an API
 
-You can use the [SchemaCrawler Web Application as a REST API](https://rapidapi.com/sualeh/api/schemacrawler-web-application1/). The specifications are on [Swagger Hub](https://app.swaggerhub.com/apis/sualeh/schemacrawler-web-application/16.16.3.8). 
+You can use the [SchemaCrawler Web Application as a REST API](https://rapidapi.com/sualeh/api/schemacrawler-web-application1/). The specifications are on [Swagger Hub](https://app.swaggerhub.com/apis/sualeh/schemacrawler-web-application/16.16.4.1). 
 
 
 Submit a request and your SQLite database file (say "test.db" in your local directory) with a command like this:
