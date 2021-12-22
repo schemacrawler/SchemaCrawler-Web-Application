@@ -62,11 +62,10 @@ jobs:
         # Build
         timeout 120s mvn spring-boot:run &
         sleep 15
-        (  \
-          cd src/test/postman && \
-          newman run \
-            --verbose \
-            --delay-request 1000 \
-            --environment local.postman_environment.json \
-            schemacrawler-web-application.postman_collection.json \
-        )
+        newman run \
+          --verbose \
+          --color on \
+          --delay-request 1000 \
+          --working-dir src/test/postman \
+          --env-var "url=http://localhost:8080" \
+          src/test/postman/schemacrawler-web-application.postman_collection.json
