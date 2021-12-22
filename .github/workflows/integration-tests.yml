@@ -53,6 +53,10 @@ jobs:
 # RUN INTEGRATION TESTS WITH NEWMAN
     - id: run-postman
       name: Run Postman tests for API
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET: ${{ secrets.AWS_SECRET }}
+        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
       shell: bash
       run: |
         # Build
@@ -61,5 +65,5 @@ jobs:
         newman run \
           --verbose \
           --delay-request 1000 \
-          --environment src/main/postman/local.postman_environment.json \
-          src/main/postman/schemacrawler-web-application.postman_collection.json
+          --environment src/test/postman/local.postman_environment.json \
+          src/test/postman/schemacrawler-web-application.postman_collection.json
