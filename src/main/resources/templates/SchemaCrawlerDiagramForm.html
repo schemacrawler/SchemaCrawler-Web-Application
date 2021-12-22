@@ -11,18 +11,23 @@
       <div class="row">
         <div class="col-lg-12">
           <p>
-            Create database schema diagrams for your SQLite databases. Fill
-            out and submit the form below. You can also generate diagrams on
-            your own system if you have Docker. Please take a look at <a
+            Create database schema diagrams for your SQLite databases
+            using <a href="https://www.schemacrawler.com">SchemaCrawler</a>.
+            Fill out and submit the form below.
+          </p>
+          <p>
+            You can generate your SchemaCrawler diagram on your own
+            system, and fine tune the generated diagram. Take a look at
+            <a
               href="https://dev.to/sualeh/how-to-visualize-your-sqlite-database-with-one-command-and-nothing-to-install-1f4m">How
-              to Visualize Your SQLite Database with One Command (and Nothing
-              to Install)</a>.
+              to Visualize Your SQLite Database with One Command (and
+              Nothing to Install)</a>.
           </p>
         </div>
       </div>
 
 
-      <h1>SchemaCrawler Diagram</h1>
+      <h1>Create Your SchemaCrawler Diagram</h1>
 
       <form action="#" th:action="@{/schemacrawler}"
         th:object="${diagramRequest}" method="post"
@@ -35,8 +40,8 @@
           <div class="col-lg-8">
             <input type="text" class="form-control" id="name"
               th:field="*{name}" /> <small id="nameHelp"
-              class="form-text text-muted">Enter your first and last
-              name.</small>
+              class="form-text text-muted">Enter your first and
+              last name.</small>
             <div class="alert alert-warning text-muted small"
               th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
           </div>
@@ -48,7 +53,8 @@
           <div class="col-lg-8">
             <input type="email" class="form-control" id="email"
               th:field="*{email}" /> <small id="emailHelp"
-              class="form-text text-muted">Enter your email address.</small>
+              class="form-text text-muted">Enter your email
+              address.</small>
             <div class="alert alert-warning text-muted small"
               th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
           </div>
@@ -61,7 +67,8 @@
           <div class="col-lg-8">
             <input type="text" class="form-control" id="title"
               th:field="*{title}" /> <small id="titleHelp"
-              class="form-text text-muted">Enter the diagram title.</small>
+              class="form-text text-muted">Enter the diagram
+              title.</small>
             <div class="alert alert-warning text-muted small"
               th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
           </div>
@@ -71,9 +78,10 @@
             <label for="file">Database File:</label>
           </div>
           <div class="col-lg-8">
-            <input type="file" class="form-control" id="file" name="file" />
-            <small id="fileHelp" class="form-text text-muted">Select a
-              SQLite database file to upload.</small>
+            <input type="file" class="form-control" id="file"
+              name="file" /> <small id="fileHelp"
+              class="form-text text-muted">Select a SQLite
+              database file to upload.</small>
             <div class="alert alert-warning text-muted small"
               th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
           </div>

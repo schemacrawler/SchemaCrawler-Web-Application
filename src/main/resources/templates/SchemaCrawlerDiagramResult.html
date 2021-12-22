@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/head :: head" />
-  <body>
-    <header th:replace="fragments/header :: header" />
-    <main>
-      <div id="page-content" class="container-fluid">
-      
-        <h1>SchemaCrawler Diagram</h1>
-        
-        <div class="alert alert-secondary">
-          Your SchemaCrawler diagram will take a few minutes to get generated. <br /> 
-          After a wait, you can
-          <a th:href="'/schemacrawler/results/' + ${diagramRequest.key}">view your SchemaCrawler diagram</a>.
-        </div>
-        
-        <div>
-          <p>You can generate your SchemaCrawler diagram on your own system, and fine tune options. <br /> 
-          Take a look at 
-          <a href="https://dev.to/sualeh/how-to-visualize-your-sqlite-database-with-one-command-and-nothing-to-install-1f4m">How to Visualize 
-          Your SQLite Database with One Command (and Nothing to Install)</a>.</p>
-        </div>
-        
+<head th:replace="fragments/head :: head" />
+<body>
+  <header th:replace="fragments/header :: header" />
+  <main>
+    <div id="page-content" class="container-fluid">
+
+      <h1>SchemaCrawler Diagram</h1>
+
+      <div class="alert alert-secondary">
+        Your SchemaCrawler diagram will take a few minutes to get
+        generated. After a short wait, you can <a
+          th:href="'/schemacrawler/results/' + ${diagramRequest.key}">view
+          your SchemaCrawler diagram</a>.
       </div>
-    </main>
-    <footer th:replace="fragments/footer :: footer" />
-  </body>
+
+      <div>
+        <p>
+          You can generate your SchemaCrawler diagram on your own
+          system, and fine tune the generated diagram. Take a look at <a
+            href="https://dev.to/sualeh/how-to-visualize-your-sqlite-database-with-one-command-and-nothing-to-install-1f4m">How
+            to Visualize Your SQLite Database with One Command (and
+            Nothing to Install)</a>.
+        </p>
+      </div>
+
+    </div>
+  </main>
+  <footer th:replace="fragments/footer :: footer" />
+</body>
 </html>
