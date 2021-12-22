@@ -85,14 +85,15 @@ public class DiagramRequestController {
 
   @Autowired
   public DiagramRequestController(
-      @NotNull final StorageService storageService,
-      @NotNull final ProcessingService processingService) {
+      @NotNull(message = "StorageService not provided") final StorageService storageService,
+      @NotNull(message = "ProcessingService not provided")
+          final ProcessingService processingService) {
     this.storageService = storageService;
     this.processingService = processingService;
   }
 
   @GetMapping(UI_PREFIX)
-  public String diagramRequestForm(@NotNull final Model model) {
+  public String diagramRequestForm(@NotNull(message = "Model not provided") final Model model) {
     model.addAttribute("diagramRequest", new DiagramRequest());
     return "SchemaCrawlerDiagramForm";
   }
@@ -100,7 +101,8 @@ public class DiagramRequestController {
   @PostMapping(value = API_PREFIX, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public ResponseEntity<DiagramRequest> diagramRequestFormApi(
-      @ModelAttribute("diagramRequest") @NotNull @Valid final DiagramRequest diagramRequest,
+      @ModelAttribute("diagramRequest") @NotNull(message = "Diagram request not provided") @Valid
+          final DiagramRequest diagramRequest,
       final BindingResult bindingResult,
       @RequestParam("file") final Optional<MultipartFile> file) {
 
@@ -139,7 +141,8 @@ public class DiagramRequestController {
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = UI_PREFIX)
   public String diagramRequestFormSubmit(
-      @ModelAttribute("diagramRequest") @NotNull @Valid final DiagramRequest diagramRequest,
+      @ModelAttribute("diagramRequest") @NotNull(message = "Diagram request not provided") @Valid
+          final DiagramRequest diagramRequest,
       final BindingResult bindingResult,
       @RequestParam("file") final MultipartFile file)
       throws Exception {

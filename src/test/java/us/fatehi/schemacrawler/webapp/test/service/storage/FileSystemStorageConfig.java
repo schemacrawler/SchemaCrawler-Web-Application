@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Profile;
 public class FileSystemStorageConfig {
 
   @Value("${SC_WEBAPP_STORAGE:./target/schemacrawler-web-app-1}")
-  @NotNull
+  @NotNull(message = "SC_WEBAPP_STORAGE not provided")
   private Path fileSystemStorageRootPath;
 
   @Bean("fileSystemStorageRootPath")

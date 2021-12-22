@@ -48,19 +48,19 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class AmazonS3StorageConfig {
 
   @Value("${AWS_ACCESS_KEY_ID}")
-  @NotNull
+  @NotNull(message = "AWS_ACCESS_KEY_ID not provided")
   private String accessKeyId;
 
   @Value("${AWS_SECRET}")
-  @NotNull
+  @NotNull(message = "AWS_SECRET not provided")
   private String secretAccessKey;
 
   @Value("${AWS_REGION:us-east-1}")
-  @NotNull
+  @NotNull(message = "AWS_REGION not provided")
   private String awsRegion;
 
   @Value("${AWS_S3_BUCKET}")
-  @NotNull
+  @NotNull(message = "AWS_S3_BUCKET not provided")
   private String s3Bucket;
 
   @Bean(name = "s3Bucket")

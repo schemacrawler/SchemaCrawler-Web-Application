@@ -90,7 +90,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("error").asText(), is("[email: must not be null, name: must not be null]"));
+        jsonNode.get("error").asText(), is("[email: Email is required, name: Name is required]"));
   }
 
   @Test

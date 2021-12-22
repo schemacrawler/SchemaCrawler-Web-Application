@@ -68,8 +68,9 @@ public class DiagramResultController {
 
   @Autowired
   public DiagramResultController(
-      @NotNull final StorageService storageService,
-      @NotNull final ProcessingService processingService) {
+      @NotNull(message = "StorageService not provided") final StorageService storageService,
+      @NotNull(message = "ProcessingService not provided")
+          final ProcessingService processingService) {
     this.storageService = storageService;
   }
 
@@ -78,7 +79,10 @@ public class DiagramResultController {
       produces = MediaType.IMAGE_PNG_VALUE)
   @ResponseBody
   public Resource diagramImage(
-      @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
+      @PathVariable
+          @NotNull(message = "Key not provided")
+          @Pattern(regexp = "[A-Za-z0-9]{12}")
+          @Size(min = 12, max = 12)
           final DiagramKey key)
       throws Exception {
     return retrieveDiagramLocal(key);
@@ -94,7 +98,10 @@ public class DiagramResultController {
   @GetMapping(value = UI_RESULTS_PREFIX + "/{key}")
   public String retrieveResults(
       final Model model,
-      @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
+      @PathVariable
+          @NotNull(message = "Key not provided")
+          @Pattern(regexp = "[A-Za-z0-9]{12}")
+          @Size(min = 12, max = 12)
           final DiagramKey key)
       throws Exception {
 
@@ -118,7 +125,10 @@ public class DiagramResultController {
   @GetMapping(value = API_PREFIX + "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public ResponseEntity<DiagramRequest> retrieveResultsApi(
-      @PathVariable @NotNull @Pattern(regexp = "[A-Za-z0-9]{12}") @Size(min = 12, max = 12)
+      @PathVariable
+          @NotNull(message = "Key not provided")
+          @Pattern(regexp = "[A-Za-z0-9]{12}")
+          @Size(min = 12, max = 12)
           final DiagramKey key)
       throws Exception {
 
