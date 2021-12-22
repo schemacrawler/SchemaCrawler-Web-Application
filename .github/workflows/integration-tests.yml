@@ -60,7 +60,8 @@ jobs:
       shell: bash
       run: |
         # Build
-        timeout 120s mvn spring-boot:run &
+        timeout 120s mvn spring-boot:run > application.log 2>&1 &
+        pwd
         sleep 15
         newman run \
           --verbose \

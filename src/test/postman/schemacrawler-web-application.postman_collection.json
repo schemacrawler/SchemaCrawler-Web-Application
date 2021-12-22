@@ -61,7 +61,7 @@
             {
               "key": "file",
               "type": "file",
-              "src": "./test.db"
+              "src": "test.db"
             }
           ]
         },
@@ -129,7 +129,7 @@
             {
               "key": "file",
               "type": "file",
-              "src": "./test.db",
+              "src": "test.db",
               "disabled": true
             }
           ]
@@ -198,7 +198,7 @@
             {
               "key": "file",
               "type": "file",
-              "src": "./test.db"
+              "src": "test.db"
             }
           ]
         },
@@ -266,7 +266,7 @@
             {
               "key": "file",
               "type": "file",
-              "src": "./test.data"
+              "src": "test.data"
             }
           ]
         },
