@@ -19,9 +19,12 @@ jobs:
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
-      uses: sualeh/prepare-maven-build@v0.0.3
+      uses: sualeh/prepare-maven-build@v1.1.1
+      with:
+        java-version: 8
     - id: install-packages
       name: Install packages
+      shell: bash
       run: |
         # Install Graphviz
         sudo apt-get -qq update
@@ -33,6 +36,7 @@ jobs:
 # and additional -Ddocker.skip=false argument to the Maven build.
     - id: build
       name: Build and test for distribution
+      shell: bash
       run: |
         # Build
         mvn \
@@ -46,6 +50,7 @@ jobs:
 # vulnerabilities flagged by Amazon ECR. For this reason, build the Docker image locally.
     - id: build-docker-image
       name: Build Docker image
+      shell: bash
       run: |
         # Build
         docker build \
@@ -59,6 +64,7 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      shell: bash
       run: |
         # Publish Docker image
         docker version
@@ -81,6 +87,7 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_APP_NAME: schemacrawler-webapp
+      shell: bash
       run: |
         # Release on Heroku
         docker tag \

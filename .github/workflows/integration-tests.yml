@@ -1,4 +1,4 @@
-name: Quick Build
+name: Integration Tests
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Quick build
+    name: Integration Tests
     runs-on: ubuntu-latest
     steps:
 
@@ -26,6 +26,18 @@ jobs:
         sudo apt-get -qq update
         sudo apt-get -q install graphviz
         dot -V
+    - id: setup-node
+      name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - id: install-newman
+      name: Install newman
+      shell: bash
+      run: |
+        # Install newman
+        npm install -g newman
+        newman -v
 
 # BUILD AND TEST
     - id: build-test
@@ -37,12 +49,6 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           package
-    - id: publish-test-results
-      name: Upload results and coverage
-      if: contains(github.ref, 'master')
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CODECOV_TOKEN: 350b716c-8f65-451b-b438-072f0662637d
-      shell: bash
-      run: |
-        bash <(curl -s https://codecov.io/bash)
+
+# RUN INTEGRATION TESTS WITH NEWMAN
+
