@@ -29,6 +29,8 @@ package us.fatehi.schemacrawler.webapp.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.IOUtils.toInputStream;
+import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
+import static us.fatehi.schemacrawler.webapp.controller.URIConstants.UI_PREFIX;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.DATA;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.LOG;
@@ -89,13 +91,13 @@ public class DiagramRequestController {
     this.processingService = processingService;
   }
 
-  @GetMapping("/schemacrawler")
+  @GetMapping(UI_PREFIX)
   public String diagramRequestForm(@NotNull final Model model) {
     model.addAttribute("diagramRequest", new DiagramRequest());
     return "SchemaCrawlerDiagramForm";
   }
 
-  @PostMapping(value = "/schemacrawler", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = API_PREFIX, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public ResponseEntity<DiagramRequest> diagramRequestFormApi(
       @ModelAttribute("diagramRequest") @NotNull @Valid final DiagramRequest diagramRequest,
@@ -135,7 +137,7 @@ public class DiagramRequestController {
   }
 
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
-  @PostMapping(value = "/schemacrawler")
+  @PostMapping(value = UI_PREFIX)
   public String diagramRequestFormSubmit(
       @ModelAttribute("diagramRequest") @NotNull @Valid final DiagramRequest diagramRequest,
       final BindingResult bindingResult,

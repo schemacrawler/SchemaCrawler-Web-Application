@@ -1,0 +1,71 @@
+name: Integration Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+
+# SETUP BUILD ENVIRONMENT
+    - id: prepare-maven-build
+      name: Prepare Maven build
+      uses: sualeh/prepare-maven-build@v1.1.1
+      with:
+        java-version: 8
+    - id: install-packages
+      name: Install packages
+      shell: bash
+      run: |
+        # Install Graphviz
+        sudo apt-get -qq update
+        sudo apt-get -q install graphviz
+        dot -V
+    - id: setup-node
+      name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - id: install-newman
+      name: Install newman
+      shell: bash
+      run: |
+        # Install newman
+        npm install -g newman
+        newman -v
+
+# BUILD AND TEST
+    - id: build-test
+      name: Build and run tests
+      shell: bash
+      run: |
+        # Build
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          package
+
+# RUN INTEGRATION TESTS WITH NEWMAN
+    - id: run-postman
+      name: Run Postman tests for API
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET: ${{ secrets.AWS_SECRET }}
+        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      shell: bash
+      run: |
+        # Build
+        timeout 120s mvn spring-boot:run > application.log 2>&1 &
+        sleep 15
+        newman run \
+          --verbose \
+          --color on \
+          --delay-request 1000 \
+          --working-dir src/test/postman \
+          --env-var "url=http://localhost:8080" \
+          src/test/postman/schemacrawler-web-application.postman_collection.json

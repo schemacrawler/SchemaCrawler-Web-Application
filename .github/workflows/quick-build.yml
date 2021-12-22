@@ -1,6 +1,10 @@
 name: Quick Build
 
-on: push
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
 
 jobs:
   build:
@@ -11,9 +15,12 @@ jobs:
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
-      uses: sualeh/prepare-maven-build@v0.0.3
+      uses: sualeh/prepare-maven-build@v1.1.1
+      with:
+        java-version: 8
     - id: install-packages
       name: Install packages
+      shell: bash
       run: |
         # Install Graphviz
         sudo apt-get -qq update
@@ -23,6 +30,7 @@ jobs:
 # BUILD AND TEST
     - id: build-test
       name: Build and run tests
+      shell: bash
       run: |
         # Build
         mvn \
@@ -35,5 +43,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CODECOV_TOKEN: 350b716c-8f65-451b-b438-072f0662637d
+      shell: bash
       run: |
         bash <(curl -s https://codecov.io/bash)
