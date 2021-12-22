@@ -51,4 +51,15 @@ jobs:
           package
 
 # RUN INTEGRATION TESTS WITH NEWMAN
-
+    - id: run-postman
+      name: Run Postman tests for API
+      shell: bash
+      run: |
+        # Build
+        timeout 120s mvn spring-boot:run &
+        sleep 15
+        newman run \
+          --verbose \
+          --delay-request 1000 \
+          --environment src/main/postman/local.postman_environment.json \
+          src/main/postman/schemacrawler-web-application.postman_collection.json

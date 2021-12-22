@@ -29,3 +29,4 @@ keys.txt
 *.db
 *.png
 **/launch.json
+/src/test/postman/production.postman_environment.json
