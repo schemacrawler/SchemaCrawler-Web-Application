@@ -160,7 +160,7 @@
               "pm.test(\"Check response\", function () {\r",
               "    var diagramRequest = pm.response.json();\r",
               "    pm.expect(diagramRequest.name).to.eql('Sualeh Fatehi');\r",
-              "    pm.expect(diagramRequest.error).to.eql('email: must not be null');\r",
+              "    pm.expect(diagramRequest.error).to.eql('email: Email is required');\r",
               "});\r",
               ""
             ],
@@ -221,8 +221,8 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Check status code (400)\", function () {\r",
-              "    pm.response.to.have.status(400);\r",
+              "pm.test(\"Check status code (500)\", function () {\r",
+              "    pm.response.to.have.status(500);\r",
               "});\r",
               "\r",
               "pm.test(\"Check response\", function () {\r",
