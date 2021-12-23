@@ -78,7 +78,6 @@ public class ResultControllerAPITest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            //            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -107,7 +106,7 @@ public class ResultControllerAPITest {
                 get(resultsUrlPath)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isOk())
             .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 

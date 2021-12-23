@@ -140,11 +140,7 @@ public class DiagramResultController {
       return ResponseEntity.notFound().build();
     }
 
-    if (diagramRequest.hasLogMessage()) {
-      return ResponseEntity.badRequest().body(diagramRequest);
-    } else {
-      return ResponseEntity.ok(diagramRequest);
-    }
+    return ResponseEntity.ok(diagramRequest);
   }
 
   private Resource retrieveDiagramLocal(final DiagramKey key) throws Exception {

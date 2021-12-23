@@ -37,11 +37,11 @@ paths:
                 $ref: '#/components/examples/diagram-request-complete'
       responses:
         '201':
-          $ref: '#/components/responses/201'
+          $ref: '#/components/responses/created-diagram'
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/components/responses/bad-request'
         '500':
-          $ref: '#/components/responses/400'
+          $ref: '#/components/responses/server-error'
   /diagrams/{key}:
     description: Retrieve a SchemaCrawler schema diagram request
     get:
@@ -52,9 +52,9 @@ paths:
         - $ref: '#/components/parameters/key'
       responses:
         '200':
-          $ref: '#/components/responses/200'
+          $ref: '#/components/responses/retrieved-request'
         '400':
-          $ref: '#/components/responses/400'
+          description: Bad request
         '404':
           description: Results not found
   /diagrams/{key}/diagram:
@@ -140,7 +140,7 @@ components:
       schema:
         $ref: '#/components/schemas/DiagramKey'
   responses:
-    '200':
+    retrieved-request:
       description: Good diagram request information
       content:
         application/json:
@@ -154,7 +154,7 @@ components:
       links:
         retrieve-diagram-image-by-key:
           $ref: '#/components/links/retrieve-results-by-key'
-    '201':
+    created-diagram:
       description: Created diagram request information
       headers:
         Location:
@@ -176,7 +176,19 @@ components:
           $ref: '#/components/links/retrieve-results-by-key'
         retrieve-diagram-image-by-key:
           $ref: '#/components/links/retrieve-results-by-key'
-    '400':
+    bad-request:
+      description: Diagram request information with error
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/DiagramRequest'
+              - $ref: '#/components/schemas/OnResponseParameters'
+              - $ref: '#/components/schemas/OnErrorParameters'
+          examples:
+            diagram-response-good:
+              $ref: '#/components/examples/diagram-response-error'
+    server-error:
       description: Diagram request information with error
       content:
         application/json:
