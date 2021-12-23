@@ -60,11 +60,11 @@ public class DiagramRequest implements Serializable {
   private final Instant timestamp;
   private String error;
 
-  @NotNull
+  @NotNull(message = "Name is required")
   @Size(min = 2, max = 255, message = "Please enter your full name")
   private String name;
 
-  @NotNull
+  @NotNull(message = "Email is required")
   @Pattern(
       regexp =
           "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z",
@@ -72,7 +72,7 @@ public class DiagramRequest implements Serializable {
   @Size(min = 5, max = 255, message = "Please enter a valid email address")
   private String email;
 
-  @NotNull
+  @NotNull(message = "A SQLite database file needs to be uploaded")
   @Size(min = 1, max = 255, message = "Please select a file to upload")
   private String file;
 

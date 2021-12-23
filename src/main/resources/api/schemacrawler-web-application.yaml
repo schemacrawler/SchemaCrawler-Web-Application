@@ -1,0 +1,240 @@
+openapi: 3.0.3
+info:
+  title: SchemaCrawler Web Application
+  description: Create a SchemaCrawler schema diagram from an uploaded SQLite database file
+  version: '16.16.4.2'
+  license:
+    name: Eclipse Public License (EPL-2.0)
+    url: https://www.eclipse.org/legal/epl-2.0/
+  contact:
+    name: SchemaCrawler
+    email: sualeh@schemacrawler.com
+    url: https://www.schemacrawler.com
+tags:
+  - name: diagram-requests
+    description: Create a SchemaCrawler schema diagram
+  - name: diagram-results
+    description: Retrieve a SchemaCrawler schema diagram
+paths:
+  /diagrams:
+    post:
+      summary: Create a SchemaCrawler schema diagram
+      description: Makes a request to create a SchemaCrawler schema diagram
+      operationId: diagram-request
+      tags:
+        - diagram-requests
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/DiagramRequest'
+                - $ref: '#/components/schemas/OnRequestParameters'
+            examples:
+              diagram-request-basic:
+                $ref: '#/components/examples/diagram-request-basic'
+              diagram-request-complete:
+                $ref: '#/components/examples/diagram-request-complete'
+      responses:
+        '201':
+          $ref: '#/components/responses/created-diagram'
+        '400':
+          $ref: '#/components/responses/bad-request'
+        '500':
+          $ref: '#/components/responses/server-error'
+  /diagrams/{key}:
+    description: Retrieve a SchemaCrawler schema diagram request
+    get:
+      tags:
+        - diagram-results
+      operationId: retrieve-results
+      parameters:
+        - $ref: '#/components/parameters/key'
+      responses:
+        '200':
+          $ref: '#/components/responses/retrieved-request'
+        '400':
+          description: Bad request
+        '404':
+          description: Results not found
+  /diagrams/{key}/diagram:
+    description: Retrieve a SchemaCrawler schema diagram
+    get:
+      tags:
+        - diagram-results
+      operationId: retrieve-diagram-image
+      parameters:
+        - $ref: '#/components/parameters/key'
+      responses:
+        '200':
+          description: OK
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+components:
+  schemas:
+    DiagramKey:
+      description: Unique key identifying each request
+      type: string
+      minLength: 12
+      maxLength: 12
+      pattern: '[a-z0-9]{12}'
+      readOnly: true # Returned by GET, not used in POST/PUT/PATCH
+    DiagramRequest:
+      type: object
+      properties:
+        key:
+          $ref: '#/components/schemas/DiagramKey'
+        name:
+          description: Name of the user
+          type: string
+          minLength: 2
+          maxLength: 255
+        email:
+          description: Email of the user
+          type: string
+          format: email
+          minLength: 5
+          maxLength: 255
+        title:
+          description: Diagram title
+          type: string
+          minLength: 0
+          maxLength: 255
+        file:
+          description: Uploaded SQLite database file
+          type: string
+          format: binary
+        error:
+          description: Error message
+          type: string
+          readOnly: true # Returned by GET, not used in POST/PUT/PATCH
+        timestamp:
+          description: Request timestamp in UTC
+          type: string
+          format: date-time
+          readOnly: true # Returned by GET, not used in POST/PUT/PATCH
+    OnRequestParameters:
+      type: object
+      required:
+        - name
+        - email
+        - file
+    OnResponseParameters:
+      type: object
+      required:
+        - key
+        - timestamp
+    OnErrorParameters:
+      type: object
+      required:
+        - error
+  parameters:
+    key:
+      name: key
+      description: Diagram key for lookups
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/DiagramKey'
+  responses:
+    retrieved-request:
+      description: Good diagram request information
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/DiagramRequest'
+              - $ref: '#/components/schemas/OnResponseParameters'
+          examples:
+            diagram-response-good:
+              $ref: '#/components/examples/diagram-response-good'
+      links:
+        retrieve-diagram-image-by-key:
+          $ref: '#/components/links/retrieve-results-by-key'
+    created-diagram:
+      description: Created diagram request information
+      headers:
+        Location:
+          description: Location of a newly created resource
+          schema:
+            type: string
+            format: uri
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/DiagramRequest'
+              - $ref: '#/components/schemas/OnResponseParameters'
+          examples:
+            diagram-response-good:
+              $ref: '#/components/examples/diagram-response-good'
+      links:
+        retrieve-results-by-key:
+          $ref: '#/components/links/retrieve-results-by-key'
+        retrieve-diagram-image-by-key:
+          $ref: '#/components/links/retrieve-results-by-key'
+    bad-request:
+      description: Diagram request information with error
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/DiagramRequest'
+              - $ref: '#/components/schemas/OnResponseParameters'
+              - $ref: '#/components/schemas/OnErrorParameters'
+          examples:
+            diagram-response-good:
+              $ref: '#/components/examples/diagram-response-error'
+    server-error:
+      description: Diagram request information with error
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/DiagramRequest'
+              - $ref: '#/components/schemas/OnResponseParameters'
+              - $ref: '#/components/schemas/OnErrorParameters'
+          examples:
+            diagram-response-good:
+              $ref: '#/components/examples/diagram-response-error'
+  links:
+    retrieve-results-by-key:
+      operationId: retrieve-results
+      parameters:
+        key: '$response.body#/key'
+      description: The 'key' from the response can be used as a path parameter
+    retrieve-diagram-image-by-key:
+      operationId: retrieve-diagram-image
+      parameters:
+        key: '$response.body#/key'
+      description: The 'key' from the response can be used as a path parameter
+  examples:
+    diagram-request-basic:
+      value:
+        name: Sualeh Fatehi
+        email: sualeh@hotmail.com
+        file: test.db
+    diagram-request-complete:
+      value:
+        name: Sualeh Fatehi
+        email: sualeh@hotmail.com
+        title: Test schema diagram
+        file: test.db
+    diagram-response-good:
+      value:
+        key: 38yyfzj0f5mk
+        name: Sualeh Fatehi
+        email: sualeh@hotmail.com
+        file: test.db
+        timestamp: '2021-12-11T04:28:59.237Z'
+    diagram-response-error:
+      value:
+        key: 38xxfzj0f5mk
+        name: Sualeh Fatehi
+        email: sualeh@hotmail.com
+        file: test.db
+        timestamp: '2021-12-11T04:28:59.237Z'
+        error: Expected SQLite database, but got content of text/plain

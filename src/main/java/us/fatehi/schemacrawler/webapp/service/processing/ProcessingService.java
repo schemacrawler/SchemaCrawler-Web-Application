@@ -53,13 +53,15 @@ public class ProcessingService {
   private final StorageService storageService;
 
   @Autowired
-  public ProcessingService(@NotNull final StorageService storageService) {
+  public ProcessingService(
+      @NotNull(message = "StorageService not provided") final StorageService storageService) {
     this.storageService = storageService;
   }
 
   @Async
   public void generateSchemaCrawlerDiagram(
-      @NotNull final DiagramRequest diagramRequest, @NotNull final Path localPath)
+      @NotNull(message = "Diagram request not provided") final DiagramRequest diagramRequest,
+      @NotNull(message = "Local path not provided") final Path localPath)
       throws Exception {
 
     logger.info(

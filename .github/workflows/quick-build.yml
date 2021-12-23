@@ -10,6 +10,15 @@ jobs:
   build:
     name: Quick build
     runs-on: ubuntu-latest
+
+    # Service containers to run with workflow
+    services:
+      swagger-editor:
+        image: swaggerapi/swagger-editor
+        ports:
+          - 80:8080
+
+
     steps:
 
 # SETUP BUILD ENVIRONMENT
@@ -26,6 +35,14 @@ jobs:
         sudo apt-get -qq update
         sudo apt-get -q install graphviz
         dot -V
+
+# VALIDATE OPENAPI SPECIFICATION
+    - id: validate-oas
+      name: Validate OpenAPI definition
+      uses: char0n/swagger-editor-validate@v1.2.1
+      with:
+        swagger-editor-url: http://localhost/
+        definition-file: src/main/resources/api/schemacrawler-web-application.yaml
 
 # BUILD AND TEST
     - id: build-test

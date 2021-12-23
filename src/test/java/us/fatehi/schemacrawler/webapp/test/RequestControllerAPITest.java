@@ -27,6 +27,7 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.test;
 
+import static com.atlassian.oai.validator.mockmvc.OpenApiValidationMatchers.openApi;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -69,6 +70,7 @@ public class RequestControllerAPITest {
 
   @Autowired private MockMvc mvc;
   @Autowired private ThreadPoolTaskExecutor pool;
+
   @Autowired private StorageService storageService;
 
   @Test
@@ -78,9 +80,10 @@ public class RequestControllerAPITest {
         mvc.perform(
                 multipart(API_PREFIX)
                     .file(mockMultipartFile())
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -90,7 +93,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("error").asText(), is("[email: must not be null, name: must not be null]"));
+        jsonNode.get("error").asText(), is("email: Email is required; name: Name is required"));
   }
 
   @Test
@@ -102,9 +105,10 @@ public class RequestControllerAPITest {
                     .file(mockMultipartFile())
                     .param("name", "Sualeh")
                     .param("email", "sualeh@hotmail.com")
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -142,9 +146,10 @@ public class RequestControllerAPITest {
                     .file(multipartFile)
                     .param("name", "Sualeh")
                     .param("email", "sualeh@hotmail.com")
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isInternalServerError())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
