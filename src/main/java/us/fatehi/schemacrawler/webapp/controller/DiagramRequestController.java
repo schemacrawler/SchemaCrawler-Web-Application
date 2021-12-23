@@ -98,46 +98,6 @@ public class DiagramRequestController {
     return "SchemaCrawlerDiagramForm";
   }
 
-  @PostMapping(value = API_PREFIX, produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseBody
-  public ResponseEntity<DiagramRequest> diagramRequestFormApi(
-      @ModelAttribute("diagramRequest") @NotNull(message = "Diagram request not provided") @Valid
-          final DiagramRequest diagramRequest,
-      final BindingResult bindingResult,
-      @RequestParam("file") final Optional<MultipartFile> file) {
-
-    URI location = null;
-    if (!file.isPresent()) {
-      diagramRequest.setError("No SQLite file upload provided");
-      // Save validation errors
-      saveDiagramRequest(diagramRequest);
-    } else if (bindingResult.hasErrors()) {
-      final List<String> errors =
-          bindingResult.getFieldErrors().stream()
-              .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-              .collect(Collectors.toList());
-      Collections.sort(errors);
-      diagramRequest.setError(errors.toString());
-      // Save validation errors
-      saveBindingResultLogFile(diagramRequest.getKey(), bindingResult);
-      saveDiagramRequest(diagramRequest);
-    } else {
-      try {
-        generateSchemaCrawlerDiagram(diagramRequest, file.get());
-        location = new URI("./" + diagramRequest.getKey());
-      } catch (final Exception e) {
-        LOGGER.warn(e.getMessage(), e);
-        diagramRequest.setError(e.getMessage());
-      }
-    }
-
-    if (diagramRequest.hasLogMessage()) {
-      return ResponseEntity.badRequest().body(diagramRequest);
-    } else {
-      return ResponseEntity.created(location).body(diagramRequest);
-    }
-  }
-
   // http://stackoverflow.com/questions/30297719/cannot-get-validation-working-with-spring-boot-and-thymeleaf
   @PostMapping(value = UI_PREFIX)
   public String diagramRequestFormSubmit(
@@ -157,6 +117,52 @@ public class DiagramRequestController {
     generateSchemaCrawlerDiagram(diagramRequest, file);
 
     return "SchemaCrawlerDiagramResult";
+  }
+
+  @PostMapping(value = API_PREFIX, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public ResponseEntity<DiagramRequest> diagramRequestFormSubmitApi(
+      @ModelAttribute("diagramRequest") @NotNull(message = "Diagram request not provided") @Valid
+          final DiagramRequest diagramRequest,
+      final BindingResult bindingResult,
+      @RequestParam("file") final Optional<MultipartFile> file) {
+
+    // Check for bad requests
+    if (!file.isPresent()) {
+      diagramRequest.setError("No SQLite file upload provided");
+      // Save validation errors
+      saveDiagramRequest(diagramRequest);
+    } else if (bindingResult.hasErrors()) {
+      final List<String> errors =
+          bindingResult.getFieldErrors().stream()
+              .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+              .collect(Collectors.toList());
+      Collections.sort(errors);
+      diagramRequest.setError(String.join("; ", errors));
+      // Save validation errors
+      saveBindingResultLogFile(diagramRequest.getKey(), bindingResult);
+      saveDiagramRequest(diagramRequest);
+    }
+
+    if (diagramRequest.hasLogMessage()) {
+      return ResponseEntity.badRequest().body(diagramRequest);
+    }
+
+    // Generate diagram
+    URI location = null;
+    try {
+      generateSchemaCrawlerDiagram(diagramRequest, file.get());
+      location = new URI("./" + diagramRequest.getKey());
+    } catch (final Exception e) {
+      LOGGER.warn(e.getMessage(), e);
+      diagramRequest.setError(e.getMessage());
+    }
+
+    if (diagramRequest.hasLogMessage()) {
+      return ResponseEntity.internalServerError().body(diagramRequest);
+    } else {
+      return ResponseEntity.created(location).body(diagramRequest);
+    }
   }
 
   @GetMapping(value = "/")

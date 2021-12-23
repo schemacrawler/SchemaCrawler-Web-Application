@@ -40,6 +40,8 @@ paths:
           $ref: '#/components/responses/201'
         '400':
           $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/400'
   /diagrams/{key}:
     description: Retrieve a SchemaCrawler schema diagram request
     get:

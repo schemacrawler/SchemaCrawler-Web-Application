@@ -93,7 +93,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("error").asText(), is("[email: Email is required, name: Name is required]"));
+        jsonNode.get("error").asText(), is("email: Email is required; name: Name is required"));
   }
 
   @Test
@@ -148,7 +148,7 @@ public class RequestControllerAPITest {
                     .param("email", "sualeh@hotmail.com")
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isInternalServerError())
             .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
