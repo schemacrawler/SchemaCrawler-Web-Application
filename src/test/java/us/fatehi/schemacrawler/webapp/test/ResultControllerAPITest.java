@@ -27,6 +27,7 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.test;
 
+import static com.atlassian.oai.validator.mockmvc.OpenApiValidationMatchers.openApi;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -77,6 +78,7 @@ public class ResultControllerAPITest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
+            //  .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -106,6 +108,7 @@ public class ResultControllerAPITest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -126,6 +129,7 @@ public class ResultControllerAPITest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -150,6 +154,7 @@ public class ResultControllerAPITest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));

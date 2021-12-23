@@ -76,9 +76,6 @@ public class RequestControllerAPITest {
   @Test
   public void apiWithNoParameters() throws Exception {
 
-    // NOTE: Cannot validate OpenAPI specification, since some fields like name and email are
-    // missing
-
     final MvcResult result =
         mvc.perform(
                 multipart(API_PREFIX)
@@ -86,7 +83,7 @@ public class RequestControllerAPITest {
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            // .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));

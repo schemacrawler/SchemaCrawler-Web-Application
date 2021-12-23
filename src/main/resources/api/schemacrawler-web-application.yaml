@@ -27,7 +27,9 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/DiagramRequest'
+              allOf:
+                - $ref: '#/components/schemas/DiagramRequest'
+                - $ref: '#/components/schemas/OnRequestParameters'
             examples:
               diagram-request-basic:
                 $ref: '#/components/examples/diagram-request-basic'
@@ -80,12 +82,6 @@ components:
       readOnly: true # Returned by GET, not used in POST/PUT/PATCH
     DiagramRequest:
       type: object
-      required:
-        - key
-        - name
-        - email
-        - file
-        - timestamp
       properties:
         key:
           $ref: '#/components/schemas/DiagramKey'
@@ -118,6 +114,21 @@ components:
           type: string
           format: date-time
           readOnly: true # Returned by GET, not used in POST/PUT/PATCH
+    OnRequestParameters:
+      type: object
+      required:
+        - name
+        - email
+        - file
+    OnResponseParameters:
+      type: object
+      required:
+        - key
+        - timestamp
+    OnErrorParameters:
+      type: object
+      required:
+        - error
   parameters:
     key:
       name: key
@@ -132,7 +143,9 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/DiagramRequest'
+            allOf:
+              - $ref: '#/components/schemas/DiagramRequest'
+              - $ref: '#/components/schemas/OnResponseParameters'
           examples:
             diagram-response-good:
               $ref: '#/components/examples/diagram-response-good'
@@ -150,7 +163,9 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/DiagramRequest'
+            allOf:
+              - $ref: '#/components/schemas/DiagramRequest'
+              - $ref: '#/components/schemas/OnResponseParameters'
           examples:
             diagram-response-good:
               $ref: '#/components/examples/diagram-response-good'
@@ -164,7 +179,10 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/DiagramRequest'
+            allOf:
+              - $ref: '#/components/schemas/DiagramRequest'
+              - $ref: '#/components/schemas/OnResponseParameters'
+              - $ref: '#/components/schemas/OnErrorParameters'
           examples:
             diagram-response-good:
               $ref: '#/components/examples/diagram-response-error'
