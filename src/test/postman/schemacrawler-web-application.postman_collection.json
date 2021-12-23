@@ -160,7 +160,7 @@
               "pm.test(\"Check response\", function () {\r",
               "    var diagramRequest = pm.response.json();\r",
               "    pm.expect(diagramRequest.name).to.eql('Sualeh Fatehi');\r",
-              "    pm.expect(diagramRequest.error).to.eql('[email: must not be null]');\r",
+              "    pm.expect(diagramRequest.error).to.eql('email: must not be null');\r",
               "});\r",
               ""
             ],
