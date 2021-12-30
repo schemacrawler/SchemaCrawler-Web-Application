@@ -24,7 +24,7 @@
 #
 # ========================================================================
 
-FROM openjdk:11-slim-buster
+FROM openjdk:17-jdk-alpine
 
 
 ARG SCHEMACRAWLER_VERSION=16.16.6
