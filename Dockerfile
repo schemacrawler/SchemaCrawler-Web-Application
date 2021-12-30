@@ -31,16 +31,23 @@ ARG SCHEMACRAWLER_VERSION=16.16.6
 ARG SCHEMACRAWLER_WEBAPP_VERSION=16.16.6.1
 
 LABEL \
-  "us.fatehi.schemacrawler.product-version"="SchemaCrawler ${SCHEMACRAWLER_VERSION}" \
-  "us.fatehi.schemacrawler.website"="http://www.schemacrawler.com" \
-  "us.fatehi.schemacrawler.docker-hub"="https://hub.docker.com/r/schemacrawler/schemacrawler"
+  "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>" \
+  "org.opencontainers.image.authors"="Sualeh Fatehi <sualeh@hotmail.com>" \
+  "org.opencontainers.image.title"="SchemaCrawler Web Application" \
+  "org.opencontainers.image.description"="Free database schema discovery and comprehension tool" \
+  "org.opencontainers.image.url"="https://www.schemacrawler.com/" \
+  "org.opencontainers.image.source"="https://github.com/schemacrawler/SchemaCrawler-Web-Application" \
+  "org.opencontainers.image.vendor"="SchemaCrawler" \
+  "org.opencontainers.image.license"="(GPL-3.0 OR OR LGPL-3.0+ EPL-1.0)"
 
-LABEL "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>"
 
-# Install Graphviz
+# Install Graphviz as root user
 RUN \
-    apt-get -qq update \
- && apt-get -qq -y install graphviz
+  apk add --update --no-cache \
+  bash \
+  bash-completion \
+  graphviz \
+  ttf-freefont
 
 # Copy SchemaCrawler Web Application files for the current user
 COPY \
