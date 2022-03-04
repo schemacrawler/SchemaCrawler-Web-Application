@@ -4,7 +4,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>16.16.10.2</version>
+  <version>16.16.11.2</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
@@ -91,7 +91,7 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>16.16.10</version>
+      <version>16.16.11</version>
     </dependency>
 
 
@@ -118,7 +118,7 @@
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier</artifactId>
-      <version>3.8.1</version>
+      <version>3.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
