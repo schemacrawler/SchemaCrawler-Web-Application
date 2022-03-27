@@ -49,7 +49,7 @@ This is a Spring Boot web application with a Bootstrap user interface, with sour
   - Start the application from Maven, run  
 	  `mvn -Dspring-boot.run.fork=false spring-boot:run`
   - Start application from the jar file, run  
-	  `java -jar target/schemacrawler-webapp-16.16.12.2.jar`
+	  `java -jar target/schemacrawler-webapp-16.16.14.2.jar`
   - Start the application from the local image in a Docker container, run  
 	  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
 
@@ -64,7 +64,7 @@ or the Docker container, open a browser to
 
 #### As an API
 
-You can use the [SchemaCrawler Web Application as a REST API](https://rapidapi.com/sualeh/api/schemacrawler-web-application1/). The specifications are on [Swagger Hub](https://app.swaggerhub.com/apis/sualeh/schemacrawler-web-application/16.16.12.2). 
+You can use the [SchemaCrawler Web Application as a REST API](https://rapidapi.com/sualeh/api/schemacrawler-web-application1/). The specifications are on [Swagger Hub](https://app.swaggerhub.com/apis/sualeh/schemacrawler-web-application/16.16.14.2). 
 
 
 Submit a request and your SQLite database file (say "test.db" in your local directory) with a command like this:
