@@ -39,7 +39,7 @@ jobs:
 # VALIDATE OPENAPI SPECIFICATION
     - id: validate-oas
       name: Validate OpenAPI definition
-      uses: char0n/swagger-editor-validate@v1.2.1
+      uses: char0n/swagger-editor-validate@v1.3.1
       with:
         swagger-editor-url: http://localhost/
         definition-file: src/main/resources/api/schemacrawler-web-application.yaml
