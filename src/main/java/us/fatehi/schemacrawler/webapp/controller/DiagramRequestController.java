@@ -72,6 +72,7 @@ import org.springframework.web.multipart.MultipartFile;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
+import us.fatehi.schemacrawler.webapp.service.notification.NotificationService;
 import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
@@ -82,14 +83,18 @@ public class DiagramRequestController {
 
   private final StorageService storageService;
   private final ProcessingService processingService;
+  private final NotificationService notificationService;
 
   @Autowired
   public DiagramRequestController(
-      @NotNull(message = "StorageService not provided") final StorageService storageService,
-      @NotNull(message = "ProcessingService not provided")
-          final ProcessingService processingService) {
+      @NotNull(message = "Storage service not provided") final StorageService storageService,
+      @NotNull(message = "Processing service not provided")
+          final ProcessingService processingService,
+      @NotNull(message = "Notification service not provided")
+          final NotificationService notificationService) {
     this.storageService = storageService;
     this.processingService = processingService;
+    this.notificationService = notificationService;
   }
 
   @GetMapping(UI_PREFIX)
@@ -115,6 +120,7 @@ public class DiagramRequestController {
     }
 
     generateSchemaCrawlerDiagram(diagramRequest, file);
+    notificationService.notify(diagramRequest);
 
     return "SchemaCrawlerDiagramResult";
   }

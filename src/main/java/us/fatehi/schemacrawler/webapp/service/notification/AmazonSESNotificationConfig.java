@@ -25,41 +25,24 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp.service.storage;
+package us.fatehi.schemacrawler.webapp.service.notification;
 
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.ses.SesClient;
 
 @Configuration
 @Profile("production")
-public class AmazonS3StorageConfig {
+public class AmazonSESNotificationConfig {
 
-  @Value("${AWS_S3_BUCKET}")
-  @NotNull(message = "AWS_S3_BUCKET not provided")
-  private String s3Bucket;
-
-  @Bean(name = "s3Bucket")
-  public String s3Bucket() {
-    if (StringUtils.isAnyBlank(s3Bucket)) {
-      throw new InternalRuntimeException("No Amazon S3 bucket provided");
-    }
-    return s3Bucket;
-  }
-
-  @Bean(name = "s3Client")
-  public S3Client s3Client(final AwsCredentialsProvider awsCredentials, final Region awsRegion) {
-    final S3Client s3Client =
-        S3Client.builder().credentialsProvider(awsCredentials).region(awsRegion).build();
-    return s3Client;
+  @Bean(name = "sesClient")
+  public SesClient sesClient(final AwsCredentialsProvider awsCredentials, final Region awsRegion) {
+    final SesClient sesClient =
+        SesClient.builder().credentialsProvider(awsCredentials).region(awsRegion).build();
+    return sesClient;
   }
 }

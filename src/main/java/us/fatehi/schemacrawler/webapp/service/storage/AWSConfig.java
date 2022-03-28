@@ -36,30 +36,42 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
 @Profile("production")
-public class AmazonS3StorageConfig {
+public class AWSConfig {
 
-  @Value("${AWS_S3_BUCKET}")
-  @NotNull(message = "AWS_S3_BUCKET not provided")
-  private String s3Bucket;
+  @Value("${AWS_ACCESS_KEY_ID}")
+  @NotNull(message = "AWS_ACCESS_KEY_ID not provided")
+  private String accessKeyId;
 
-  @Bean(name = "s3Bucket")
-  public String s3Bucket() {
-    if (StringUtils.isAnyBlank(s3Bucket)) {
-      throw new InternalRuntimeException("No Amazon S3 bucket provided");
+  @Value("${AWS_SECRET}")
+  @NotNull(message = "AWS_SECRET not provided")
+  private String secretAccessKey;
+
+  @Value("${AWS_REGION:us-east-1}")
+  @NotNull(message = "AWS_REGION not provided")
+  private String awsRegion;
+
+  @Bean(name = "awsCredentials")
+  public AwsCredentialsProvider awsCredentials() {
+    if (StringUtils.isAnyBlank(accessKeyId, secretAccessKey)) {
+      throw new InternalRuntimeException("No AWS credentials provided");
     }
-    return s3Bucket;
+    final AwsCredentials awsCredentials = AwsBasicCredentials.create(accessKeyId, secretAccessKey);
+    return StaticCredentialsProvider.create(awsCredentials);
   }
 
-  @Bean(name = "s3Client")
-  public S3Client s3Client(final AwsCredentialsProvider awsCredentials, final Region awsRegion) {
-    final S3Client s3Client =
-        S3Client.builder().credentialsProvider(awsCredentials).region(awsRegion).build();
-    return s3Client;
+  @Bean(name = "awsRegion")
+  public Region awsRegion() {
+    if (StringUtils.isBlank(awsRegion)) {
+      throw new InternalRuntimeException("No AWS region provided");
+    }
+    return Region.of(awsRegion);
   }
 }
