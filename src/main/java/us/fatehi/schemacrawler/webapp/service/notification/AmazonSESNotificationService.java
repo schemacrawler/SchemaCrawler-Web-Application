@@ -40,6 +40,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -65,10 +66,13 @@ public class AmazonSESNotificationService implements NotificationService {
 
   private final SesClient sesClient;
   private final InternetAddress sender;
+  private final String webAppUri;
 
   @Autowired
-  public AmazonSESNotificationService(@NonNull final SesClient sesClient) {
+  public AmazonSESNotificationService(
+      @NonNull final SesClient sesClient, @NotBlank final String webAppUri) {
     this.sesClient = sesClient;
+    this.webAppUri = webAppUri;
 
     try {
       sender = new InternetAddress("webapp@schemacrawler.com", "SchemaCrawler Web Application");
@@ -83,9 +87,11 @@ public class AmazonSESNotificationService implements NotificationService {
     final String recipient = diagramRequest.getEmail();
     final String subject = String.format("SchemaCrawler Diagram: %s", diagramRequest.getTitle());
     final String key = diagramRequest.getKey().getKey();
-    final String bodyText = String.format("Your SchemaCrawler diagram is ready at %s", key);
+    final String resultsUrl = String.format("%s/schemacrawler/results/%s", webAppUri, key);
+
+    final String bodyText = String.format("Your SchemaCrawler diagram is ready at %s", resultsUrl);
     final String bodyHTML =
-        String.format("<a href='%s'>Your SchemaCrawler diagram is ready</a>", key);
+        String.format("<a href='%s'>Your SchemaCrawler diagram is ready</a>", resultsUrl);
 
     try {
       final MimeMessage message = createMessage(recipient, subject, bodyText, bodyHTML);
