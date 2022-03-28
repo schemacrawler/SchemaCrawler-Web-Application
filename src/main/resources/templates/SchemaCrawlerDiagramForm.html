@@ -54,7 +54,7 @@
             <input type="email" class="form-control" id="email"
               th:field="*{email}" /> <small id="emailHelp"
               class="form-text text-muted">Enter your email
-              address.</small>
+              address. Results will be emailed to this address.</small>
             <div class="alert alert-warning text-muted small"
               th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
           </div>
