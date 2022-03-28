@@ -45,6 +45,9 @@ public class WebappConfig {
     if (StringUtils.isBlank(webAppUri)) {
       throw new InternalRuntimeException("No web application URI provided");
     }
+    if (webAppUri.equals("none")) {
+      return "http://localhost:8080";
+    }
     return webAppUri;
   }
 }
