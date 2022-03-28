@@ -4,7 +4,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>16.16.14.2</version>
+  <version>16.16.14.3</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>

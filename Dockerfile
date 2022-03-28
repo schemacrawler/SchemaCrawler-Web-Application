@@ -28,7 +28,7 @@ FROM openjdk:17-jdk-alpine
 
 
 ARG SCHEMACRAWLER_VERSION=16.16.14
-ARG SCHEMACRAWLER_WEBAPP_VERSION=16.16.14.2
+ARG SCHEMACRAWLER_WEBAPP_VERSION=16.16.14.3
 
 LABEL \
   "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>" \
