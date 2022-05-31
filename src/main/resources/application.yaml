@@ -1,0 +1,27 @@
+logging:
+  level:
+    org:
+      springframework: WARN
+    root: WARN
+
+spring:
+  servlet:
+    multipart:
+      max-request-size: 1024KB
+      max-file-size: 1024KB
+  thymeleaf:
+    cache: 'false'
+  profiles:
+    active: production
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics
+
+springdoc:
+  api-docs:
+    path: /openapi
+    enabled: 'true'
+  writer-with-default-pretty-printer: 'true'

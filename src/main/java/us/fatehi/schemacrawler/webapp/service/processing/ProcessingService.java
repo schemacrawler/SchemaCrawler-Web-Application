@@ -27,7 +27,8 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.processing;
 
-import static schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility.createSchemaCrawlerDiagram;
+import static schemacrawler.tools.command.text.diagram.options.DiagramOutputFormat.png;
+import static schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility.executeForOutput;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
@@ -75,8 +76,7 @@ public class ProcessingService {
 
     final String title = diagramRequest.getTitle();
     // Generate a database integration, and store the generated image
-    final Path schemaCrawlerDiagram =
-        createSchemaCrawlerDiagram(localPath, title, PNG.getExtension());
+    final Path schemaCrawlerDiagram = executeForOutput(localPath, title, png);
     storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
   }
 }
