@@ -94,10 +94,9 @@ jobs:
           schemacrawler/schemacrawler-webapp \
           registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
         echo "$(heroku auth:token)" | docker login --username=_ --password-stdin registry.heroku.com
-        docker push registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web
-        docker logout
-        heroku container:login --verbose
+        docker push registry.heroku.com/${{ env.HEROKU_APP_NAME }}/web        
         heroku container:release --verbose --app ${{ env.HEROKU_APP_NAME }} web
+        docker logout
 
 # CREATE GITHUB RELEASE AND ADD ASSETS
     - id: create-release
