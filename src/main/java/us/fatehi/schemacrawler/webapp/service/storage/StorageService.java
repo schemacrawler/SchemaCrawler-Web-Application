@@ -34,11 +34,7 @@ import org.springframework.core.io.InputStreamSource;
 
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 
-/**
- * Service to store files.
- *
- * @author Sualeh Fatehi
- */
+/** Service to store files. */
 public interface StorageService {
 
   /**
