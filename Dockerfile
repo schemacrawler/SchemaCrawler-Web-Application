@@ -24,11 +24,11 @@
 #
 # ========================================================================
 
-FROM openjdk:17-jdk-alpine
+FROM eclipse-temurin:11-alpine
 
 
-ARG SCHEMACRAWLER_VERSION=16.16.17
-ARG SCHEMACRAWLER_WEBAPP_VERSION=16.16.17.1
+ARG SCHEMACRAWLER_VERSION=16.16.18
+ARG SCHEMACRAWLER_WEBAPP_VERSION=16.16.18.1
 
 LABEL \
   "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>" \
