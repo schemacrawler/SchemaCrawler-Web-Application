@@ -49,36 +49,13 @@ This is a Spring Boot web application with a Bootstrap user interface, with sour
   - Start the application from Maven, run  
 	  `mvn -Dspring-boot.run.fork=false spring-boot:run`
   - Start application from the jar file, run  
-	  `java -jar target/schemacrawler-webapp-16.16.17.1.jar`
+	  `java -jar target/schemacrawler-webapp-16.16.18.1.jar`
   - Start the application from the local image in a Docker container, run  
 	  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
 
 
 ### Use the Application
 
-#### From a Browser
-
 Then, after you ensure that the web server is running, either from the command-line,
 or the Docker container, open a browser to
 [https://localhost:8080](https://localhost:8080)
-
-#### As an API
-
-You can use the [SchemaCrawler Web Application as a REST API](https://rapidapi.com/sualeh/api/schemacrawler-web-application1/). The specifications are on [Swagger Hub](https://app.swaggerhub.com/apis/sualeh/schemacrawler-web-application/16.16.17.1). 
-
-
-Submit a request and your SQLite database file (say "test.db" in your local directory) with a command like this:
-```sh
-curl \
-  -F "name=Sualeh Fatehi" \
-  -F "email=sualeh@hotmail.com" \
-  -F "file=@test.db" \
-  -H "Accept: application/json" \
-  http://localhost:8080/diagrams
-```
-You will get a 12 character key in return, which uniquely identifies your request.
-
-If your identifier is "l0nk0wu4t2a3", can retrieve the generated image after a few minutes using a request similar to:
-```sh
-curl http://localhost:8080/diagrams/l0nk0wu4t2a3/diagram --output diagram.png
-```
