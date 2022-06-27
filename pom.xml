@@ -139,7 +139,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk</artifactId>
-      <version>1.12.244</version>
+      <version>1.12.248</version>
       <scope>test</scope>
     </dependency>
 
