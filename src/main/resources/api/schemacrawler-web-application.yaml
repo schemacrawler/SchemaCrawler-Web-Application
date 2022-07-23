@@ -107,6 +107,11 @@ components:
           description: Uploaded SQLite database file
           type: string
           format: binary
+        file-hash:
+          description: MD5 hash of SQLite database file contents to identify duplicate requests
+          type: string
+          minLength: 32
+          maxLength: 32          
         error:
           description: Error message
           type: string

@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 package us.fatehi.schemacrawler.webapp.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.READ;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
 import static us.fatehi.schemacrawler.webapp.controller.URIConstants.UI_PREFIX;
@@ -38,9 +39,11 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.S
 import static us.fatehi.utility.Utility.isBlank;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +64,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -207,6 +211,10 @@ public class DiagramRequestController {
 
       // Store the uploaded database file locally, so it can be processed
       final Path localPath = storageService.storeLocal(file, key, SQLITE_DB);
+      try (InputStream is = Files.newInputStream(localPath, READ)) {
+        final String md5DigestHex = DigestUtils.md5DigestAsHex(is);
+        diagramRequest.setFileHash(md5DigestHex);
+      }
 
       checkMimeType(diagramRequest, localPath);
 

@@ -79,6 +79,9 @@ public class DiagramRequest implements Serializable {
   @Size(min = 0, max = 255, message = "Please enter a valid title")
   private String title;
 
+  @Size(min = 32, max = 32)
+  private String fileHash;
+
   /** Public constructor. Generates a random key, and sets the creation timestamp. */
   public DiagramRequest() {
     timestamp = Instant.now();
@@ -116,6 +119,10 @@ public class DiagramRequest implements Serializable {
    */
   public String getFile() {
     return file;
+  }
+
+  public String getFileHash() {
+    return fileHash;
   }
 
   /**
@@ -179,6 +186,10 @@ public class DiagramRequest implements Serializable {
    */
   public void setFile(final String file) {
     this.file = file;
+  }
+
+  public void setFileHash(final String fileHash) {
+    this.fileHash = fileHash;
   }
 
   /**
