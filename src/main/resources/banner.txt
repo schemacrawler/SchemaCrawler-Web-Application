@@ -1,4 +1,4 @@
 
 
-SchemaCrawler Web Application v16.19.2.1
+SchemaCrawler Web Application v16.19.5.1
 Spring Boot ${spring-boot.version}

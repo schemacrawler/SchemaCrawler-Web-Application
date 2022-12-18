@@ -6,7 +6,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>16.19.2.1</version>
+  <version>16.19.5.1</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
@@ -43,7 +43,7 @@
       <dependency>
         <groupId>us.fatehi</groupId>
         <artifactId>schemacrawler-parent</artifactId>
-        <version>16.19.2</version>
+        <version>16.19.5</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -107,7 +107,7 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>16.19.2</version>
+      <version>16.19.5</version>
     </dependency>
 
 
@@ -126,7 +126,7 @@
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier</artifactId>
-      <version>3.11.1</version>
+      <version>3.12.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -142,7 +142,7 @@
       <version>1.12.346</version>
       <scope>test</scope>
     </dependency>
- 
+
     <!-- Validate that the requests follow the OpenAPI specificastion -->
     <dependency>
       <groupId>com.atlassian.oai</groupId>
@@ -155,6 +155,26 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>17</version>
+              <vendor>temurin</vendor>
+            </jdk>
+          </toolchains>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
