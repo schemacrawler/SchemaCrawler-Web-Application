@@ -21,7 +21,7 @@ jobs:
       name: Prepare Maven build
       uses: sualeh/prepare-maven-build@v1.3.2
       with:
-        java-version: 8
+        java-version: 17
     - id: install-packages
       name: Install packages
       shell: bash

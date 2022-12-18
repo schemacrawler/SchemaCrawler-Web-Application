@@ -170,7 +170,7 @@
           <toolchains>
             <jdk>
               <version>17</version>
-              <vendor>temurin</vendor>
+              <vendor>temurin_17</vendor>
             </jdk>
           </toolchains>
         </configuration>
