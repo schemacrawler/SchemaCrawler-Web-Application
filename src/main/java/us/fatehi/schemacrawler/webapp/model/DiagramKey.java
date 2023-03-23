@@ -30,8 +30,8 @@ package us.fatehi.schemacrawler.webapp.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;

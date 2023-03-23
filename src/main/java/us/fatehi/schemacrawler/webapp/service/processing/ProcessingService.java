@@ -35,7 +35,7 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.S
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.PathResource;

@@ -42,8 +42,6 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +50,7 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import software.amazon.awssdk.services.s3.S3Client;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;

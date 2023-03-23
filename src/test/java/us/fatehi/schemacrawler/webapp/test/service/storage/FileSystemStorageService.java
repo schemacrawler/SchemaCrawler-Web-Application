@@ -39,14 +39,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
