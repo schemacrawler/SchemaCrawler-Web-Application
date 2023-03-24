@@ -42,11 +42,13 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.J
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -58,8 +60,9 @@ import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
-@SpringBootTest
+@RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@SpringBootTest
 @ActiveProfiles("local")
 public class ResultControllerAPITest {
 

@@ -43,12 +43,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.localstack.LocalStackContainer;
@@ -60,6 +62,8 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig;
 
+@RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
 @SpringBootTest(
     properties = {
       "spring.main.allow-bean-definition-overriding=true",
@@ -67,7 +71,6 @@ import us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig
       "AWS_SECRET=no-secret",
       "AWS_S3_BUCKET=no-bucket"
     })
-@AutoConfigureMockMvc
 @ActiveProfiles("production")
 @SpringJUnitConfig(S3ServiceControllerTestConfig.class)
 @Testcontainers(disabledWithoutDocker = true)

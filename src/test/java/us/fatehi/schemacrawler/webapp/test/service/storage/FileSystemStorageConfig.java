@@ -29,7 +29,7 @@ package us.fatehi.schemacrawler.webapp.test.service.storage;
 
 import java.nio.file.Path;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

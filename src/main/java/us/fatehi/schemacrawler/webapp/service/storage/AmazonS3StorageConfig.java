@@ -27,7 +27,7 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.service.storage;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
