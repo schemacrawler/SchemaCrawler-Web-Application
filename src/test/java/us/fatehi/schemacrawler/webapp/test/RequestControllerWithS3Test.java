@@ -42,7 +42,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +96,6 @@ public class RequestControllerWithS3Test {
   @Autowired private ThreadPoolTaskExecutor pool;
   @Autowired private MockMvc mvc;
 
-  @Disabled
   @Test
   public void formWithUpload() throws Exception {
 
