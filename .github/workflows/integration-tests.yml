@@ -75,3 +75,11 @@ jobs:
           --working-dir src/test/postman \
           --env-var "url=http://localhost:8080" \
           src/test/postman/schemacrawler-web-application.postman_collection.json
+    - id: upload-application-log
+      name: Upload application log
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: application-log
+        path: ./application.log
+        retention-days: 5
