@@ -30,13 +30,11 @@ package us.fatehi.schemacrawler.webapp.test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
@@ -54,7 +52,7 @@ public class LocalStackS3BucketTest {
   private static final String TEST_BUCKET_NAME = "foo";
 
   private final DockerImageName localstackImage =
-      DockerImageName.parse("localstack/localstack").withTag("0.13.0.8");
+      DockerImageName.parse("localstack/localstack").withTag("2.0.0");
 
   @Container
   private final LocalStackContainer localstack =
