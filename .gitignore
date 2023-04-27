@@ -31,3 +31,4 @@ keys.txt
 **/launch.json
 
 /src/test/postman/production.postman_environment.json
+application.log
