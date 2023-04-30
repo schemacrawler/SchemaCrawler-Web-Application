@@ -295,7 +295,7 @@
               "\r",
               "pm.test(\"Check response\", function () {\r",
               "    var diagramRequest = pm.response.json();\r",
-              "    pm.expect(diagramRequest.key).to.eql('79ledbvzvcgg');\r",
+              "    pm.expect(diagramRequest.key).to.eql('aiejs3qsrkuh');\r",
               "});\r",
               ""
             ],
@@ -318,13 +318,13 @@
           }
         ],
         "url": {
-          "raw": "{{url}}/diagrams/79ledbvzvcgg",
+          "raw": "{{url}}/diagrams/aiejs3qsrkuh",
           "host": [
             "{{url}}"
           ],
           "path": [
             "diagrams",
-            "79ledbvzvcgg"
+            "aiejs3qsrkuh"
           ]
         }
       },
