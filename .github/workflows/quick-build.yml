@@ -3,8 +3,6 @@ name: Quick Build
 on:
   workflow_dispatch:
   push:
-    branches:
-      - '**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
