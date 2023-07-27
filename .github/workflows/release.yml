@@ -56,7 +56,7 @@ jobs:
       run: |
         # Build
         docker build \
-          -t schemacrawler/schemacrawler-webapp:v16.20.1.1 \
+          -t schemacrawler/schemacrawler-webapp:v16.20.4.1 \
           -t schemacrawler/schemacrawler-webapp:latest \
           .
 
@@ -75,7 +75,7 @@ jobs:
           docker.io/schemacrawler/schemacrawler-webapp:${{ github.sha }}
         docker tag \
           schemacrawler/schemacrawler-webapp \
-          docker.io/schemacrawler/schemacrawler-webapp:v16.20.1.1
+          docker.io/schemacrawler/schemacrawler-webapp:v16.20.4.1
         docker tag \
           schemacrawler/schemacrawler-webapp \
           docker.io/schemacrawler/schemacrawler-webapp:latest
@@ -105,6 +105,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: ./target/schemacrawler-webapp-16.20.1.1.jar
-        asset_name: schemacrawler-webapp-16.20.1.1.jar
+        asset_path: ./target/schemacrawler-webapp-16.20.4.1.jar
+        asset_name: schemacrawler-webapp-16.20.4.1.jar
         asset_content_type: application/zip
