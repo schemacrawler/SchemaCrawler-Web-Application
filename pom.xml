@@ -6,7 +6,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>16.20.5.1</version>
+  <version>16.20.6.1</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
@@ -52,7 +52,7 @@
       <dependency>
         <groupId>us.fatehi</groupId>
         <artifactId>schemacrawler-parent</artifactId>
-        <version>16.20.5</version>
+        <version>16.20.6</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>  
@@ -131,7 +131,7 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>16.20.5</version>
+      <version>16.20.6</version>
     </dependency>
 
 
@@ -229,7 +229,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
