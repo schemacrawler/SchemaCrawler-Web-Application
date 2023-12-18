@@ -77,7 +77,7 @@ jobs:
           src/test/postman/schemacrawler-web-application.postman_collection.json
     - id: upload-application-log
       name: Upload application log
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: application-log
