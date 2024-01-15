@@ -131,7 +131,7 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>16.20.8</version>
+      <version>16.21.1</version>
     </dependency>
 
 
