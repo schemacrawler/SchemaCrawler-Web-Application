@@ -40,7 +40,7 @@ This is a Spring Boot web application with a Bootstrap user interface, with sour
   - Start the application from Maven, run  
 	  `mvn -Dspring-boot.run.fork=false spring-boot:run`
   - Start application from the jar file, run  
-	  `java -jar target/schemacrawler-webapp-16.20.8.1.jar`
+	  `java -jar target/schemacrawler-webapp-16.21.1.1.jar`
   - Start the application from the local image in a Docker container, run  
 	  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
 
