@@ -45,7 +45,7 @@
       <dependency>
         <groupId>com.atlassian.oai</groupId>
         <artifactId>swagger-request-validator</artifactId>
-        <version>2.40.0</version>
+        <version>2.39.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -317,7 +317,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.1.1</version>
         <executions>
           <execution>
             <id>docker-build</id>
