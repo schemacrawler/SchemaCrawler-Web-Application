@@ -206,11 +206,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-<<<<<<< Updated upstream
           <version>3.4.1</version>
-=======
-          <version>3.4.0</version>
->>>>>>> Stashed changes
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -238,11 +234,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-<<<<<<< Updated upstream
           <version>3.6.0</version>
-=======
-          <version>3.5.2</version>
->>>>>>> Stashed changes
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
