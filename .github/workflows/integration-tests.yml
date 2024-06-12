@@ -3,8 +3,6 @@ name: Integration Tests
 on:
   workflow_dispatch:
   push:
-    branches:
-      - '**'
   schedule:
     - cron: '12 0/11 * * *'
 
@@ -21,22 +19,17 @@ jobs:
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
-      uses: sualeh/prepare-maven-build@v1.3.5
+      uses: sualeh/prepare-maven-build@v1.4.0
       with:
         java-version: 17
-    - id: install-packages
-      name: Install packages
-      shell: bash
-      run: |
-        # Install Graphviz
-        sudo apt-get -qq update
-        sudo apt-get -q install graphviz
-        dot -V
+    - id: install-graphviz
+      name: Install Graphviz
+      uses: sualeh/install-graphviz@v1.0.3
     - id: setup-node
       name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '20.x'
     - id: install-newman
       name: Install newman
       shell: bash
