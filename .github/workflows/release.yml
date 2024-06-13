@@ -21,17 +21,12 @@ jobs:
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
-      uses: sualeh/prepare-maven-build@v1.3.5
+      uses: sualeh/prepare-maven-build@v1.4.0
       with:
-        java-version: 17
-    - id: install-packages
-      name: Install packages
-      shell: bash
-      run: |
-        # Install Graphviz
-        sudo apt-get -qq update
-        sudo apt-get -q install graphviz
-        dot -V
+        java-version: 21
+    - id: install-graphviz
+      name: Install Graphviz
+      uses: sualeh/install-graphviz@v1.0.3
 
 # BUILD FOR DISTRIBUTION
 # To build an image using Cloud Native Buildpacks for Spring Boot, provide
