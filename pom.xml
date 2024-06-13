@@ -22,7 +22,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <docker.skip>true</docker.skip>
-    <java.version>17</java.version>
+    <java.version>21</java.version>
     <testcontainers.version>1.19.5</testcontainers.version>
   </properties>
 
@@ -268,7 +268,7 @@
         <configuration>
           <toolchains>
             <jdk>
-              <version>17</version>
+              <version>21</version>
               <vendor>temurin</vendor>
             </jdk>
           </toolchains>
@@ -278,8 +278,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>17</source>
-          <target>17</target>
+          <source>21</source>
+          <target>21</target>
         </configuration>
       </plugin>
       <plugin>
