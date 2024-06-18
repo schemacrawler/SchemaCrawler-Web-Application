@@ -51,7 +51,7 @@
       <dependency>
         <groupId>us.fatehi</groupId>
         <artifactId>schemacrawler-parent</artifactId>
-        <version>16.21.2</version>
+        <version>16.21.4</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>  
