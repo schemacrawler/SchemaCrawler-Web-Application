@@ -33,7 +33,6 @@ import static java.nio.file.Files.delete;
 import static java.nio.file.Files.size;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.io.IOUtils.copy;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -41,7 +40,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-
 import jakarta.annotation.PostConstruct;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -77,7 +74,7 @@ public class AmazonS3StorageService implements StorageService {
         s3Client.headBucket(b -> b.bucket(s3Bucket)).sdkHttpResponse().isSuccessful();
     if (!bucketExists) {
       throw new InternalRuntimeException(
-          String.format("Amazon S3 bucket '%s' does not exist", s3Bucket));
+          String.format("Amazon S3 bucket <%s> does not exist", s3Bucket));
     }
   }
 
@@ -140,7 +137,7 @@ public class AmazonS3StorageService implements StorageService {
       s3Client.putObject(b -> b.bucket(s3Bucket).key(filename), tempFilePath);
 
     } catch (final Exception e) {
-      LOGGER.warn(String.format("Could not store, %s.%s", key, extension), e);
+      LOGGER.warn(String.format("Could not store <%s.%s>", key, extension), e);
     }
   }
 
@@ -159,7 +156,7 @@ public class AmazonS3StorageService implements StorageService {
     // Check that the file is not empty
     if (size(tempFilePath) == 0) {
       delete(tempFilePath);
-      throw new Exception(String.format("No data for file %s.%s", key, extension));
+      throw new Exception(String.format("No data for file <%s.%s>", key, extension));
     }
 
     return tempFilePath;

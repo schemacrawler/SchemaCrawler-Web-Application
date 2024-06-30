@@ -36,8 +36,6 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.D
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.LOG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
-import static us.fatehi.utility.Utility.isBlank;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -49,10 +47,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-
 import org.apache.tika.Tika;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
@@ -72,7 +66,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
+import static us.fatehi.utility.Utility.isBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
@@ -164,15 +160,15 @@ public class DiagramRequestController {
       generateSchemaCrawlerDiagram(diagramRequest, file.get());
       location = new URI("./" + diagramRequest.getKey());
     } catch (final Exception e) {
-      LOGGER.warn(e.getMessage(), e);
+      LOGGER.warn(String.format("%s%n%s", e.getMessage(), diagramRequest));
+      LOGGER.trace(e.getMessage(), e);
       diagramRequest.setError(e.getMessage());
     }
 
     if (diagramRequest.hasLogMessage()) {
       return ResponseEntity.internalServerError().body(diagramRequest);
-    } else {
-      return ResponseEntity.created(location).body(diagramRequest);
     }
+    return ResponseEntity.created(location).body(diagramRequest);
   }
 
   @GetMapping(value = "/")
@@ -184,10 +180,11 @@ public class DiagramRequestController {
       throws ExecutionRuntimeException {
     try {
       final String detectedMimeType = new Tika().detect(localPath);
-      if (!detectedMimeType.equals("application/x-sqlite3")) {
+      if (!"application/x-sqlite3".equals(detectedMimeType)) {
         final MimeType mimeType = MimeTypes.getDefaultMimeTypes().forName(detectedMimeType);
 
         final StringBuffer exceptionMessage = new StringBuffer();
+        exceptionMessage.append(diagramRequest.getName()).append(System.lineSeparator());
         exceptionMessage.append("Expected a SQLite database file, but got a ");
         if (!isBlank(mimeType.getDescription())) {
           exceptionMessage.append(mimeType.getDescription()).append(" file");
@@ -199,6 +196,7 @@ public class DiagramRequestController {
         throw new ExecutionRuntimeException(exceptionMessage.toString());
       }
     } catch (final MimeTypeException | IOException | NullPointerException e) {
+      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
       LOGGER.trace(e.getMessage(), e);
     }
   }
@@ -221,6 +219,7 @@ public class DiagramRequestController {
       // Make asynchronous call to generate diagram
       processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
     } catch (final Exception e) {
+      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
       LOGGER.warn(e.getMessage(), e);
       saveExceptionLogFile(key, e);
       diagramRequest.setError(e.getMessage());
@@ -241,6 +240,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception e) {
+      LOGGER.error(String.format("%s%n%s", e.getMessage(), key));
       LOGGER.warn(e.getMessage(), e);
     }
   }
@@ -253,7 +253,8 @@ public class DiagramRequestController {
     try {
       storageService.store(() -> toInputStream(diagramRequest.toJson(), UTF_8), key, JSON);
     } catch (final Exception e) {
-      LOGGER.error("Could not save diagram request", e);
+      LOGGER.error(
+          String.format("Could not save diagram request%n%s%n%s", e.getMessage(), diagramRequest));
     }
   }
 
@@ -265,6 +266,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception e) {
+      LOGGER.error(String.format("%s%n%s", e.getMessage(), key));
       LOGGER.warn(e.getMessage(), e);
     }
   }

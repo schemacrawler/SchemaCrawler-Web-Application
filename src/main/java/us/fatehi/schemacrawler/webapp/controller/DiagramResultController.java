@@ -33,13 +33,7 @@ import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
 import static us.fatehi.schemacrawler.webapp.controller.URIConstants.UI_RESULTS_PREFIX;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
-
 import java.nio.file.Path;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +46,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
@@ -109,7 +105,7 @@ public class DiagramResultController {
     model.addAttribute("diagramRequest", diagramRequest);
 
     if (diagramRequest.hasLogMessage()) {
-      throw new ExecutionRuntimeException(diagramRequest.getError());
+      throw new ExecutionRuntimeException(diagramRequest.toString());
     }
 
     return "SchemaCrawlerDiagram";
@@ -136,7 +132,8 @@ public class DiagramResultController {
     try {
       diagramRequest = retrieveResults(key);
     } catch (final Exception e) {
-      LOGGER.warn(e.getMessage(), e);
+      LOGGER.error(String.format("<%s>: %s", key, e.getMessage()));
+      LOGGER.trace(e.getMessage(), e);
       return ResponseEntity.notFound().build();
     }
 
@@ -147,14 +144,18 @@ public class DiagramResultController {
     return storageService
         .retrieveLocal(key, PNG)
         .map(PathResource::new)
-        .orElseThrow(() -> new Exception("Cannot find image, " + key));
+        .orElseThrow(
+            () -> new ExecutionRuntimeException(String.format("Cannot find key <%s>", key)));
   }
 
   private DiagramRequest retrieveResults(final DiagramKey key) throws Exception {
     final Path jsonFile =
         storageService
             .retrieveLocal(key, JSON)
-            .orElseThrow(() -> new ExecutionRuntimeException("Cannot find request for " + key));
+            .orElseThrow(
+                () ->
+                    new ExecutionRuntimeException(
+                        String.format("Cannot find request for <%s>", key)));
     final DiagramRequest diagramRequest =
         DiagramRequest.fromJson(newBufferedReader(jsonFile, UTF_8));
     return diagramRequest;
