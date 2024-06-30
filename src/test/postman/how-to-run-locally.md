@@ -10,7 +10,7 @@ mvn clean package
 3. Start the server.
 ```sh
 export AWS_ACCESS_KEY_ID=AKIA2YOURCCESSKEYFVM
-export AWS_SECRET=eVyourpassword0zOOiYOURPASSWORDFII4VchI
+export AWS_SECRET_ACCESS_KEY=eVyourpassword0zOOiYOURPASSWORDFII4VchI
 export AWS_S3_BUCKET=schemacrawler-web-app-test-1
 mvn spring-boot:run
 ```

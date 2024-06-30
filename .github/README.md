@@ -34,7 +34,7 @@ This is a Spring Boot web application with a Bootstrap user interface, with sour
 
 - Set the following environmental variables locally
   - AWS_ACCESS_KEY_ID
-  - AWS_SECRET
+  - AWS_SECRET_ACCESS_KEY
   - AWS_S3_BUCKET
 - Do one of the steps below to start the web application locally on your system
   - Start the application from Maven, run  
@@ -42,7 +42,7 @@ This is a Spring Boot web application with a Bootstrap user interface, with sour
   - Start application from the jar file, run  
 	  `java -jar target/schemacrawler-webapp-16.21.2.1.jar`
   - Start the application from the local image in a Docker container, run  
-	  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
+	  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET_ACCESS_KEY=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
 
 
 ### Use the Application

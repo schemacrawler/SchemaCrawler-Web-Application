@@ -68,7 +68,7 @@ import us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig
     properties = {
       "spring.main.allow-bean-definition-overriding=true",
       "AWS_ACCESS_KEY_ID=no-access-key",
-      "AWS_SECRET=no-secret",
+      "AWS_SECRET_ACCESS_KEY=no-secret",
       "AWS_S3_BUCKET=no-bucket"
     })
 @ActiveProfiles("production")

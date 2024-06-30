@@ -50,8 +50,8 @@ public class AWSConfig {
   @NotNull(message = "AWS_ACCESS_KEY_ID not provided")
   private String accessKeyId;
 
-  @Value("${AWS_SECRET}")
-  @NotNull(message = "AWS_SECRET not provided")
+  @Value("${AWS_SECRET_ACCESS_KEY}")
+  @NotNull(message = "AWS_SECRET_ACCESS_KEY not provided")
   private String secretAccessKey;
 
   @Value("${AWS_REGION:us-east-1}")
