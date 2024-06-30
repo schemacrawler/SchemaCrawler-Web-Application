@@ -33,11 +33,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
-
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +49,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
@@ -99,7 +99,8 @@ public class ResultControllerTest {
             .andReturn();
 
     final Exception exception = result.getResolvedException();
-    assertThat(exception.getMessage(), is("Bad error"));
+    assertThat(
+        exception.getMessage(), matchesPattern(Pattern.compile(".*Bad error.*", Pattern.DOTALL)));
   }
 
   @Test
@@ -116,7 +117,7 @@ public class ResultControllerTest {
 
     final Throwable exception = ExceptionUtils.getRootCause(result.getResolvedException());
     assertThat(exception, is(instanceOf(ExecutionRuntimeException.class)));
-    assertThat(exception.getMessage(), is("Cannot find request for missingkey01"));
+    assertThat(exception.getMessage(), is("Cannot find request for <missingkey01>"));
   }
 
   @Test

@@ -160,7 +160,7 @@ public class DiagramRequestController {
       generateSchemaCrawlerDiagram(diagramRequest, file.get());
       location = new URI("./" + diagramRequest.getKey());
     } catch (final Exception e) {
-      LOGGER.warn(String.format("%s%n%s", e.getMessage(), diagramRequest));
+      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
       LOGGER.trace(e.getMessage(), e);
       diagramRequest.setError(e.getMessage());
     }
@@ -240,7 +240,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception e) {
-      LOGGER.error(String.format("%s%n%s", e.getMessage(), key));
+      LOGGER.error(String.format("<%s>: %s", key, e.getMessage()));
       LOGGER.warn(e.getMessage(), e);
     }
   }
@@ -266,7 +266,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception e) {
-      LOGGER.error(String.format("%s%n%s", e.getMessage(), key));
+      LOGGER.error(String.format("<%s>: %s", key, e.getMessage()));
       LOGGER.warn(e.getMessage(), e);
     }
   }
