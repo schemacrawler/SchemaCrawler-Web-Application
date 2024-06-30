@@ -184,7 +184,6 @@ public class DiagramRequestController {
         final MimeType mimeType = MimeTypes.getDefaultMimeTypes().forName(detectedMimeType);
 
         final StringBuffer exceptionMessage = new StringBuffer();
-        exceptionMessage.append("<").append(diagramRequest.getKey()).append(">: ");
         exceptionMessage.append("Expected a SQLite database file, but got a ");
         if (!isBlank(mimeType.getDescription())) {
           exceptionMessage.append(mimeType.getDescription()).append(" file");

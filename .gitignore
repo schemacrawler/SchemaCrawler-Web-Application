@@ -33,3 +33,4 @@ keys.txt
 /src/test/postman/production.postman_environment.json
 application.log
 tree.txt
+/src/test/postman/api-*.json
