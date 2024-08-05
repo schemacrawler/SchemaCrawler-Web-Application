@@ -24,7 +24,7 @@
 #
 # ========================================================================
 
-FROM eclipse-temurin:17-alpine
+FROM eclipse-temurin:21-jdk-alpine
 
 ARG SCHEMACRAWLER_VERSION=16.21.2
 ARG SCHEMACRAWLER_WEBAPP_VERSION=16.21.2.1
