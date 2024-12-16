@@ -3,10 +3,15 @@ name: Quick Build
 on:
   workflow_dispatch:
   push:
+  pull_request:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+permissions: read-all
 
 jobs:
   build:
@@ -33,6 +38,25 @@ jobs:
       name: Install Graphviz
       uses: sualeh/install-graphviz@v1.0.3
 
+# BUILD DEPENDENCIES
+    - id: checkout-schemacrawler
+      name: Checkout SchemaCrawler
+      uses: actions/checkout@v4
+      with:
+        repository: schemacrawler/SchemaCrawler
+        path: SchemaCrawler
+    - id: build-schemacrawler
+      name: Build SchemaCrawler for local Maven repository
+      shell: bash
+      run: |
+        # Build SchemaCrawler
+        cd SchemaCrawler
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          -DskipTests=true \
+          clean install
+
 # VALIDATE OPENAPI SPECIFICATION
     - id: validate-oas
       name: Validate OpenAPI definition
@@ -50,7 +74,7 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          package
+          clean package
     - id: publish-test-results
       name: Upload results and coverage
       if: contains(github.ref, 'main')

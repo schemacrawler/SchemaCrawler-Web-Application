@@ -38,6 +38,25 @@ jobs:
         npm install -g newman
         newman -v
 
+# BUILD DEPENDENCIES
+    - id: checkout-schemacrawler
+      name: Checkout SchemaCrawler
+      uses: actions/checkout@v4
+      with:
+        repository: schemacrawler/SchemaCrawler
+        path: SchemaCrawler
+    - id: build-schemacrawler
+      name: Build SchemaCrawler for local Maven repository
+      shell: bash
+      run: |
+        # Build SchemaCrawler
+        cd SchemaCrawler
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          -DskipTests=true \
+          clean install
+
 # BUILD AND TEST
     - id: build-test
       name: Build and run tests
