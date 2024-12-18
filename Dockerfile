@@ -61,4 +61,4 @@ ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
 ENV PORT=8080
 
 # Default command to run the application 
-ENTRYPOINT ["java", "$JAVA_OPTS", "-Dserver.port=$PORT", "-jar", "schemacrawler-webapp.jar"]
+ENTRYPOINT java $JAVA_OPTS -Dserver.port=$PORT -jar schemacrawler-webapp.jar
