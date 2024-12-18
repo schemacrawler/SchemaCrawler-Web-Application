@@ -27,7 +27,7 @@
 FROM eclipse-temurin:21-jdk-alpine
 
 ARG SCHEMACRAWLER_VERSION=16.24.1
-ARG SCHEMACRAWLER_WEBAPP_VERSION=16.24.1.3
+ARG SCHEMACRAWLER_WEBAPP_VERSION=16.24.1.1
 
 LABEL \
   "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>" \
@@ -53,6 +53,12 @@ COPY \
   ./target/schemacrawler-webapp-${SCHEMACRAWLER_WEBAPP_VERSION}.jar \
   schemacrawler-webapp.jar
 
-# Run the web-application.  CMD is required to run on Heroku
-# $JAVA_OPTS and $PORT are set by Heroku
-CMD java $JAVA_OPTS -Dserver.port=$PORT -Djava.security.egd=file:/dev/./urandom -jar schemacrawler-webapp.jar
+# Expose the port the application will run on
+EXPOSE 8080
+
+# Run the web-application. Define default port and java options as environment variables
+ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
+ENV PORT=8080
+
+# Default command to run the application 
+ENTRYPOINT ["java", "$JAVA_OPTS", "-Dserver.port=$PORT", "-jar", "schemacrawler-webapp.jar"]

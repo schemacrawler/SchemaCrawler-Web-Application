@@ -4,9 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - v[0-9]+.[0-9]+.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+.[0-9]+-[A-Z]
+      - v[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?(-[A-Z])?
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -41,43 +39,6 @@ jobs:
           --batch-mode \
           clean install
 
-# BUILD DOCKER IMAGE LOCALLY
-# Cloud Native Buildpacks for Spring Boot, whether from Paketo or Heroku consume
-# more than 512 MB of RAM (free-tier limit for Heroku), and have security
-# vulnerabilities flagged by Amazon ECR. For this reason, build the Docker image locally.
-    - id: build-docker-image
-      name: Build Docker image
-      shell: bash
-      run: |
-        # Build
-        docker build \
-          -t schemacrawler/schemacrawler-webapp:v16.24.1.3 \
-          -t schemacrawler/schemacrawler-webapp:latest \
-          .
-
-# PUBLISH DOCKER IMAGE
-    - id: publish-docker-image
-      name: Publish Docker image
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      shell: bash
-      run: |
-        # Publish Docker image
-        docker version
-        docker tag \
-          schemacrawler/schemacrawler-webapp \
-          docker.io/schemacrawler/schemacrawler-webapp:${{ github.sha }}
-        docker tag \
-          schemacrawler/schemacrawler-webapp \
-          docker.io/schemacrawler/schemacrawler-webapp:v16.24.1.3
-        docker tag \
-          schemacrawler/schemacrawler-webapp \
-          docker.io/schemacrawler/schemacrawler-webapp:latest
-        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        docker push docker.io/schemacrawler/schemacrawler-webapp
-        docker logout
-
 # CREATE GITHUB RELEASE AND ADD ASSETS
     - id: create-release
       name: Create GitHub release
@@ -100,6 +61,36 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: ./target/schemacrawler-webapp-16.24.1.3.jar
-        asset_name: schemacrawler-webapp-16.24.1.3.jar
+        asset_path: ./target/schemacrawler-webapp-16.24.1.1.jar
+        asset_name: schemacrawler-webapp-16.24.1.1.jar
         asset_content_type: application/zip
+
+# BUILD AND PUBLISH DOCKER IMAGE
+    - id: setup-qemu
+      name: Setup QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - id: setup-buildx
+      name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log into Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        file: ./Dockerfile
+        context: .
+        platforms: |-
+          linux/amd64
+          linux/arm64
+        tags: |-
+          schemacrawler/schemacrawler-webapp:v16.24.1.1
+          schemacrawler/schemacrawler-webapp:latest
+        sbom: true
+        provenance: true
+        push: true
