@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: SchemaCrawler Web Application
   description: Create a SchemaCrawler schema diagram from an uploaded SQLite database file
-  version: '16.24.2-1'
+  version: '16.24.3-1'
   license:
     name: Eclipse Public License (EPL-2.0)
     url: https://www.eclipse.org/legal/epl-2.0/
