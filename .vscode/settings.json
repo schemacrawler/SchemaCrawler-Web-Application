@@ -7,5 +7,7 @@
     },
     "git.postCommitCommand": "sync",
     "java.configuration.updateBuildConfiguration": "automatic",
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "editor.formatOnSave": false,
+    "editor.formatOnType": true
 }
