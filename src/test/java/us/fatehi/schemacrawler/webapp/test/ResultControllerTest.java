@@ -33,12 +33,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
-import java.util.regex.Pattern;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -99,8 +97,7 @@ public class ResultControllerTest {
             .andReturn();
 
     final Exception exception = result.getResolvedException();
-    assertThat(
-        exception.getMessage(), matchesPattern(Pattern.compile(".*Bad error.*", Pattern.DOTALL)));
+    assertThat(exception.getMessage(), containsString("Bad error"));
   }
 
   @Test

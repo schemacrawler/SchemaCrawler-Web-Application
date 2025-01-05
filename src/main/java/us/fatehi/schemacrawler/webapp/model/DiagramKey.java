@@ -47,7 +47,7 @@ public class DiagramKey implements Serializable {
   private final String key;
 
   public DiagramKey() {
-    key = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+    key = RandomStringUtils.secure().nextAlphanumeric(12).toLowerCase();
   }
 
   public DiagramKey(final String key) {

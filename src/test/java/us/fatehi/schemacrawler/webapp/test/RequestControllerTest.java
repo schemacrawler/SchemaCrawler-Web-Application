@@ -93,8 +93,8 @@ public class RequestControllerTest {
 
     final DiagramRequest diagramRequest =
         (DiagramRequest) mvcResult.getModelAndView().getModel().get("diagramRequest");
-    final boolean awaitTermination =
-        pool.getThreadPoolExecutor().awaitTermination(3, TimeUnit.SECONDS);
+    /* final boolean awaitTermination = */ pool.getThreadPoolExecutor()
+        .awaitTermination(3, TimeUnit.SECONDS);
 
     final Optional<Path> localDatabaseFile =
         storageService.retrieveLocal(diagramRequest.getKey(), SQLITE_DB);
@@ -107,7 +107,7 @@ public class RequestControllerTest {
 
     final MockMultipartFile multipartFile =
         new MockMultipartFile(
-            "file", "test.db", "application/octet-stream", RandomUtils.nextBytes(5));
+            "file", "test.db", "application/octet-stream", RandomUtils.secure().randomBytes(5));
 
     final MvcResult mvcResult =
         mvc.perform(

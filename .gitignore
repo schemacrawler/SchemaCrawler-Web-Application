@@ -2,6 +2,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 ~/
 *.versionsBackup
+tree.txt
 
 ### STS ###
 .apt_generated
