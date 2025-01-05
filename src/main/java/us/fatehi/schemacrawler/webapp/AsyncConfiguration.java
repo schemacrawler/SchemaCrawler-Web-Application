@@ -25,33 +25,37 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
-package us.fatehi.schemacrawler.webapp;
 
-import java.util.Arrays;
-import java.util.concurrent.Executor;
-import java.util.logging.Logger;
+package us.fatehi.schemacrawler.webapp;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.lang.Nullable;
-import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import java.util.Arrays;
+import java.util.concurrent.Executor;
+import java.util.logging.Logger;
 
 @Configuration
 @EnableAsync
-public class AsyncConfiguration extends AsyncConfigurerSupport {
+public class AsyncConfiguration implements AsyncConfigurer {
 
   private static final Logger logger = Logger.getLogger(AsyncConfiguration.class.getName());
 
   @Override
   public Executor getAsyncExecutor() {
-    return new SimpleAsyncTaskExecutor();
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(2);
+    executor.setMaxPoolSize(5);
+    executor.setQueueCapacity(500);
+    executor.setThreadNamePrefix("AsyncExecutor-");
+    executor.initialize();
+    return executor;
   }
 
   @Override
-  @Nullable
   public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
     return (throwable, method, parameters) -> {
       final StringBuilder buffer = new StringBuilder();
