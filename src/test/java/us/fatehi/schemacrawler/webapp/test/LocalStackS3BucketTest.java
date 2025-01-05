@@ -52,7 +52,7 @@ public class LocalStackS3BucketTest {
   private static final String TEST_BUCKET_NAME = "foo";
 
   private final DockerImageName localstackImage =
-      DockerImageName.parse("localstack/localstack").withTag("2.0.0");
+      DockerImageName.parse("localstack/localstack").withTag("4.0.3");
 
   @Container
   private final LocalStackContainer localstack =
