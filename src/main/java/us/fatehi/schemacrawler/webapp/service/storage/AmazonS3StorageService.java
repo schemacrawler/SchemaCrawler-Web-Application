@@ -25,6 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
+
 package us.fatehi.schemacrawler.webapp.service.storage;
 
 import static java.nio.file.Files.copy;
@@ -42,7 +43,6 @@ import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
@@ -61,7 +61,6 @@ public class AmazonS3StorageService implements StorageService {
   private final String s3Bucket;
   private final S3Client s3Client;
 
-  @Autowired
   public AmazonS3StorageService(@NonNull final S3Client s3Client, @NonNull final String s3Bucket) {
     this.s3Client = s3Client;
     this.s3Bucket = s3Bucket;

@@ -25,6 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
+
 package us.fatehi.schemacrawler.webapp.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -53,7 +54,6 @@ import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -85,7 +85,6 @@ public class DiagramRequestController {
   private final ProcessingService processingService;
   private final NotificationService notificationService;
 
-  @Autowired
   public DiagramRequestController(
       @NotNull(message = "Storage service not provided") final StorageService storageService,
       @NotNull(message = "Processing service not provided")

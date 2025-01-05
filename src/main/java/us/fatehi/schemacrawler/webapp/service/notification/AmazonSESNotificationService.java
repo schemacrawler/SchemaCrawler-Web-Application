@@ -25,6 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
+
 package us.fatehi.schemacrawler.webapp.service.notification;
 
 import java.io.ByteArrayOutputStream;
@@ -45,7 +46,6 @@ import jakarta.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -68,7 +68,6 @@ public class AmazonSESNotificationService implements NotificationService {
   private final InternetAddress sender;
   private final String webAppUri;
 
-  @Autowired
   public AmazonSESNotificationService(
       @NonNull final SesClient sesClient, @NotBlank final String webAppUri) {
     this.sesClient = sesClient;

@@ -25,6 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
+
 package us.fatehi.schemacrawler.webapp.service.processing;
 
 import static schemacrawler.tools.command.text.diagram.options.DiagramOutputFormat.png;
@@ -37,7 +38,6 @@ import java.util.logging.Logger;
 
 import jakarta.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,6 @@ public class ProcessingService {
 
   private final StorageService storageService;
 
-  @Autowired
   public ProcessingService(
       @NotNull(message = "StorageService not provided") final StorageService storageService) {
     this.storageService = storageService;

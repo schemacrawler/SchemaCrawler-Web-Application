@@ -25,6 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
+
 package us.fatehi.schemacrawler.webapp.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -36,7 +37,6 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.P
 import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -62,7 +62,6 @@ public class DiagramResultController {
 
   private final StorageService storageService;
 
-  @Autowired
   public DiagramResultController(
       @NotNull(message = "StorageService not provided") final StorageService storageService,
       @NotNull(message = "ProcessingService not provided")

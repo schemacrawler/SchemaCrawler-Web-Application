@@ -25,6 +25,7 @@ http://www.gnu.org/licenses/
 
 ========================================================================
 */
+
 package us.fatehi.schemacrawler.webapp.test.service.storage;
 
 import static java.nio.file.Files.copy;
@@ -39,7 +40,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.lang.NonNull;
@@ -56,7 +56,6 @@ public class FileSystemStorageService implements StorageService {
 
   private final FileSystemStorageConfig config;
 
-  @Autowired
   public FileSystemStorageService(@NonNull final FileSystemStorageConfig config) {
     this.config = config;
   }
