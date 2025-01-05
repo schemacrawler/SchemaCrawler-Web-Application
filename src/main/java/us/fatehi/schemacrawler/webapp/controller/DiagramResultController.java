@@ -47,7 +47,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
@@ -73,9 +72,7 @@ public class DiagramResultController {
       produces = MediaType.IMAGE_PNG_VALUE)
   @ResponseBody
   public Resource diagramImage(
-      @PathVariable @NotNull(message = "Key not provided") @Pattern(regexp = "[A-Za-z0-9]{12}")
-          final DiagramKey key)
-      throws Exception {
+      @PathVariable @NotNull(message = "Key not provided") final DiagramKey key) throws Exception {
     return retrieveDiagramLocal(key);
   }
 
@@ -88,9 +85,7 @@ public class DiagramResultController {
    */
   @GetMapping(value = UI_RESULTS_PREFIX + "/{key}")
   public String retrieveResults(
-      final Model model,
-      @PathVariable @NotNull(message = "Key not provided") @Pattern(regexp = "[A-Za-z0-9]{12}")
-          final DiagramKey key)
+      final Model model, @PathVariable @NotNull(message = "Key not provided") final DiagramKey key)
       throws Exception {
 
     final DiagramRequest diagramRequest = retrieveResults(key);
@@ -113,9 +108,7 @@ public class DiagramResultController {
   @GetMapping(value = API_PREFIX + "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public ResponseEntity<DiagramRequest> retrieveResultsApi(
-      @PathVariable @NotNull(message = "Key not provided") @Pattern(regexp = "[A-Za-z0-9]{12}")
-          final DiagramKey key)
-      throws Exception {
+      @PathVariable @NotNull(message = "Key not provided") final DiagramKey key) throws Exception {
 
     final DiagramRequest diagramRequest;
     try {
