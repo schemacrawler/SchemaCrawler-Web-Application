@@ -138,7 +138,7 @@ public class RequestControllerAPITest {
 
     final MockMultipartFile multipartFile =
         new MockMultipartFile(
-            "file", "test.db", "application/octet-stream", RandomUtils.nextBytes(5));
+            "file", "test.db", "application/octet-stream", RandomUtils.secure().randomBytes(5));
 
     final MvcResult result =
         mvc.perform(

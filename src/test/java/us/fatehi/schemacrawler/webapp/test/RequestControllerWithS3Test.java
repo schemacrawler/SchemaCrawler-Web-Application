@@ -112,8 +112,8 @@ public class RequestControllerWithS3Test {
 
     final DiagramRequest diagramRequest =
         (DiagramRequest) mvcResult.getModelAndView().getModel().get("diagramRequest");
-    final boolean awaitTermination =
-        pool.getThreadPoolExecutor().awaitTermination(3, TimeUnit.SECONDS);
+    /* final boolean awaitTermination = */ pool.getThreadPoolExecutor()
+        .awaitTermination(3, TimeUnit.SECONDS);
 
     // Verify contents of S3 bucket
     final S3Client s3Client = new S3ServiceControllerTestConfig().s3Client();

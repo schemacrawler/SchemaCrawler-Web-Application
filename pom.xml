@@ -14,7 +14,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.12</version>
+    <version>3.4.1</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -28,12 +28,19 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>3.4.1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
         <version>5.11.4</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>	
+      </dependency>
       <dependency>
         <groupId>software.amazon.awssdk</groupId>
         <artifactId>bom</artifactId>
@@ -54,7 +61,7 @@
         <version>16.25.1</version>
         <scope>import</scope>
         <type>pom</type>
-      </dependency>  
+      </dependency>
       <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>testcontainers-bom</artifactId>
@@ -251,7 +258,7 @@
           <version>3.5.0</version>
         </plugin>
       </plugins>
-    </pluginManagement>  
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
