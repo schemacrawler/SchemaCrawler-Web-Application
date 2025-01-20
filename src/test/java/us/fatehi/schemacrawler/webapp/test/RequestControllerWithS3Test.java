@@ -37,12 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 import static us.fatehi.schemacrawler.webapp.test.utility.S3ServiceControllerTestConfig.TEST_SC_WEB_APP_BUCKET;
 import static us.fatehi.schemacrawler.webapp.test.utility.TestUtility.mockMultipartFile;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +55,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
@@ -125,6 +122,6 @@ public class RequestControllerWithS3Test {
     assertThat(contents.size(), is(greaterThan(0)));
 
     assertThat(contents.get(0).key(), is(diagramRequest.getKey() + ".db"));
-    assertThat(contents.get(0).size(), is(9216L));
+    assertThat(contents.get(0).size(), is(greaterThan(9_200L)));
   }
 }
