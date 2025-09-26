@@ -6,7 +6,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>16.28.2-1</version>
+  <version>16.28.3-1</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
@@ -14,7 +14,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.5</version>
+    <version>3.5.6</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -58,7 +58,7 @@
       <dependency>
         <groupId>us.fatehi</groupId>
         <artifactId>schemacrawler-parent</artifactId>
-        <version>16.28.2</version>
+        <version>16.28.3</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -137,14 +137,13 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-      <version>16.28.2</version>
+      <version>16.28.3</version>
     </dependency>
 
 
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
-      <version>3.2.3</version>
     </dependency>
 
     <dependency>
@@ -255,26 +254,6 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-toolchains-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>toolchain</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <toolchains>
-            <jdk>
-              <version>21</version>
-              <vendor>temurin</vendor>
-            </jdk>
-          </toolchains>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
