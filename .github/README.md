@@ -1,3 +1,5 @@
+**:star: Star it :arrow_heading_up: if you love it!**
+
 [![Quick Build](https://github.com/schemacrawler/SchemaCrawler-Web-Application/workflows/Quick%20Build/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions?query=workflow%3A%22Quick+Build%22)
 [![Integration Tests](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions/workflows/integration-tests.yml)
 [![codecov](https://codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application/branch/main/graph/badge.svg)](https://app.codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application)
