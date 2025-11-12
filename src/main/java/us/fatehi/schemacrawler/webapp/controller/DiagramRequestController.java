@@ -37,6 +37,10 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.D
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.LOG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
+import static us.fatehi.utility.Utility.isBlank;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -66,9 +70,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import static us.fatehi.utility.Utility.isBlank;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;

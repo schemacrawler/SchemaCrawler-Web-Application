@@ -29,20 +29,17 @@ package us.fatehi.schemacrawler.webapp.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
+
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketResponse;
+import us.fatehi.schemacrawler.webapp.test.utility.LocalStackTestUtility;
 
 @Testcontainers(disabledWithoutDocker = true)
 public class LocalStackS3BucketTest {
@@ -51,38 +48,28 @@ public class LocalStackS3BucketTest {
   private static final String TEST_OBJECT_NAME = "bar";
   private static final String TEST_BUCKET_NAME = "foo";
 
-  private final DockerImageName localstackImage =
-      DockerImageName.parse("localstack/localstack").withTag("4.0.3");
-
   @Container
   private final LocalStackContainer localstack =
-      new LocalStackContainer(localstackImage).withServices(S3);
+      LocalStackTestUtility.newLocalStackContainerContainer();
 
   @Test
   public void createS3Object() {
-    final S3Client s3 =
-        S3Client.builder()
-            .endpointOverride(localstack.getEndpointOverride(LocalStackContainer.Service.S3))
-            .credentialsProvider(
-                StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create(
-                        localstack.getAccessKey(), localstack.getSecretKey())))
-            .region(Region.of(localstack.getRegion()))
-            .build();
+    final S3Client s3Client = LocalStackTestUtility.newS3Client(localstack);
 
-    s3.createBucket(b -> b.bucket(TEST_BUCKET_NAME));
-    s3.waiter().waitUntilBucketExists(b -> b.bucket(TEST_BUCKET_NAME));
-    s3.putObject(
+    s3Client.createBucket(b -> b.bucket(TEST_BUCKET_NAME));
+    s3Client.waiter().waitUntilBucketExists(b -> b.bucket(TEST_BUCKET_NAME));
+    s3Client.putObject(
         b -> b.bucket(TEST_BUCKET_NAME).key(TEST_OBJECT_NAME),
         RequestBody.fromBytes(TEST_CONTENT.getBytes()));
-    s3.waiter().waitUntilObjectExists(b -> b.bucket(TEST_BUCKET_NAME).key(TEST_OBJECT_NAME));
+    s3Client.waiter().waitUntilObjectExists(b -> b.bucket(TEST_BUCKET_NAME).key(TEST_OBJECT_NAME));
 
-    final HeadBucketResponse headBucketResponse = s3.headBucket(b -> b.bucket(TEST_BUCKET_NAME));
+    final HeadBucketResponse headBucketResponse =
+        s3Client.headBucket(b -> b.bucket(TEST_BUCKET_NAME));
 
     assertThat(headBucketResponse.sdkHttpResponse().isSuccessful(), is(true));
 
     final ResponseBytes<GetObjectResponse> objectAsBytes =
-        s3.getObjectAsBytes(b -> b.bucket(TEST_BUCKET_NAME).key(TEST_OBJECT_NAME));
+        s3Client.getObjectAsBytes(b -> b.bucket(TEST_BUCKET_NAME).key(TEST_OBJECT_NAME));
     final String data = new String(objectAsBytes.asByteArray());
 
     assertThat(data, is(TEST_CONTENT));
