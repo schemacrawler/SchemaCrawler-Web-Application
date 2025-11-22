@@ -75,13 +75,21 @@ paths:
                 format: binary
 components:
   schemas:
-    DiagramKey:
-      description: Unique key identifying each request
+    DiagramKeyValue:
+      description: Unique key string identifying each request
       type: string
       minLength: 12
       maxLength: 12
       pattern: '[a-z0-9]{12}'
-      readOnly: true # Returned by GET, not used in POST/PUT/PATCH
+    DiagramKey:
+      description: Object wrapper for the unique key identifying each request (as returned by the API)
+      type: object
+      properties:
+        key:
+          $ref: '#/components/schemas/DiagramKeyValue'
+      required:
+        - key
+      readOnly: true # Returned by GET/POST responses
     DiagramRequest:
       type: object
       properties:
@@ -92,30 +100,36 @@ components:
           type: string
           minLength: 2
           maxLength: 255
+          nullable: true
         email:
           description: Email of the user
           type: string
           format: email
           minLength: 5
           maxLength: 255
+          nullable: true
         title:
           description: Diagram title
           type: string
           minLength: 0
           maxLength: 255
+          nullable: true
         file:
           description: Uploaded SQLite database file
           type: string
           format: binary
-        file-hash:
+          nullable: true
+        fileHash:
           description: MD5 hash of SQLite database file contents to identify duplicate requests
           type: string
           minLength: 32
-          maxLength: 32          
+          maxLength: 32
+          nullable: true
         error:
           description: Error message
           type: string
-          readOnly: true # Returned by GET, not used in POST/PUT/PATCH
+          readOnly: true # Returned by GET/POST responses, not used in POST/PUT/PATCH inputs
+          nullable: true
         timestamp:
           description: Request timestamp in UTC
           type: string
@@ -143,7 +157,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: '#/components/schemas/DiagramKey'
+        $ref: '#/components/schemas/DiagramKeyValue'
   responses:
     retrieved-request:
       description: Good diagram request information
@@ -166,7 +180,7 @@ components:
           description: Location of a newly created resource
           schema:
             type: string
-            format: uri
+          example: './{key}'
       content:
         application/json:
           schema:
@@ -230,16 +244,19 @@ components:
         file: test.db
     diagram-response-good:
       value:
-        key: 38yyfzj0f5mk
+        key:
+          key: 38yyfzj0f5mk
         name: Sualeh Fatehi
         email: sualeh@hotmail.com
         file: test.db
+        fileHash: 0123456789abcdef0123456789abcdef
         timestamp: '2021-12-11T04:28:59.237Z'
     diagram-response-error:
       value:
-        key: 38xxfzj0f5mk
+        key:
+          key: 38xxfzj0f5mk
         name: Sualeh Fatehi
         email: sualeh@hotmail.com
         file: test.db
         timestamp: '2021-12-11T04:28:59.237Z'
-        error: Expected SQLite database, but got content of text/plain
+        error: Expected a SQLite database file, but got a file of type text/plain

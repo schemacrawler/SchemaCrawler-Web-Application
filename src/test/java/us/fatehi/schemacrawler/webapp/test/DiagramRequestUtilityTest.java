@@ -27,9 +27,9 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.test;
 
+import static java.time.ZoneOffset.UTC;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.io.StringReader;
@@ -57,12 +57,11 @@ public class DiagramRequestUtilityTest {
     final DiagramRequest diagramRequestMarshalled =
         DiagramRequest.fromJson(new StringReader(diagramRequestJson));
 
-    // Stable fields should round-trip
     assertThat(
         diagramRequestMarshalled.getKey().getKey(), is(diagramRequestSource.getKey().getKey()));
-    // Timestamp is generated in the constructor and may not deserialize to the same value
-    // when using Jackson; just assert it was populated
-    assertThat(diagramRequestMarshalled.getTimestamp(), is(notNullValue()));
+    assertThat(
+        diagramRequestMarshalled.getTimestamp().atZone(UTC).toLocalDate(),
+        is(diagramRequestSource.getTimestamp().atZone(UTC).toLocalDate()));
     assertThat(diagramRequestMarshalled.getName(), is(diagramRequestSource.getName()));
     assertThat(diagramRequestMarshalled.getEmail(), is(diagramRequestSource.getEmail()));
     assertThat(diagramRequestMarshalled.getFile(), is(nullValue()));

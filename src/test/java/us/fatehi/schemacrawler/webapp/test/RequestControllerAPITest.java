@@ -27,6 +27,7 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.test;
 
+import static com.atlassian.oai.validator.mockmvc.OpenApiValidationMatchers.openApi;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -79,6 +80,7 @@ public class RequestControllerAPITest {
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -88,7 +90,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("error").asText(), is("email: Email is required; name: Name is required"));
+        jsonNode.get("error").asString(), is("email: Email is required; name: Name is required"));
   }
 
   @Test
@@ -103,6 +105,7 @@ public class RequestControllerAPITest {
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -143,6 +146,7 @@ public class RequestControllerAPITest {
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError())
+            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -153,7 +157,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("error").asText(),
+        jsonNode.get("error").asString(),
         matchesPattern(
             Pattern.compile(
                 ".*Expected a SQLite database file, but got a file of type.*", Pattern.DOTALL)));
