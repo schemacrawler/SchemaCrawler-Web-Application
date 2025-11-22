@@ -170,9 +170,9 @@ public class DiagramRequest implements Serializable {
   }
 
   /**
-   * Set error message.
+   * Set the error message.
    *
-   * @param Error message
+   * @param error Error message
    */
   public void setError(final String error) {
     this.error = error;
