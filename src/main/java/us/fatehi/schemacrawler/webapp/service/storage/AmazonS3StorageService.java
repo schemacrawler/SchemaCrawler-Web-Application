@@ -127,7 +127,7 @@ public class AmazonS3StorageService implements StorageService {
       final String filename = key + "." + extension.getExtension();
       final Path tempFilePath = createTempFile(null, filename).toAbsolutePath();
       try (final InputStream inputStream = streamSource.getInputStream();
-          final OutputStream outputStream = Files.newOutputStream(tempFilePath); ) {
+          final OutputStream outputStream = Files.newOutputStream(tempFilePath) ) {
         copy(inputStream, outputStream);
       }
 

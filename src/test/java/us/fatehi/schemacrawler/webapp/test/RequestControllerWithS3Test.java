@@ -117,7 +117,7 @@ public class RequestControllerWithS3Test {
 
     assertThat(contents.size(), is(greaterThan(0)));
 
-    assertThat(contents.get(0).key(), is(diagramRequest.getKey() + ".db"));
-    assertThat(contents.get(0).size(), is(greaterThan(9_200L)));
+    assertThat(contents.getFirst().key(), is(diagramRequest.getKey() + ".db"));
+    assertThat(contents.getFirst().size(), is(greaterThan(9_200L)));
   }
 }
