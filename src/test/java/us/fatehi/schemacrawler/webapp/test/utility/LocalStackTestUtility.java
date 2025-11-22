@@ -19,7 +19,7 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 
 public final class LocalStackTestUtility {
 
-  public static LocalStackContainer newLocalStackContainerContainer() {
+  public static LocalStackContainer newLocalStackContainer() {
     final DockerImageName localstackImage =
         DockerImageName.parse("localstack/localstack").withTag("4.10");
 

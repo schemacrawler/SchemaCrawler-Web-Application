@@ -49,8 +49,7 @@ public class LocalStackS3BucketTest {
   private static final String TEST_BUCKET_NAME = "foo";
 
   @Container
-  private final LocalStackContainer localstack =
-      LocalStackTestUtility.newLocalStackContainerContainer();
+  private final LocalStackContainer localstack = LocalStackTestUtility.newLocalStackContainer();
 
   @Test
   public void createS3Object() {

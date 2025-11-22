@@ -74,7 +74,7 @@ public class RequestControllerWithS3Test {
 
   @Container
   public static final LocalStackContainer localstack =
-      LocalStackTestUtility.newLocalStackContainerContainer();
+      LocalStackTestUtility.newLocalStackContainer();
 
   static {
     localstack.start();
