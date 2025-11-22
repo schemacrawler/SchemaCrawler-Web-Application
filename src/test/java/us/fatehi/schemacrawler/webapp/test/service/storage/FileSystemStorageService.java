@@ -35,17 +35,14 @@ import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
 
+import jakarta.annotation.PostConstruct;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
-
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-
-import jakarta.annotation.PostConstruct;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
@@ -111,9 +108,8 @@ public class FileSystemStorageService implements StorageService {
       @NonNull final FileExtensionType extension)
       throws Exception {
     final Path filePath =
-        Paths.get(
-            System.getProperty("java.io.tmpdir"),
-            String.format("%s.%s", key, extension.getExtension()));
+        Path.of(
+            System.getProperty("java.io.tmpdir"), "%s.%s".formatted(key, extension.getExtension()));
 
     saveFile(streamSource, key, extension, filePath);
 
@@ -133,7 +129,7 @@ public class FileSystemStorageService implements StorageService {
     // Check that the file is not empty
     if (Files.size(filePath) == 0) {
       Files.delete(filePath);
-      throw new Exception(String.format("Uploaded file has no data (%s)", key));
+      throw new Exception("Uploaded file has no data (%s)".formatted(key));
     }
   }
 }

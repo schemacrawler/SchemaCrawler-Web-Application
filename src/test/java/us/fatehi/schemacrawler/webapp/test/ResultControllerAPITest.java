@@ -40,25 +40,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
-@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("local")
@@ -167,6 +164,6 @@ public class ResultControllerAPITest {
     final DiagramKey resultKey = objectMapper.readValue(keyNode, DiagramKey.class);
 
     assertThat(resultKey, is(key));
-    assertThat(jsonNode.get("name").asText(), is("Sualeh Fatehi"));
+    assertThat(jsonNode.get("name").asString(), is("Sualeh Fatehi"));
   }
 }

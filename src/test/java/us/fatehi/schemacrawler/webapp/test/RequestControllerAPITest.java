@@ -33,15 +33,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 import static us.fatehi.schemacrawler.webapp.test.utility.TestUtility.mockMultipartFile;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -49,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,13 +53,13 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
-@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("local")
@@ -94,7 +90,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("error").asText(), is("email: Email is required; name: Name is required"));
+        jsonNode.get("error").asString(), is("email: Email is required; name: Name is required"));
   }
 
   @Test
@@ -118,8 +114,8 @@ public class RequestControllerAPITest {
     final ObjectMapper objectMapper = new ObjectMapper();
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
-    assertThat(jsonNode.get("error"), is(nullValue()));
-    assertThat(jsonNode.get("title"), is(nullValue()));
+    assertThat(jsonNode.get("error").isNull(), is(true));
+    assertThat(jsonNode.get("title").isNull(), is(true));
 
     final String keyNode = jsonNode.get("key").toString();
     final DiagramKey key = objectMapper.readValue(keyNode, DiagramKey.class);
@@ -161,7 +157,7 @@ public class RequestControllerAPITest {
     final JsonNode jsonNode = objectMapper.readTree(returnJson);
 
     assertThat(
-        jsonNode.get("error").asText(),
+        jsonNode.get("error").asString(),
         matchesPattern(
             Pattern.compile(
                 ".*Expected a SQLite database file, but got a file of type.*", Pattern.DOTALL)));

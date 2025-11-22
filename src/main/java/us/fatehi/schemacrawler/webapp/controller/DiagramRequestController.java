@@ -68,7 +68,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
@@ -126,7 +125,6 @@ public class DiagramRequestController {
   }
 
   @PostMapping(value = API_PREFIX, produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseBody
   public ResponseEntity<DiagramRequest> diagramRequestFormSubmitApi(
       @ModelAttribute("diagramRequest") @NotNull(message = "Diagram request not provided") @Valid
           final DiagramRequest diagramRequest,
@@ -134,7 +132,7 @@ public class DiagramRequestController {
       @RequestParam("file") final Optional<MultipartFile> file) {
 
     // Check for bad requests
-    if (!file.isPresent()) {
+    if (file.isEmpty()) {
       diagramRequest.setError("No SQLite file upload provided");
       // Save validation errors
       saveDiagramRequest(diagramRequest);
@@ -160,7 +158,7 @@ public class DiagramRequestController {
       generateSchemaCrawlerDiagram(diagramRequest, file.get());
       location = new URI("./" + diagramRequest.getKey());
     } catch (final Exception e) {
-      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
+      LOGGER.error("%s%n%s".formatted(e.getMessage(), diagramRequest));
       LOGGER.trace(e.getMessage(), e);
       diagramRequest.setError(e.getMessage());
     }
@@ -183,7 +181,7 @@ public class DiagramRequestController {
       if (!"application/x-sqlite3".equals(detectedMimeType)) {
         final MimeType mimeType = MimeTypes.getDefaultMimeTypes().forName(detectedMimeType);
 
-        final StringBuffer exceptionMessage = new StringBuffer();
+        final StringBuilder exceptionMessage = new StringBuilder();
         exceptionMessage.append("Expected a SQLite database file, but got a ");
         if (!isBlank(mimeType.getDescription())) {
           exceptionMessage.append(mimeType.getDescription()).append(" file");
@@ -195,7 +193,7 @@ public class DiagramRequestController {
         throw new ExecutionRuntimeException(exceptionMessage.toString());
       }
     } catch (final MimeTypeException | IOException | NullPointerException e) {
-      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
+      LOGGER.error("%s%n%s".formatted(e.getMessage(), diagramRequest));
       LOGGER.trace(e.getMessage(), e);
     }
   }
@@ -218,7 +216,7 @@ public class DiagramRequestController {
       // Make asynchronous call to generate diagram
       processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
     } catch (final Exception e) {
-      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
+      LOGGER.error("%s%n%s".formatted(e.getMessage(), diagramRequest));
       LOGGER.warn(e.getMessage(), e);
       saveExceptionLogFile(key, e);
       diagramRequest.setError(e.getMessage());
@@ -239,7 +237,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception e) {
-      LOGGER.error(String.format("<%s>: %s", key, e.getMessage()));
+      LOGGER.error("<%s>: %s".formatted(key, e.getMessage()));
       LOGGER.warn(e.getMessage(), e);
     }
   }
@@ -253,7 +251,7 @@ public class DiagramRequestController {
       storageService.store(() -> toInputStream(diagramRequest.toJson(), UTF_8), key, JSON);
     } catch (final Exception e) {
       LOGGER.error(
-          String.format("Could not save diagram request%n%s%n%s", e.getMessage(), diagramRequest));
+          "Could not save diagram request%n%s%n%s".formatted(e.getMessage(), diagramRequest));
     }
   }
 
@@ -265,7 +263,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception e) {
-      LOGGER.error(String.format("<%s>: %s", key, e.getMessage()));
+      LOGGER.error("<%s>: %s".formatted(key, e.getMessage()));
       LOGGER.warn(e.getMessage(), e);
     }
   }

@@ -31,9 +31,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.localstack.LocalStackContainer;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -49,8 +49,7 @@ public class LocalStackS3BucketTest {
   private static final String TEST_BUCKET_NAME = "foo";
 
   @Container
-  private final LocalStackContainer localstack =
-      LocalStackTestUtility.newLocalStackContainerContainer();
+  private final LocalStackContainer localstack = LocalStackTestUtility.newLocalStackContainer();
 
   @Test
   public void createS3Object() {

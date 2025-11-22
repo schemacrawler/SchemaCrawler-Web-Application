@@ -27,38 +27,40 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.model;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
-import static com.fasterxml.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS;
-import static com.fasterxml.jackson.databind.SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID;
-import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_ENUMS_USING_TO_STRING;
 import static java.util.Objects.requireNonNull;
-
-import java.io.IOException;
-import java.io.Reader;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import static tools.jackson.core.StreamReadFeature.IGNORE_UNDEFINED;
+import static tools.jackson.core.StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION;
+import static tools.jackson.core.StreamWriteFeature.IGNORE_UNKNOWN;
+import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
+import static tools.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS;
+import static tools.jackson.databind.SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import java.io.Reader;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
+import tools.jackson.databind.cfg.MapperBuilder;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 public class DiagramRequestUtility {
 
-  @Bean
-  @Primary
-  public ObjectMapper objectMapper() {
+  private static ObjectMapper newConfiguredObjectMapper() {
+
+    final MapperBuilder<? extends ObjectMapper, ?> mapperBuilder = JsonMapper.builder();
+
+    requireNonNull(mapperBuilder, "No mapper builder provided");
+    mapperBuilder.enable(ORDER_MAP_ENTRIES_BY_KEYS, INDENT_OUTPUT, USE_EQUALITY_FOR_OBJECT_ID);
+    mapperBuilder.enable(INCLUDE_SOURCE_IN_LOCATION, IGNORE_UNDEFINED);
+    mapperBuilder.enable(IGNORE_UNKNOWN);
 
     @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -75,16 +77,16 @@ public class DiagramRequestUtility {
       @JsonUnwrapped public DiagramKey key;
     }
 
-    final ObjectMapper mapper = new ObjectMapper();
-    mapper.enable(
-        ORDER_MAP_ENTRIES_BY_KEYS,
-        INDENT_OUTPUT,
-        USE_EQUALITY_FOR_OBJECT_ID,
-        WRITE_ENUMS_USING_TO_STRING);
-    mapper.setSerializationInclusion(NON_NULL);
-    mapper.addMixIn(DiagramRequest.class, JacksonAnnotationMixIn.class);
-    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    mapper.registerModule(new JavaTimeModule());
+    mapperBuilder.addMixIn(DiagramRequest.class, JacksonAnnotationMixIn.class);
+
+    final ObjectMapper objectMapper = mapperBuilder.build();
+    return objectMapper;
+  }
+
+  @Bean
+  @Primary
+  public ObjectMapper objectMapper() {
+    final ObjectMapper mapper = newConfiguredObjectMapper();
     return mapper;
   }
 
@@ -92,7 +94,7 @@ public class DiagramRequestUtility {
     requireNonNull(diagramRequest, "No diagram request provided");
     try {
       return objectMapper().writeValueAsString(diagramRequest);
-    } catch (final JsonProcessingException e) {
+    } catch (final JacksonException e) {
       throw new ExecutionRuntimeException("Cannot serialize diagram request", e);
     }
   }
@@ -101,9 +103,9 @@ public class DiagramRequestUtility {
     requireNonNull(diagramRequestReader, "No diagram request reader provided");
     try {
       return objectMapper().readValue(diagramRequestReader, DiagramRequest.class);
-    } catch (final IOException e) {
+    } catch (final JacksonException e) {
       throw new ExecutionRuntimeException(
-          String.format("Cannot deserialize diagram request%n%s", diagramRequestReader), e);
+          "Cannot deserialize diagram request%n%s".formatted(diagramRequestReader), e);
     }
   }
 }

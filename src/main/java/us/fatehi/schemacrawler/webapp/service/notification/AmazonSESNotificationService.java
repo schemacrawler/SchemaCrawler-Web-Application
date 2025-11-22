@@ -28,12 +28,6 @@ http://www.gnu.org/licenses/
 
 package us.fatehi.schemacrawler.webapp.service.notification;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.util.Properties;
-
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
@@ -43,13 +37,16 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.util.Properties;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-
 import software.amazon.awssdk.awscore.exception.AwsErrorDetails;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.ses.SesClient;
@@ -84,28 +81,28 @@ public class AmazonSESNotificationService implements NotificationService {
   public void notify(@NotNull final DiagramRequest diagramRequest) {
 
     final String recipient = diagramRequest.getEmail();
-    final String subject = String.format("SchemaCrawler Diagram: %s", diagramRequest.getTitle());
+    final String subject = "SchemaCrawler Diagram: %s".formatted(diagramRequest.getTitle());
     final String key = diagramRequest.getKey().getKey();
-    final String resultsUrl = String.format("%s/schemacrawler/results/%s", webAppUri, key);
+    final String resultsUrl = "%s/schemacrawler/results/%s".formatted(webAppUri, key);
 
-    final String bodyText = String.format("Your SchemaCrawler diagram is ready at %s", resultsUrl);
+    final String bodyText = "Your SchemaCrawler diagram is ready at %s".formatted(resultsUrl);
     final String bodyHTML =
-        String.format("<a href='%s'>Your SchemaCrawler diagram is ready</a>", resultsUrl);
+        "<a href='%s'>Your SchemaCrawler diagram is ready</a>".formatted(resultsUrl);
 
     try {
       final MimeMessage message = createMessage(recipient, subject, bodyText, bodyHTML);
       send(message);
     } catch (MessagingException | IOException e) {
       LOGGER.warn(
-          String.format("Error sending email for %s: %s", diagramRequest.getKey(), e.getMessage()));
+          "Error sending email for %s: %s".formatted(diagramRequest.getKey(), e.getMessage()));
     } catch (final SesException e) {
       final AwsErrorDetails awsErrorDetails = e.awsErrorDetails();
       LOGGER.warn(
-          String.format(
-              "Error sending email for %s: %s - %s",
-              diagramRequest.getKey(),
-              awsErrorDetails.errorCode(),
-              awsErrorDetails.errorMessage()));
+          "Error sending email for %s: %s - %s"
+              .formatted(
+                  diagramRequest.getKey(),
+                  awsErrorDetails.errorCode(),
+                  awsErrorDetails.errorMessage()));
     }
   }
 

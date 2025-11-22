@@ -33,15 +33,12 @@ import static schemacrawler.tools.sqlite.SchemaCrawlerSQLiteUtility.executeForOu
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.PNG;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.SQLITE_DB;
 
+import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.util.logging.Logger;
-
-import jakarta.validation.constraints.NotNull;
-
 import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
@@ -65,8 +62,7 @@ public class ProcessingService {
       throws Exception {
 
     logger.info(
-        String.format(
-            "Processing in thread %s%n%s", Thread.currentThread().getName(), diagramRequest));
+        "Processing in thread %s%n%s".formatted(Thread.currentThread().getName(), diagramRequest));
 
     final DiagramKey key = diagramRequest.getKey();
 
