@@ -15,6 +15,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 
 public final class LocalStackTestUtility {
 
@@ -35,6 +36,8 @@ public final class LocalStackTestUtility {
     final S3Client s3 =
         S3Client.builder()
             .endpointOverride(s3Endpoint)
+            // LocalStack requires path-style access
+            .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
             .credentialsProvider(
                 StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(

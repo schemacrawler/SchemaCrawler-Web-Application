@@ -30,7 +30,6 @@ package us.fatehi.schemacrawler.webapp.test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -42,7 +41,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketResponse;
 import us.fatehi.schemacrawler.webapp.test.utility.LocalStackTestUtility;
 
-@Disabled
 @Testcontainers(disabledWithoutDocker = true)
 public class LocalStackS3BucketTest {
 
