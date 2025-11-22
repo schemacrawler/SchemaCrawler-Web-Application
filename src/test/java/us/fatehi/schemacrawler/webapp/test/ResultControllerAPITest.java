@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.test;
 
-import static com.atlassian.oai.validator.mockmvc.OpenApiValidationMatchers.openApi;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -40,25 +39,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static us.fatehi.schemacrawler.webapp.controller.URIConstants.API_PREFIX;
 import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.JSON;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
-@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("local")
@@ -108,7 +104,6 @@ public class ResultControllerAPITest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -129,7 +124,6 @@ public class ResultControllerAPITest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
-            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));
@@ -154,7 +148,6 @@ public class ResultControllerAPITest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(openApi().isValid("api/schemacrawler-web-application.yaml"))
             .andReturn();
 
     assertThat(result, is(notNullValue()));

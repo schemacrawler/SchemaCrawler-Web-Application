@@ -134,7 +134,7 @@ public class DiagramRequestController {
       @RequestParam("file") final Optional<MultipartFile> file) {
 
     // Check for bad requests
-    if (!file.isPresent()) {
+    if (file.isEmpty()) {
       diagramRequest.setError("No SQLite file upload provided");
       // Save validation errors
       saveDiagramRequest(diagramRequest);
@@ -160,7 +160,7 @@ public class DiagramRequestController {
       generateSchemaCrawlerDiagram(diagramRequest, file.get());
       location = new URI("./" + diagramRequest.getKey());
     } catch (final Exception e) {
-      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
+      LOGGER.error("%s%n%s".formatted(e.getMessage(), diagramRequest));
       LOGGER.trace(e.getMessage(), e);
       diagramRequest.setError(e.getMessage());
     }
@@ -195,7 +195,7 @@ public class DiagramRequestController {
         throw new ExecutionRuntimeException(exceptionMessage.toString());
       }
     } catch (final MimeTypeException | IOException | NullPointerException e) {
-      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
+      LOGGER.error("%s%n%s".formatted(e.getMessage(), diagramRequest));
       LOGGER.trace(e.getMessage(), e);
     }
   }
@@ -218,7 +218,7 @@ public class DiagramRequestController {
       // Make asynchronous call to generate diagram
       processingService.generateSchemaCrawlerDiagram(diagramRequest, localPath);
     } catch (final Exception e) {
-      LOGGER.error(String.format("%s%n%s", e.getMessage(), diagramRequest));
+      LOGGER.error("%s%n%s".formatted(e.getMessage(), diagramRequest));
       LOGGER.warn(e.getMessage(), e);
       saveExceptionLogFile(key, e);
       diagramRequest.setError(e.getMessage());
@@ -239,7 +239,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception e) {
-      LOGGER.error(String.format("<%s>: %s", key, e.getMessage()));
+      LOGGER.error("<%s>: %s".formatted(key, e.getMessage()));
       LOGGER.warn(e.getMessage(), e);
     }
   }
@@ -253,7 +253,7 @@ public class DiagramRequestController {
       storageService.store(() -> toInputStream(diagramRequest.toJson(), UTF_8), key, JSON);
     } catch (final Exception e) {
       LOGGER.error(
-          String.format("Could not save diagram request%n%s%n%s", e.getMessage(), diagramRequest));
+          "Could not save diagram request%n%s%n%s".formatted(e.getMessage(), diagramRequest));
     }
   }
 
@@ -265,7 +265,7 @@ public class DiagramRequestController {
       final String stackTrace = stackTraceWriter.toString();
       storageService.store(() -> toInputStream(stackTrace, UTF_8), key, LOG);
     } catch (final Exception e) {
-      LOGGER.error(String.format("<%s>: %s", key, e.getMessage()));
+      LOGGER.error("<%s>: %s".formatted(key, e.getMessage()));
       LOGGER.warn(e.getMessage(), e);
     }
   }

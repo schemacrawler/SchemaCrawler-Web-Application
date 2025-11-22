@@ -30,20 +30,19 @@ package us.fatehi.schemacrawler.webapp.model;
 import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 
-import java.io.Reader;
-import java.io.Serializable;
-import java.time.Instant;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+import java.io.Reader;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.Instant;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class DiagramRequest implements Serializable {
 
-  private static final long serialVersionUID = 2065519510282344200L;
+  @Serial private static final long serialVersionUID = 2065519510282344200L;
 
   /**
    * Factory method to deserialize a JSON request.

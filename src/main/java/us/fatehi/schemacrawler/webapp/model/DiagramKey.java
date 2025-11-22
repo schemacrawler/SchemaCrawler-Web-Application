@@ -27,20 +27,18 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.model;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Objects;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 
 public class DiagramKey implements Serializable {
 
-  private static final long serialVersionUID = 3453873731406876293L;
+  @Serial private static final long serialVersionUID = 3453873731406876293L;
 
   @Pattern(regexp = "[a-z0-9]{12}")
   @Size(min = 12, max = 12, message = "Invalid key length")
@@ -97,7 +95,7 @@ public class DiagramKey implements Serializable {
    */
   private String validateKey(final String key) throws RuntimeException {
     if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key)) {
-      throw new InternalRuntimeException(String.format("Invalid key <%s>", key));
+      throw new InternalRuntimeException("Invalid key <%s>".formatted(key));
     }
     return key.toLowerCase();
   }

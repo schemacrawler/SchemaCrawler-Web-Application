@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
 import us.fatehi.schemacrawler.webapp.service.notification.NotificationService;
 
@@ -43,6 +42,6 @@ public class LogNotificationService implements NotificationService {
 
   @Override
   public void notify(final DiagramRequest diagramRequest) {
-    LOGGER.info(String.format("**** EMAILING RESULT for %s", diagramRequest.getKey().getKey()));
+    LOGGER.info("**** EMAILING RESULT for %s".formatted(diagramRequest.getKey().getKey()));
   }
 }
