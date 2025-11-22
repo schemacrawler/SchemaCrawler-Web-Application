@@ -51,7 +51,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
 import us.fatehi.schemacrawler.webapp.model.DiagramRequest;
-import us.fatehi.schemacrawler.webapp.service.processing.ProcessingService;
 import us.fatehi.schemacrawler.webapp.service.storage.StorageService;
 
 @Controller
@@ -62,9 +61,7 @@ public class DiagramResultController {
   private final StorageService storageService;
 
   public DiagramResultController(
-      @NotNull(message = "StorageService not provided") final StorageService storageService,
-      @NotNull(message = "ProcessingService not provided")
-          final ProcessingService processingService) {
+      @NotNull(message = "StorageService not provided") final StorageService storageService) {
     this.storageService = storageService;
   }
 
@@ -107,7 +104,6 @@ public class DiagramResultController {
    * @throws Exception On an exception
    */
   @GetMapping(value = API_PREFIX + "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseBody
   public ResponseEntity<DiagramRequest> retrieveResultsApi(
       @PathVariable @NotNull(message = "Key not provided") final DiagramKey key) throws Exception {
 

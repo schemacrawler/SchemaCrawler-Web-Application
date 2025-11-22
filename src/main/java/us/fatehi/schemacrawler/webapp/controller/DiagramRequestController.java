@@ -68,7 +68,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
@@ -126,7 +125,6 @@ public class DiagramRequestController {
   }
 
   @PostMapping(value = API_PREFIX, produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseBody
   public ResponseEntity<DiagramRequest> diagramRequestFormSubmitApi(
       @ModelAttribute("diagramRequest") @NotNull(message = "Diagram request not provided") @Valid
           final DiagramRequest diagramRequest,
@@ -183,7 +181,7 @@ public class DiagramRequestController {
       if (!"application/x-sqlite3".equals(detectedMimeType)) {
         final MimeType mimeType = MimeTypes.getDefaultMimeTypes().forName(detectedMimeType);
 
-        final StringBuffer exceptionMessage = new StringBuffer();
+        final StringBuilder exceptionMessage = new StringBuilder();
         exceptionMessage.append("Expected a SQLite database file, but got a ");
         if (!isBlank(mimeType.getDescription())) {
           exceptionMessage.append(mimeType.getDescription()).append(" file");
