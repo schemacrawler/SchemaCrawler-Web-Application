@@ -18,7 +18,7 @@
               "\r",
               "pm.test(\"Check headers\", () => {\r",
               "  var diagramRequest = pm.response.json();\r",
-              "  pm.expect(pm.response.headers.get('Location')).to.eql('./' + diagramRequest.key);\r",
+              "  pm.expect(pm.response.headers.get('Location')).to.eql('./' + diagramRequest.key.key);\r",
               "});\r",
               "\r",
               "pm.test(\"Check response\", function () {\r",
@@ -295,7 +295,7 @@
               "\r",
               "pm.test(\"Check response\", function () {\r",
               "    var diagramRequest = pm.response.json();\r",
-              "    pm.expect(diagramRequest.key).to.eql('aiejs3qsrkuh');\r",
+              "    pm.expect(diagramRequest.key.key).to.eql('aiejs3qsrkuh');\r",
               "});\r",
               ""
             ],
