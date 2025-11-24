@@ -41,7 +41,7 @@ jobs:
 # BUILD DEPENDENCIES
     - id: checkout-schemacrawler
       name: Checkout SchemaCrawler
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         repository: schemacrawler/SchemaCrawler
         path: SchemaCrawler
