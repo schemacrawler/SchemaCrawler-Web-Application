@@ -1,7 +1,7 @@
 # ========================================================================
 # SchemaCrawler
 # http://www.schemacrawler.com
-# Copyright (c) 2000-2025, Sualeh Fatehi <sualeh@hotmail.com>.
+# Copyright (c) 2000-2026, Sualeh Fatehi <sualeh@hotmail.com>.
 # All rights reserved.
 # ------------------------------------------------------------------------
 #
@@ -26,8 +26,8 @@
 
 FROM eclipse-temurin:21-jdk-alpine
 
-ARG SCHEMACRAWLER_VERSION=17.1.6
-ARG SCHEMACRAWLER_WEBAPP_VERSION=17.1.6-1
+ARG SCHEMACRAWLER_VERSION=17.1.7
+ARG SCHEMACRAWLER_WEBAPP_VERSION=17.1.7-1
 
 LABEL \
   "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>" \
