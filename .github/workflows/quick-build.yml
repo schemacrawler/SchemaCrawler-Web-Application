@@ -58,7 +58,11 @@ jobs:
           clean install
 
 # VALIDATE OPENAPI SPECIFICATION
-    - id: validate-oas
+    - id: ping-server
+      name: Check Swagger Editor reachable
+      run: |
+        curl -v http://localhost/ || echo "Swagger Editor not reachable"
+    - id: validate-open-api-definition
       name: Validate OpenAPI definition
       uses: swaggerexpert/swagger-editor-validate@v1
       with:
