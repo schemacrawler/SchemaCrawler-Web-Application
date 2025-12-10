@@ -63,6 +63,7 @@ jobs:
       uses: swaggerexpert/swagger-editor-validate@v1
       with:
         swagger-editor-url: http://localhost/
+        default-timeout: 60000
         definition-file: src/main/resources/api/schemacrawler-web-application.yaml
 
 # BUILD AND TEST
