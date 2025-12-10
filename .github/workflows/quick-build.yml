@@ -21,7 +21,7 @@ jobs:
     # Service containers to run with workflow
     services:
       swagger-editor:
-        image: swaggerapi/swagger-editor
+        image: docker.swagger.io/swaggerapi/swagger-editor
         ports:
           - 80:8080
 
