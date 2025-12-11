@@ -1,0 +1,17 @@
+# docker run -d -p 8080:80 docker.swagger.io/swaggerapi/swagger-editor:latest
+services:
+  swagger-editor:
+    image: docker.swagger.io/swaggerapi/swagger-editor:latest
+    container_name: swagger-editor
+    ports:
+      - target: 80
+        published: 8080
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: bind
+        source: ./src/main/resources/api
+        target: /tmp
+    environment:
+      SWAGGER_FILE: /tmp/schemacrawler-web-application.yaml
+    restart: unless-stopped

@@ -68,6 +68,7 @@ jobs:
       with:
         swagger-editor-url: http://localhost:8080/
         definition-file: src/main/resources/api/schemacrawler-web-application.yaml
+        default-timeout: 60000
 
 # BUILD AND TEST
     - id: build-test
