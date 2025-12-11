@@ -17,15 +17,6 @@ jobs:
   build:
     name: Quick build
     runs-on: ubuntu-latest
-
-    # Service containers to run with workflow
-    services:
-      swagger-editor:
-        image: docker.swagger.io/swaggerapi/swagger-editor:latest
-        ports:
-          - 8080:80
-
-
     steps:
 
 # SETUP BUILD ENVIRONMENT
@@ -65,19 +56,6 @@ jobs:
         # Validate OpenAPI definition
         npm install @redocly/cli -g
         redocly lint ./src/main/resources/api/schemacrawler-web-application.yaml
-    - id: ping-server
-      name: Check if Swagger Editor is reachable
-      shell: bash
-      run: |
-        # Check if Swagger Editor is reachable
-        curl -v http://localhost:8080/ || echo "Swagger Editor not reachable"
-    - id: validate-open-api-definition
-      name: Validate OpenAPI definition
-      uses: swaggerexpert/swagger-editor-validate@v1
-      with:
-        swagger-editor-url: http://localhost:8080/
-        definition-file: src/main/resources/api/schemacrawler-web-application.yaml
-        default-timeout: 60000
 
 # BUILD AND TEST
     - id: build-test
