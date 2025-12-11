@@ -58,9 +58,18 @@ jobs:
           clean install
 
 # VALIDATE OPENAPI SPECIFICATION
-    - id: ping-server
-      name: Check Swagger Editor reachable
+    - id: redocly
+      name: Validate OpenAPI definition
+      shell: bash
       run: |
+        # Validate OpenAPI definition
+        npm install @redocly/cli -g
+        redocly lint ./src/main/resources/api/schemacrawler-web-application.yaml
+    - id: ping-server
+      name: Check if Swagger Editor is reachable
+      shell: bash
+      run: |
+        # Check if Swagger Editor is reachable
         curl -v http://localhost:8080/ || echo "Swagger Editor not reachable"
     - id: validate-open-api-definition
       name: Validate OpenAPI definition
