@@ -17,15 +17,6 @@ jobs:
   build:
     name: Quick build
     runs-on: ubuntu-latest
-
-    # Service containers to run with workflow
-    services:
-      swagger-editor:
-        image: swaggerapi/swagger-editor
-        ports:
-          - 80:8080
-
-
     steps:
 
 # SETUP BUILD ENVIRONMENT
@@ -58,12 +49,13 @@ jobs:
           clean install
 
 # VALIDATE OPENAPI SPECIFICATION
-    - id: validate-oas
+    - id: redocly
       name: Validate OpenAPI definition
-      uses: swaggerexpert/swagger-editor-validate@v1
-      with:
-        swagger-editor-url: http://localhost/
-        definition-file: src/main/resources/api/schemacrawler-web-application.yaml
+      shell: bash
+      run: |
+        # Validate OpenAPI definition
+        npm install @redocly/cli -g
+        redocly lint ./src/main/resources/api/schemacrawler-web-application.yaml
 
 # BUILD AND TEST
     - id: build-test

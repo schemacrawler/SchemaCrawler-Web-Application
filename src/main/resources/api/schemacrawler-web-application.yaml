@@ -10,6 +10,14 @@ info:
     name: SchemaCrawler
     email: sualeh@schemacrawler.com
     url: https://www.schemacrawler.com
+# This API has no security
+security: []
+servers:
+  - url: 'https://{schemacrawler-host}'
+    variables:
+      schemacrawler-host:
+        default: schemacrawler.example.com
+        description: Host for the SchemaCrawler Web Application interface and API
 tags:
   - name: diagram-requests
     description: Create a SchemaCrawler schema diagram
@@ -43,8 +51,9 @@ paths:
         '500':
           $ref: '#/components/responses/server-error'
   /diagrams/{key}:
-    description: Retrieve a SchemaCrawler schema diagram request
     get:
+      summary: Get a SchemaCrawler schema diagram request
+      description: Retrieve a SchemaCrawler schema diagram request
       tags:
         - diagram-results
       operationId: retrieve-results
@@ -58,8 +67,9 @@ paths:
         '404':
           description: Results not found
   /diagrams/{key}/diagram:
-    description: Retrieve a SchemaCrawler schema diagram
     get:
+      summary: Get a SchemaCrawler schema diagram
+      description: Retrieve a SchemaCrawler schema diagram
       tags:
         - diagram-results
       operationId: retrieve-diagram-image
@@ -73,6 +83,8 @@ paths:
               schema:
                 type: string
                 format: binary
+        '404':
+          description: Results not found
 components:
   schemas:
     DiagramKeyValue:
