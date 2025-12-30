@@ -94,6 +94,11 @@
     </dependency>
 
     <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-diagram</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>
     </dependency>
