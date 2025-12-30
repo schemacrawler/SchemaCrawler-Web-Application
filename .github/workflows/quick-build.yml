@@ -30,23 +30,18 @@ jobs:
       uses: sualeh/install-graphviz@v1.0.3
 
 # BUILD DEPENDENCIES
-    - id: checkout-schemacrawler
-      name: Checkout SchemaCrawler
-      uses: actions/checkout@v6
+    - id: build-schemacrawler-core
+      name: Build SchemaCrawler-Core
+      uses: sualeh/build-maven-dependency@v1.0.8
+      with:
+        repository: schemacrawler/SchemaCrawler-Core
+        artifact: us.fatehi:schemacrawler:17.2.8
+    - id: build-schemacrawler
+      name: Build SchemaCrawler
+      uses: sualeh/build-maven-dependency@v1.0.8
       with:
         repository: schemacrawler/SchemaCrawler
-        path: SchemaCrawler
-    - id: build-schemacrawler
-      name: Build SchemaCrawler for local Maven repository
-      shell: bash
-      run: |
-        # Build SchemaCrawler
-        cd SchemaCrawler
-        mvn \
-          --no-transfer-progress \
-          --batch-mode \
-          -DskipTests=true \
-          clean install
+        artifact: us.fatehi:schemacrawler-commandline:17.2.8
 
 # VALIDATE OPENAPI SPECIFICATION
     - id: redocly
