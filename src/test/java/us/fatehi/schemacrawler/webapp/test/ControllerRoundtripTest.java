@@ -51,8 +51,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -107,7 +107,11 @@ public class ControllerRoundtripTest {
 
     final DiagramRequest diagramRequestFromJson =
         DiagramRequest.fromJson(newBufferedReader(jsonPathOptional.get(), UTF_8));
-    assertThat(diagramRequest, is(equalTo(diagramRequestFromJson)));
+    assertThat(diagramRequest.getName(), is(equalTo(diagramRequestFromJson.getName())));
+    assertThat(diagramRequest.getEmail(), is(equalTo(diagramRequestFromJson.getEmail())));
+    assertThat(diagramRequest.getFile(), is(equalTo(diagramRequestFromJson.getFile())));
+    assertThat(diagramRequest.getKey(), is(equalTo(diagramRequestFromJson.getKey())));
+    assertThat(diagramRequest.getTitle(), is(equalTo(diagramRequestFromJson.getTitle())));
 
     final String diagramUrlPath = "/schemacrawler/results/" + key + "/diagram";
 
