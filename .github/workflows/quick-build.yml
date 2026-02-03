@@ -35,13 +35,13 @@ jobs:
       uses: sualeh/build-maven-dependency@v1.0.8
       with:
         repository: schemacrawler/SchemaCrawler-Core
-        artifact: us.fatehi:schemacrawler:17.6.0
+        artifact: us.fatehi:schemacrawler:17.6.1
     - id: build-schemacrawler
       name: Build SchemaCrawler
       uses: sualeh/build-maven-dependency@v1.0.8
       with:
         repository: schemacrawler/SchemaCrawler
-        artifact: us.fatehi:schemacrawler-commandline:17.6.0
+        artifact: us.fatehi:schemacrawler-commandline:17.6.1
 
 # VALIDATE OPENAPI SPECIFICATION
     - id: redocly
