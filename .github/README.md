@@ -1,14 +1,16 @@
+<!-- markdownlint-disable MD041 -->
 **:star: Star it :arrow_heading_up: if you love it!**
 
 [![Quick Build](https://github.com/schemacrawler/SchemaCrawler-Web-Application/workflows/Quick%20Build/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions?query=workflow%3A%22Quick+Build%22)
 [![Integration Tests](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions/workflows/integration-tests.yml)
 [![codecov](https://codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application/branch/main/graph/badge.svg)](https://app.codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application)
 
-<img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" align="right" />
+# <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" valign="middle" /> SchemaCrawler Web Application
 
-# SchemaCrawler Web Application
-
-> **Note**: Please see the [SchemaCrawler website](https://www.schemacrawler.com/) for more details.
+> [!NOTE]
+> * Please see the [SchemaCrawler website](https://www.schemacrawler.com/) for more details.
+> * Use the [SchemaCrawler AI MCP Server](https://github.com/schemacrawler/SchemaCrawler-AI-MCP-Server-Usage) to get deep insights into your database
+> * Explore the SchemaCrawler command-line with a [live online tutorial](https://killercoda.com/schemacrawler).
 
 
 ## Technologies
@@ -39,11 +41,11 @@ This is a Spring Boot web application with a Bootstrap user interface, with sour
   - AWS_SECRET_ACCESS_KEY
   - AWS_S3_BUCKET
 - Do one of the steps below to start the web application locally on your system
-  - Start the application from Maven, run  
+  - Start the application from Maven, run
 	  `mvn -Dspring-boot.run.fork=false spring-boot:run`
-  - Start application from the jar file, run  
+  - Start application from the jar file, run
 	  `java -jar target/schemacrawler-webapp-17.6.1-1.jar`
-  - Start the application from the local image in a Docker container, run  
+  - Start the application from the local image in a Docker container, run
 	  `docker run -d --rm --env AWS_ACCESS_KEY_ID=xxxxx --env AWS_SECRET_ACCESS_KEY=xxxxx --env AWS_S3_BUCKET=xxxxx -p 8080:8080 -t schemacrawler/schemacrawler-webapp`
 
 
