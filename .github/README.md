@@ -5,7 +5,7 @@
 [![Integration Tests](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-Web-Application/actions/workflows/integration-tests.yml)
 [![codecov](https://codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application/branch/main/graph/badge.svg)](https://app.codecov.io/gh/schemacrawler/SchemaCrawler-Web-Application)
 
-# <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" valign="middle" /> SchemaCrawler Web Application
+# <img src="https://github.com/schemacrawler/SchemaCrawler-Usage/blob/98e442d9a957070d45e87109d5b32d7f17b62927/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png?raw=true" height="100px" width="100px" valign="middle" /> SchemaCrawler Web Application
 
 > [!NOTE]
 > * Please see the [SchemaCrawler website](https://www.schemacrawler.com/) for more details.
