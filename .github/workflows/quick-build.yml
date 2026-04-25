@@ -3,10 +3,6 @@ name: Quick Build
 on:
   workflow_dispatch:
   push:
-  pull_request:
-    branches:
-      - main
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -35,13 +31,13 @@ jobs:
       uses: sualeh/build-maven-dependency@v1.0.8
       with:
         repository: schemacrawler/SchemaCrawler-Core
-        artifact: us.fatehi:schemacrawler:17.10.1
+        artifact: us.fatehi:schemacrawler:17.10.2
     - id: build-schemacrawler
       name: Build SchemaCrawler
       uses: sualeh/build-maven-dependency@v1.0.8
       with:
         repository: schemacrawler/SchemaCrawler
-        artifact: us.fatehi:schemacrawler-commandline:17.10.1
+        artifact: us.fatehi:schemacrawler-commandline:17.10.2
 
 # VALIDATE OPENAPI SPECIFICATION
     - id: redocly
