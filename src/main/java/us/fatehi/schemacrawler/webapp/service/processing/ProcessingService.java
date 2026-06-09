@@ -36,7 +36,7 @@ import static us.fatehi.schemacrawler.webapp.service.storage.FileExtensionType.S
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.util.logging.Logger;
-import org.springframework.core.io.PathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import us.fatehi.schemacrawler.webapp.model.DiagramKey;
@@ -67,11 +67,11 @@ public class ProcessingService {
     final DiagramKey key = diagramRequest.getKey();
 
     // Store the uploaded database file
-    storageService.store(new PathResource(localPath), key, SQLITE_DB);
+    storageService.store(new FileSystemResource(localPath), key, SQLITE_DB);
 
     final String title = diagramRequest.getTitle();
     // Generate a database integration, and store the generated image
     final Path schemaCrawlerDiagram = executeForOutput(localPath, title, png);
-    storageService.store(new PathResource(schemaCrawlerDiagram), key, PNG);
+    storageService.store(new FileSystemResource(schemaCrawlerDiagram), key, PNG);
   }
 }
