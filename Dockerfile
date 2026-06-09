@@ -60,5 +60,8 @@ EXPOSE 8080
 ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
 ENV PORT=8080
 
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD wget -q --spider http://localhost:${PORT:-8080}/actuator/health || exit 1
+
 # Default command to run the application 
 ENTRYPOINT java $JAVA_OPTS -Dserver.port=$PORT -jar schemacrawler-webapp.jar

@@ -39,7 +39,7 @@ import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.PathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -122,7 +122,7 @@ public class DiagramResultController {
   private Resource retrieveDiagramLocal(final DiagramKey key) throws Exception {
     return storageService
         .retrieveLocal(key, PNG)
-        .map(PathResource::new)
+        .map(FileSystemResource::new)
         .orElseThrow(() -> new ExecutionRuntimeException("Cannot find key <%s>".formatted(key)));
   }
 
