@@ -41,16 +41,16 @@ jobs:
 # BUILD DEPENDENCIES
     - id: build-schemacrawler-core
       name: Build SchemaCrawler-Core
-      uses: sualeh/build-maven-dependency@v1.0.8
+      uses: sualeh/build-maven-dependency@v1.0.9
       with:
         repository: schemacrawler/SchemaCrawler-Core
-        artifact: us.fatehi:schemacrawler:17.11.4
+        artifact: us.fatehi:schemacrawler:17.12.1
     - id: build-schemacrawler
       name: Build SchemaCrawler
-      uses: sualeh/build-maven-dependency@v1.0.8
+      uses: sualeh/build-maven-dependency@v1.0.9
       with:
         repository: schemacrawler/SchemaCrawler
-        artifact: us.fatehi:schemacrawler-commandline:17.11.4
+        artifact: us.fatehi:schemacrawler-commandline:17.12.1
 
 # BUILD AND TEST
     - id: build-test
