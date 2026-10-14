@@ -27,13 +27,16 @@ http://www.gnu.org/licenses/
 */
 package us.fatehi.schemacrawler.webapp.model;
 
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Objects;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 
 public class DiagramKey implements Serializable {
@@ -45,7 +48,7 @@ public class DiagramKey implements Serializable {
   private final String key;
 
   public DiagramKey() {
-    key = RandomStringUtils.secure().nextAlphanumeric(12).toLowerCase();
+    key = RandomStringUtils.secure().nextAlphanumeric(12).toLowerCase(Locale.ROOT);
   }
 
   public DiagramKey(final String key) {
@@ -57,10 +60,7 @@ public class DiagramKey implements Serializable {
     if (this == obj) {
       return true;
     }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
+    if ((obj == null) || (getClass() != obj.getClass())) {
       return false;
     }
     final DiagramKey other = (DiagramKey) obj;
@@ -76,10 +76,7 @@ public class DiagramKey implements Serializable {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + (key == null ? 0 : key.hashCode());
-    return result;
+    return Objects.hash(key);
   }
 
   @Override
@@ -97,6 +94,6 @@ public class DiagramKey implements Serializable {
     if (StringUtils.length(key) != 12 || !StringUtils.isAlphanumeric(key)) {
       throw new InternalRuntimeException("Invalid key <%s>".formatted(key));
     }
-    return key.toLowerCase();
+    return key.toLowerCase(Locale.ROOT);
   }
 }
