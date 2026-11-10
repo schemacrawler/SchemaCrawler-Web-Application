@@ -21,7 +21,7 @@ jobs:
       name: Prepare Maven build
       uses: sualeh/prepare-maven-build@v1.8.2
       with:
-        java-version: 21
+        java-version: 25
     - id: install-graphviz
       name: Install Graphviz
       uses: sualeh/install-graphviz@v1.0.3
@@ -44,13 +44,13 @@ jobs:
       uses: sualeh/build-maven-dependency@v1.0.9
       with:
         repository: schemacrawler/SchemaCrawler-Core
-        artifact: us.fatehi:schemacrawler:17.16.0
+        artifact: us.fatehi:schemacrawler:18.0.2
     - id: build-schemacrawler
       name: Build SchemaCrawler
       uses: sualeh/build-maven-dependency@v1.0.9
       with:
         repository: schemacrawler/SchemaCrawler
-        artifact: us.fatehi:schemacrawler-commandline:17.16.0
+        artifact: us.fatehi:schemacrawler-commandline:18.0.2
 
 # BUILD AND TEST
     - id: build-test
