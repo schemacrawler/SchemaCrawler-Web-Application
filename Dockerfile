@@ -27,7 +27,7 @@
 FROM eclipse-temurin:25-jdk-alpine
 
 ARG SCHEMACRAWLER_VERSION=18.0.2
-ARG SCHEMACRAWLER_WEBAPP_VERSION=18.0.2-1
+ARG SCHEMACRAWLER_WEBAPP_VERSION=18.0.2-2
 
 LABEL \
   "maintainer"="Sualeh Fatehi <sualeh@hotmail.com>" \

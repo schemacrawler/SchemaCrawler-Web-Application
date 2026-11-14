@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>schemacrawler-webapp</artifactId>
-  <version>18.0.2-1</version>
+  <version>18.0.2-2</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler Web Application</name>
