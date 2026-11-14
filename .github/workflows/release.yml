@@ -14,6 +14,10 @@ jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC authentication
+      contents: write # Required for creating releases
+      attestations: write # Required for creating attestations
     steps:
 
 # VALIDATE TAGS
@@ -87,13 +91,15 @@ jobs:
       name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v4
 
-    - name: Log into Docker Hub
+    - id: docker-login
+      name: Log into Docker Hub
       uses: docker/login-action@v4
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push Docker image
+    - id: push-docker-image
+      name: Build and push Docker image
       uses: docker/build-push-action@v7
       with:
         file: ./Dockerfile
@@ -107,3 +113,13 @@ jobs:
         sbom: true
         provenance: true
         push: true
+
+    - id: attest-and-publish
+      name: Create provenance attestation and publish image digest
+      uses: schemacrawler/actions-docker-attest@v1
+      with:
+        image-name: index.docker.io/schemacrawler/schemacrawler-webapp
+        digest: ${{ steps.push-docker-image.outputs.digest }}
+        publishing-repo: schemacrawler/SchemaCrawler-Web-Application
+        tag-name: ${{ github.ref_name }}
+        update-release: ${{ startsWith(github.ref, 'refs/tags/') }}
