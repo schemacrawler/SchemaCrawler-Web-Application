@@ -116,7 +116,7 @@ jobs:
 
     - id: attest-and-publish
       name: Create provenance attestation and publish image digest
-      uses: schemacrawler/actions-docker-attest@v1
+      uses: schemacrawler/actions-docker-attest@v1.0.0
       with:
         image-name: index.docker.io/schemacrawler/schemacrawler-webapp
         digest: ${{ steps.push-docker-image.outputs.digest }}
