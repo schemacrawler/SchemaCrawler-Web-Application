@@ -41,7 +41,7 @@ jobs:
         java-version: 25
     - id: install-graphviz
       name: Install Graphviz
-      uses: sualeh/install-graphviz@v1.0.3
+      uses: schemacrawler/actions-install-graphviz@v1.0.1
 
 # BUILD FOR DISTRIBUTION
 # To build an image using Cloud Native Buildpacks for Spring Boot, provide
@@ -78,8 +78,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: ./target/schemacrawler-webapp-18.0.2-3.jar
-        asset_name: schemacrawler-webapp-18.0.2-3.jar
+        asset_path: ./target/schemacrawler-webapp-18.0.3-3.jar
+        asset_name: schemacrawler-webapp-18.0.3-3.jar
         asset_content_type: application/zip
 
 # BUILD AND PUBLISH DOCKER IMAGE
@@ -108,7 +108,7 @@ jobs:
           linux/amd64
           linux/arm64
         tags: |-
-          schemacrawler/schemacrawler-webapp:v18.0.2-3
+          schemacrawler/schemacrawler-webapp:v18.0.3-3
           schemacrawler/schemacrawler-webapp:latest
         sbom: true
         provenance: true
